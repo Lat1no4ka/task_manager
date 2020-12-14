@@ -1,31 +1,46 @@
 import React from "react";
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Navbar, Nav } from "react-bootstrap";
+import {
+  CalendarWeek,
+  PersonSquare,
+  CardChecklist,
+  Sliders,
+  Bell,
+  Table,
+  ClockHistory,
+  DoorOpen,
+} from "react-bootstrap-icons";
 class Header extends React.Component {
   render() {
     return (
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-        <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="mr-auto">
-            <Nav.Link href="#features">Features</Nav.Link>
-            <Nav.Link href="#pricing">Pricing</Nav.Link>
-            <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-          <Nav>
-            <Nav.Link href="#deets">More deets</Nav.Link>
-            <Nav.Link eventKey={2} href="#memes">
-              Dank memes
+          <Nav className=" m-auto w-50 justify-content-around">
+            <Nav.Link href="#pricing">
+              {" "}
+              <CalendarWeek size={28} />{" "}
+            </Nav.Link>
+            <Nav.Link href="#test">
+              <PersonSquare size={28} />
+            </Nav.Link>
+            <Nav.Link href="#pricing">
+              <CardChecklist size={28} />
+            </Nav.Link>
+            <Nav.Link href="#pricing">
+              <Sliders size={28} />
+            </Nav.Link>
+            <Nav.Link href="#pricing">
+              <Bell size={28} />
+            </Nav.Link>
+            <Nav.Link href="#pricing">
+              <Table size={28} />
+            </Nav.Link>
+            <Nav.Link href="#pricing">
+              <ClockHistory size={28} />
+            </Nav.Link>
+            <Nav.Link href="#pricing">
+              <DoorOpen size={28} />
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
