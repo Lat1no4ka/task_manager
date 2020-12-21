@@ -4,10 +4,8 @@ import {
   CalendarWeek,
   PersonSquare,
   CardChecklist,
-  Sliders,
   Bell,
   Table,
-  ClockHistory,
   DoorOpen,
 } from "react-bootstrap-icons";
 class Header extends React.Component {
@@ -17,27 +15,20 @@ class Header extends React.Component {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className=" m-auto w-50 justify-content-around">
-            <Nav.Link href="#pricing">
-              {" "}
-              <CalendarWeek size={28} />{" "}
+            <Nav.Link href="#calendar">
+              <CalendarWeek size={28} />
             </Nav.Link>
-            <Nav.Link href="#test">
+            <Nav.Link href="#profile">
               <PersonSquare size={28} />
             </Nav.Link>
-            <Nav.Link href="#pricing">
+            <Nav.Link href="#list">
               <CardChecklist size={28} />
             </Nav.Link>
-            <Nav.Link href="#pricing">
-              <Sliders size={28} />
-            </Nav.Link>
-            <Nav.Link href="#pricing">
+            <Nav.Link href="#bell">
               <Bell size={28} />
             </Nav.Link>
-            <Nav.Link href="#pricing">
+            <Nav.Link href="#table">
               <Table size={28} />
-            </Nav.Link>
-            <Nav.Link href="#pricing">
-              <ClockHistory size={28} />
             </Nav.Link>
             <Nav.Link href="#pricing">
               <DoorOpen size={28} />
