@@ -4,7 +4,7 @@ import Sidebar from "../sidebar/sidebar";
 import { ClockHistory, Sliders } from "react-bootstrap-icons";
 import './home.scss';
 
-class Home extends React.Component {
+class TaskBoard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -63,4 +63,4 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+export default TaskBoard;
