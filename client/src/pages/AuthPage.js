@@ -1,4 +1,4 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useHttp } from "../hooks/http.hook";
 import { AuthContext } from "../context/AuthContext";
@@ -6,17 +6,21 @@ import { AuthContext } from "../context/AuthContext";
 const AuthPage = () => {
   const auth = useContext(AuthContext);
   const { loading, error, request } = useHttp();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const data = await request("/json/user.json", "GET"); // без тела запроса т к он не хочет отдавать json
-      auth.login(data.token,data.userId); 
-    } catch (error) {
-      console.log(error);
-    }
+
+    if (email || password) {
+      try {
+        const data = await request("/json/user.json", "GET"); // без тела запроса т к он не хочет отдавать json
+        console.log(data);
+        auth.login(data.token, data.userId);
+      } catch (error) {
+        console.log(error);
+      }
+    } else return null;
   };
 
   return (
