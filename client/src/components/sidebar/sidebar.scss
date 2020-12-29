@@ -1,0 +1,34 @@
+.sidebar {
+  background: #f2f2f2;
+  height: 100%;
+  animation: option-show 0.5s forwards;
+}
+.sidebar-close {
+  background: #f2f2f2;
+  height: 100%;
+  animation: option-close 0.5s forwards;
+  word-wrap: unset;
+}
+.list-item{
+  white-space: nowrap !important;
+}
+@keyframes option-show {
+  0% {
+    flex: 0 0 0;
+    max-width: 0;
+  }
+  100% {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+}
+@keyframes option-close {
+  0% {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+  100% {
+    flex: 0 0 0;
+    max-width: 0;
+  }
+}
