@@ -11,6 +11,7 @@ const TaskBoard = () => {
   const [detail, setDetail] = useState(null);
   const {loading, error, request } = useHttp();
   const [active, setActive] = useState(false);
+  const [activeDetail, setDesc] = useState(false);
   const [block, setBlock] = useState("");
   const tasks = async () => {
     try {
@@ -37,7 +38,8 @@ const TaskBoard = () => {
   });
 
   const detailTaskHandler = (item) => {
-    setActive(!active);
+    setDesc(!activeDetail);
+    console.log(activeDetail)
     setDetail(item);
   };
   return (
@@ -51,7 +53,7 @@ const TaskBoard = () => {
             <Sliders size={28} className="icon" />
           </div>
         </div>
-        {active && (
+        {activeDetail && (
           <div className="d-flex justify-content-center">
             <DetailTask data={detail}/>
           </div>
@@ -64,7 +66,7 @@ const TaskBoard = () => {
                   <TaskItem
                     key={item.id}
                     props={item}
-                    actvie={active}
+                    actvie={activeDetail}
                   />
                 </div>
               );
