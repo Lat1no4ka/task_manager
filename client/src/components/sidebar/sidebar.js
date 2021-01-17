@@ -1,6 +1,5 @@
 import React from "react";
 import { Form, ListGroup } from "react-bootstrap";
-import { Paragraph } from "react-bootstrap-icons";
 
 import "./sidebar.scss";
 

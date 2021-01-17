@@ -15,7 +15,6 @@ const AuthPage = () => {
     if (email || password) {
       try {
         const data = await request("/json/user.json", "GET"); // без тела запроса т к он не хочет отдавать json
-        console.log(data);
         auth.login(data.token, data.userId);
       } catch (error) {
         console.log(error);

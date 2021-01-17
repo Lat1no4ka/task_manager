@@ -13,7 +13,7 @@ const TaskBoard = () => {
   const [active, setActive] = useState(false);
   const [taskActive, setTaskActive] = useState(false);
   const [block, setBlock] = useState("");
-  const tasks = async () => {
+  const getTask = async () => {
     try {
       const data = await request("/json/tasks.json", "GET"); // без тела запроса т к он не хочет отдавать json
       setData(data);
@@ -31,11 +31,9 @@ const TaskBoard = () => {
       setBlock(param);
     }
   };
-  const effect = useEffect(() => {
-    if (!data) {
-      tasks();
-    }
-  });
+  useEffect(() => {
+    getTask();
+  }, []);
 
   const detailTaskHandler = (item) => {
     setTaskActive(!taskActive);
