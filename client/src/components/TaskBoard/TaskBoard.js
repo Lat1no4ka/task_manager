@@ -9,8 +9,9 @@ import "./home.scss";
 const TaskBoard = () => {
   const [data, setData] = useState(null);
   const [detail, setDetail] = useState(null);
-  const {loading, error, request } = useHttp();
+  const { loading, error, request } = useHttp();
   const [active, setActive] = useState(false);
+  const [taskActive, setTaskActive] = useState(false);
   const [block, setBlock] = useState("");
   const tasks = async () => {
     try {
@@ -37,7 +38,7 @@ const TaskBoard = () => {
   });
 
   const detailTaskHandler = (item) => {
-    setActive(!active);
+    setTaskActive(!taskActive);
     setDetail(item);
   };
   return (
@@ -51,21 +52,17 @@ const TaskBoard = () => {
             <Sliders size={28} className="icon" />
           </div>
         </div>
-        {active && (
+        {taskActive && (
           <div className="d-flex justify-content-center">
-            <DetailTask data={detail}/>
+            <DetailTask data={detail} />
           </div>
         )}
         <div className="d-flex justify-content-between flex-wrap">
           {data &&
             data.map((item) => {
               return (
-                <div className="col-4" onClick={()=> detailTaskHandler(item)}>
-                  <TaskItem
-                    key={item.id}
-                    props={item}
-                    actvie={active}
-                  />
+                <div className="col-4" onClick={() => detailTaskHandler(item)}>
+                  <TaskItem key={item.id} props={item} actvie={taskActive} />
                 </div>
               );
             })}
