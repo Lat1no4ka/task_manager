@@ -12,7 +12,7 @@ public class User implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "user_name", unique = true, nullable = false)
     private String userName;
 
     @Column(name = "password", nullable = false)

@@ -27,8 +27,8 @@ public class AuthController {
 
     @RequestMapping(value = {"/auth"},method = RequestMethod.POST, headers = {"Content-type=application/json"})
     @ResponseBody
-    public User auth(@RequestBody User data) {
-        User res = UserRep.findByEmail("test");
+    public Iterable<User> auth(@RequestBody User data) {
+        Iterable<User> res = UserRep.findAll();
         return res;
     }
 
