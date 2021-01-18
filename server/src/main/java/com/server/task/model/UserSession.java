@@ -12,11 +12,11 @@ public class UserSession {
 
     @Id
     private String id;
-    private String name;
+    private String token;
 
-    public UserSession(String id, String name) {
+    public UserSession(String id, String token) {
         this.id = id;
-        this.name = name;
+        this.token = token;
     }
 
     public String getId() {
@@ -28,11 +28,11 @@ public class UserSession {
     }
 
     public String getName() {
-        return name;
+        return token;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.token = name;
     }
 
 
