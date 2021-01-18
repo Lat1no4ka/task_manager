@@ -7,7 +7,7 @@ import Header from "./components/header/header";
 
 function App() {
   const { login, logout, token, userId } = useAuth();
-  
+
   const isAuthenticated = !!token;
   const routes = UseRoutes(isAuthenticated);
   return (

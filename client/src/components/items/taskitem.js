@@ -27,12 +27,6 @@ const TaskItem = (props) => {
             <div title={item.members}>
               <PersonCircle size={28} className="mr-3" />
             </div>
-            <div title={item.members}>
-              <PersonCircle size={28} className="mr-3" />
-            </div>
-            <div title={item.members}>
-              <PersonCircle size={28} className="mr-3" />
-            </div>
             <div>
               <p></p>
             </div>

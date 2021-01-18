@@ -9,11 +9,11 @@ import "./home.scss";
 const TaskBoard = () => {
   const [data, setData] = useState(null);
   const [detail, setDetail] = useState(null);
-  const {loading, error, request } = useHttp();
+  const { loading, error, request } = useHttp();
   const [active, setActive] = useState(false);
-  const [activeDetail, setDesc] = useState(false);
+  const [taskActive, setTaskActive] = useState(false);
   const [block, setBlock] = useState("");
-  const tasks = async () => {
+  const getTask = async () => {
     try {
       const data = await request("/json/tasks.json", "GET"); // без тела запроса т к он не хочет отдавать json
       setData(data);
@@ -31,15 +31,12 @@ const TaskBoard = () => {
       setBlock(param);
     }
   };
-  const effect = useEffect(() => {
-    if (!data) {
-      tasks();
-    }
-  });
+  useEffect(() => {
+    getTask();
+  }, []);
 
   const detailTaskHandler = (item) => {
-    setDesc(!activeDetail);
-    console.log(activeDetail)
+    setTaskActive(!taskActive);
     setDetail(item);
   };
   return (
@@ -53,21 +50,17 @@ const TaskBoard = () => {
             <Sliders size={28} className="icon" />
           </div>
         </div>
-        {activeDetail && (
+        {taskActive && (
           <div className="d-flex justify-content-center">
-            <DetailTask data={detail}/>
+            <DetailTask data={detail} />
           </div>
         )}
         <div className="d-flex justify-content-between flex-wrap">
           {data &&
             data.map((item) => {
               return (
-                <div className="col-4" onClick={()=> detailTaskHandler(item)}>
-                  <TaskItem
-                    key={item.id}
-                    props={item}
-                    actvie={activeDetail}
-                  />
+                <div className="col-4" onClick={() => detailTaskHandler(item)}>
+                  <TaskItem key={item.id} props={item} actvie={taskActive} />
                 </div>
               );
             })}
