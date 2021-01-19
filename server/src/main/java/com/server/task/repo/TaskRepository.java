@@ -6,7 +6,7 @@ import com.server.task.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.server.task.model.UserSession;
+import com.server.task.model.task;
 
 import java.util.List;
 
