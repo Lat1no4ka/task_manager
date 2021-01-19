@@ -23,9 +23,9 @@ public class AddTask
 {
 
     @Autowired
-    TaskRepository TaskRep;
+    TaskService TaskServ;
     @Autowired
-    TaskRepositoryImp TaskRepImp;
+    TaskServiceImp TaskServImp;
 
     @RequestMapping(value = "/addTask", method=RequestMethod.GET)
     public String addNewTaskPage()
@@ -36,7 +36,7 @@ public class AddTask
 
 
     @RequestMapping(value="/add-new-order", method=RequestMethod.POST)
-    public String addNewTaskPiece(@RequestParam(value="title") String title, @RequestParam(value="price") Double price) {
+    public String addNewTaskPiece(@RequestParam(value="title") String title, @RequestParam(value="price") Double price){
         Task taskexp = new Task();
         taskexp.setHeadID(headid);
         taskexp.setEmpId(empid);
@@ -46,7 +46,15 @@ public class AddTask
         taskexp.setTaskPriority(taskpriority);
         taskexp.setTaskStatus(taskstatus);
 
-        TaskRep.save(taskexp); //дописать сервис и имплементацию для отправки в БД
+        TaskServ.save(taskexp); //дописать сервис и имплементацию для отправки в БД (дописал)
+        return "redirect:/";
+    }
+
+    @RequestMapping(value="delete/{id}", method=RequestMethod.GET)
+    public String deleteTask(@PathVariable Integer id)
+    {
+        Task taskexp = TaskServ.getById(id);
+        TaskServ.delete(taskexp); // Удаляю из БД
         return "redirect:/";
     }
 
