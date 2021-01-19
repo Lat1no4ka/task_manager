@@ -34,7 +34,7 @@ public class Task implements Serializable {
     @Column(name = "task_status")
     private String taskstatus;
 
-    public User()
+    public Task()
     {
         this.headid = null;
         this.empid = null;
@@ -45,7 +45,7 @@ public class Task implements Serializable {
         this.taskstatus = null;
     }
 
-    public User(String headid, String empid)
+    public Task(String headid, String empid)
     {
         this.headid = headid;
         this.empid = empid;
@@ -56,7 +56,7 @@ public class Task implements Serializable {
         this.taskstatus = null;
     }
 
-    public User(Long id,String headid, String empid, String taskname, String taskdesc, String expdate, String taskpriority, String taskstatus)
+    public Task(Long id,String headid, String empid, String taskname, String taskdesc, String expdate, String taskpriority, String taskstatus)
     {
         this.headid = headid;
         this.empid = empid;

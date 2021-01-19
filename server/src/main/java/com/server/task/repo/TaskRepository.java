@@ -13,4 +13,7 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends CrudRepository<Task, String> {
 
+    void save();
+
+    void delete();
 }
