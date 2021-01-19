@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping(produces = "application/json")
 @ResponseBody
@@ -39,8 +39,8 @@ public class AuthController {
             String key = user.getId().toString();
             ActiveUser.save(new UserSession(key, token));
             Map<String, String> userData = new HashMap<String, String>();
-            userData.put("Id", key);
-            userData.put("Token", token);
+            userData.put("userId", key);
+            userData.put("token", token);
             return userData;
         }
         return null;
