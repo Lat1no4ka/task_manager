@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -46,9 +47,27 @@ public class AuthController {
         return null;
     }
 
+    @RequestMapping(value = {"/checkToken"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public boolean checkToken(@RequestBody Map<String, String> data) {
+        Optional<UserSession> session = ActiveUser.findById(data.get("userId"));
+        try {
+            String token = session.get().getToken().toString();
+            boolean check = data.get("token").matches(token);
+            if (check) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     @RequestMapping("/test")
     public String test() {
         return "test";
     }
+
 
 }
