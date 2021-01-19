@@ -9,10 +9,10 @@ import java.util.List;
 @Service
 public interface TaskService
 {
-
-//Not Done
-
-
+    Task addTask(Task task);
+    void delete(long id);
+    //Не ебу какие нужны, напиши - я добавлю
+    //Могу несколько отдельных методов ебануть в репозитории если надо
 
 }
 

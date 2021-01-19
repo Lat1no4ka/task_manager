@@ -15,4 +15,5 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends CrudRepository<Task, String> {
 
+    //пока не нужна, но пусть пока будет
 }
