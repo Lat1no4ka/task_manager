@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="admin" id="4">
+        <insert tableName="tasks">
+
+            <column name="id" valueNumeric="228"/>
+
+            <column name="head_id" value="Andrei Nadropov"/>
+
+            <column name="emp_id" value="Sergei Parkangelov"/>
+
+            <column name="task_name" type="Do a Backflip"/>
+
+            <column name="task_desc" type="Do the greatest backflip ever"/>
+
+            <column name="exp_date" type="none"/>
+
+            <column name="task_priority" type="none"/>
+
+            <column name="task_status" type="not done"/>
+
+        </insert>
+    </changeSet>
+</databaseChangeLog>
