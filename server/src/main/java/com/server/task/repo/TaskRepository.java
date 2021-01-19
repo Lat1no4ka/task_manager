@@ -1,5 +1,4 @@
-/*
-Нихуя не понимаю как это работает
+//Нихуя не понимаю как это работает
 
 package com.server.task.repo;
 
@@ -12,7 +11,6 @@ import com.server.task.model.UserSession;
 import java.util.List;
 
 @Repository
-public interface TaskRepository extends CrudRepository<User, String> {
-}
+public interface TaskRepository extends CrudRepository<Task, String> {
 
- */
+}

@@ -18,23 +18,34 @@ import java.util.List;
 @RestController
 @RequestMapping(produces = "application/json")
 @ResponseBody
-
 public class AddTask
 {
 
-    @RequestMapping(value = "/test", method=RequestMethod.GET)
+    @Autowired
+    TaskRepository TaskRep;
+
+    @RequestMapping(value = "/addTask", method=RequestMethod.GET)
     public String addNewTaskPage()
     {
-        return "GayLord228";
+        //ебануть страницу, а то некуда ходить.
+        return "addTask";
     }
 
 
+    @RequestMapping(value="/add-new-order", method=RequestMethod.POST)
+    public String addNewTaskPiece(@RequestParam(value="title") String title, @RequestParam(value="price") Double price) {
+        Task taskexp = new Task();
+        taskexp.setHeadID(headid);
+        taskexp.setEmpId(empid);
+        taskexp.setTaskName(taskname);
+        taskexp.setTascDesc(taskdesc);
+        taskexp.setExpDate(expdate);
+        taskexp.setTaskPriority(taskpriority);
+        taskexp.setTaskStatus(taskstatus);
 
-
-
-
-
-
+        TaskRep.save(taskexp); //дописать сервис и имплементацию для отправки в БД
+        return "redirect:/";
+    }
 
 
 
