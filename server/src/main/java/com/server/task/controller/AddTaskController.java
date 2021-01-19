@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.stereotype.Controller;
 
 import com.server.task.model.Task;
-import com.server.task.repo.TaskRepository;
+import com.server.task.repo.TaskService;
+import com.server.task.repo.TaskServiceImp;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,6 +24,8 @@ public class AddTask
 
     @Autowired
     TaskRepository TaskRep;
+    @Autowired
+    TaskRepositoryImp TaskRepImp;
 
     @RequestMapping(value = "/addTask", method=RequestMethod.GET)
     public String addNewTaskPage()
