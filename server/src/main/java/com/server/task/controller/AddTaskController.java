@@ -19,4 +19,23 @@ import java.util.List;
 @RequestMapping(produces = "application/json")
 @ResponseBody
 
-Public
+public class AddTask
+{
+
+    @RequestMapping(value = "/test", method=RequestMethod.GET)
+    public String addNewTaskPage()
+    {
+        return "GayLord228";
+    }
+
+
+
+
+
+
+
+
+
+
+
+}
