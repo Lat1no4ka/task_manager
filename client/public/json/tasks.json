@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "title": " задание 1 ",
+    "description": "сдать все долги шоб не отчислили",
+    "files": "",
+    "date_of_begin": "2020-12-01",
+    "date_of_end": "2020-12-02",
+    "chat": "",
+    "members": "я, Артем К, Артем Д",
+    "priority": "Не горит",
+    "position": "В работе",
+    "athor": "Я"
+  },
+  {
+    "id": 2,
+    "title": " задание 2",
+    "description": "сдать все долги шоб не отчислили",
+    "files": "",
+    "date_of_begin": "2020-12-01",
+    "date_of_end": "2020-12-02",
+    "chat": "",
+    "members": "я, Артем К, Артем Д",
+    "priority": "Не горит",
+    "position": "В работе",
+    "athor": "Я"
+  },
+  {
+    "id": 3,
+    "title": " задание 3 ",
+    "description": "сдать все долги шоб не отчислили",
+    "files": "",
+    "date_of_begin": "2020-12-01",
+    "date_of_end": "2020-12-02",
+    "chat": "",
+    "members": "я, Артем К, Артем Д",
+    "priority": "Не горит",
+    "position": "В работе",
+    "athor": "Я"
+  }
+]
