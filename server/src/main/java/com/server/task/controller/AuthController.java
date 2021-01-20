@@ -34,7 +34,6 @@ public class AuthController {
     @ResponseBody
     public Map<String, String> auth(@RequestBody User data) {
         String name = data.getUserName();
-        String test = bCryptPasswordEncoder.encode(data.getPassword());
         User user = userRepository.findByUserName(name);
         if (bCryptPasswordEncoder.matches(data.getPassword(), user.getPassword())) {
             String token = tokenService.getJWTToken(name);
@@ -64,6 +63,28 @@ public class AuthController {
             return false;
         }
     }
+
+    @RequestMapping(value = {"/registerUser"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseBody
+    public String registerUser(@RequestBody User user) {
+        String name = user.getUserName();
+        if(user.getPassword().length() < 4 || user.getUserName().length()<4){
+            return "reg error";
+        }
+        if(userRepository.findByUserName(name) == null){
+            try{
+                String password = bCryptPasswordEncoder.encode(user.getPassword());
+                user.setPassword(password);
+                userRepository.save(user);
+                return "successful";
+            }catch (Exception e){
+                return "reg error";
+            }
+        }else{
+            return "added";
+        }
+    }
+
 
     @RequestMapping("/test")
     public String test() {
