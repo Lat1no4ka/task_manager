@@ -6,7 +6,7 @@ import org.springframework.data.redis.core.RedisHash;
 import java.io.Serializable;
 
 
-@RedisHash("Student")
+@RedisHash("UserSession")
 public class UserSession {
 
 
@@ -27,12 +27,12 @@ public class UserSession {
         this.id = id;
     }
 
-    public String getName() {
+    public String getToken() {
         return token;
     }
 
-    public void setName(String name) {
-        this.token = name;
+    public void setToken(String token) {
+        this.token = token;
     }
 
 
