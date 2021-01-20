@@ -27,38 +27,23 @@ public class AddTask
     @Autowired
     TaskServiceImp TaskServImp;
 
-    @RequestMapping(value = "/addTask", method=RequestMethod.GET)
-    public String addNewTaskPage()
-    {
-        //ебануть страницу, а то некуда ходить.
-        return "addTask";
-
-    }
-
 
     //Я построил непроходимую стену, разворачивайся и уходи
-    @RequestMapping(value="/addTask", method=RequestMethod.POST)
-    public String addNewTaskPiece(@RequestParam(value="headid") String headid, @RequestParam(value="empid") String empid, @RequestParam(value="taskname") String taskname, @RequestParam(value="taskdesc") String taskdesc, @RequestParam(value="expdate") String expdate, @RequestParam(value="taskpriority") String taskpriority, @RequestParam(value="taskstatus") String taskstatus)
+    @RequestMapping(value="/addTask", method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Task addNewTaskPiece(@RequestBody Task task)
     {
         Task taskexp = new Task();
-        taskexp.setHeadID(headid);
-        taskexp.setEmpId(empid);
-        taskexp.setTaskName(taskname);
-        taskexp.setTascDesc(taskdesc);
-        taskexp.setExpDate(expdate);
-        taskexp.setTaskPriority(taskpriority);
-        taskexp.setTaskStatus(taskstatus);
 
         TaskServ.save(taskexp); //дописать сервис и имплементацию для отправки в БД (дописал)
-        return "redirect:/";
+        return task;
     }
 
-    @RequestMapping(value="delete/{id}", method=RequestMethod.GET)
-    public String deleteTask(@PathVariable Integer id)
+    @RequestMapping(value="delete/{id}", method=RequestMethod.GET, headers = {"Content-type=application/json"})
+    public Task deleteTask(@PathVariable Integer id)
     {
         Task taskexp = TaskServ.getById(id);
         TaskServ.delete(taskexp); // Удаляю из БД
-        return "redirect:/";
+        return task;
     }
 
 
