@@ -28,5 +28,22 @@ public class TaskServiceImp implements TaskService
         taskRepository.delete(id);
     }
 
+    @Override
+    public Task getById(long id)
+    {
+        return taskRepository.findById(id);
+    }
+
+    @Override
+    public Task getByEmpId(string empid)
+    {
+        return taskRepository.findByEmpId(empid);
+    }
+
+    @Override
+    public Task editTask(Task task)
+    {
+        return taskRepository.save(task);
+    }
 }
 

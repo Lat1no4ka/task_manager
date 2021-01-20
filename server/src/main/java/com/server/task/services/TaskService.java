@@ -11,6 +11,9 @@ public interface TaskService
 {
     Task addTask(Task task);
     void delete(long id);
+    Task editTask(Task task);
+    Task getByEmpId(string empid);
+    Task getById(long id);
     //Не ебу какие нужны, напиши - я добавлю
     //Могу несколько отдельных методов ебануть в репозитории если надо
 

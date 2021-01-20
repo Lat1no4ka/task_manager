@@ -32,11 +32,14 @@ public class AddTask
     {
         //ебануть страницу, а то некуда ходить.
         return "addTask";
+
     }
 
 
-    @RequestMapping(value="/add-new-order", method=RequestMethod.POST)
-    public String addNewTaskPiece(@RequestParam(value="title") String title, @RequestParam(value="price") Double price){
+    //Я построил непроходимую стену, разворачивайся и уходи
+    @RequestMapping(value="/addTask", method=RequestMethod.POST)
+    public String addNewTaskPiece(@RequestParam(value="headid") String headid, @RequestParam(value="empid") String empid, @RequestParam(value="taskname") String taskname, @RequestParam(value="taskdesc") String taskdesc, @RequestParam(value="expdate") String expdate, @RequestParam(value="taskpriority") String taskpriority, @RequestParam(value="taskstatus") String taskstatus)
+    {
         Task taskexp = new Task();
         taskexp.setHeadID(headid);
         taskexp.setEmpId(empid);
