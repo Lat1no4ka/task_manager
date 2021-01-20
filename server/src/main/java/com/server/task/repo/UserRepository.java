@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import com.server.task.model.UserSession;
 
 @Repository
-public interface UserRepository extends CrudRepository<UserSession, String>{
+public interface UserRepository extends CrudRepository<User, String>{
     User findByUserName(String name);
 }

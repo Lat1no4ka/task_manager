@@ -34,6 +34,7 @@ public class AuthController {
     @ResponseBody
     public Map<String, String> auth(@RequestBody User data) {
         String name = data.getUserName();
+        String test = bCryptPasswordEncoder.encode(data.getPassword());
         User user = userRepository.findByUserName(name);
         if (bCryptPasswordEncoder.matches(data.getPassword(), user.getPassword())) {
             String token = tokenService.getJWTToken(name);

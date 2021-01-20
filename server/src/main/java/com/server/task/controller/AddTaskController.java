@@ -22,7 +22,7 @@ public class AddTaskController
         return task;
     }
 
-    @RequestMapping(value="delete", method=RequestMethod.GET, headers = {"Content-type=application/json"})
+    @RequestMapping(value="delete", method=RequestMethod.POST, headers = {"Content-type=application/json"})
     public Task deleteTask(@RequestBody Task task)
     {
         taskRepository.delete(task);
