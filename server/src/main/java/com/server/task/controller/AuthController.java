@@ -22,7 +22,7 @@ public class AuthController {
     @Autowired
     UserSessionRepository ActiveUser;
     @Autowired
-    UserRepository UserRep;
+    UserRepository userRepository;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
@@ -33,7 +33,7 @@ public class AuthController {
     @ResponseBody
     public Map<String, String> auth(@RequestBody User data) {
         String name = data.getUserName();
-        User user = UserRep.findByUserName(name);
+        User user = userRepository.findByUserName(name);
         if (bCryptPasswordEncoder.matches(data.getPassword(), user.getPassword())) {
             String token = tokenService.getJWTToken(name);
             String key = user.getId().toString();

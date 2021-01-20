@@ -2,7 +2,6 @@ package com.server.task.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import org.springframework.data.annotation.Id;
 
 @Entity
 @Table(name = "tasks")
@@ -34,8 +33,25 @@ public class Task implements Serializable {
     @Column(name = "task_status")
     private String taskstatus;
 
-    public Task()
-    {
+    public Task(Long id, String headid, String empid, String taskname, String taskdesc, String expdate, String taskpriority, String taskstatus) {
+        this.id = id;
+        this.headid = headid;
+        this.empid = empid;
+        this.taskname = taskname;
+        this.taskdesc = taskdesc;
+        this.expdate = expdate;
+        this.taskpriority = taskpriority;
+        this.taskstatus = taskstatus;
+    }
+
+    public Task(Long id, String headid, String empid) {
+        this.id = id;
+        this.headid = headid;
+        this.empid = empid;
+    }
+
+    public Task() {
+        this.id = null;
         this.headid = null;
         this.empid = null;
         this.taskname = null;
@@ -45,105 +61,67 @@ public class Task implements Serializable {
         this.taskstatus = null;
     }
 
-    public Task(String headid, String empid)
-    {
-        this.headid = headid;
-        this.empid = empid;
-        this.taskname = null;
-        this.taskdesc = null;
-        this.expdate = null;
-        this.taskpriority = null;
-        this.taskstatus = null;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Task(Long id,String headid, String empid, String taskname, String taskdesc, String expdate, String taskpriority, String taskstatus)
-    {
-        this.headid = headid;
-        this.empid = empid;
-        this.taskname = taskname;
-        this.taskdesc = tascdesc;
-        this.expdate = expdate;
-        this.taskpriority = taskpriority;
-        this.taskstatus = taskstatus;
-    }
-
-    //Сеты
-
-    public void setHeadId(String headid)
-    {
+    public void setHeadid(String headid) {
         this.headid = headid;
     }
 
-    public void setEmpId(String empid)
-    {
+    public void setEmpid(String empid) {
         this.empid = empid;
     }
 
-    public void setTaskName(String taskname)
-    {
+    public void setTaskname(String taskname) {
         this.taskname = taskname;
     }
 
-    public void setTascDesc(String taskdesc)
-    {
-        this.taskdesc = tascdesc;
+    public void setTaskdesc(String taskdesc) {
+        this.taskdesc = taskdesc;
     }
 
-    public void setExpDate(String expdate)
-    {
+    public void setExpdate(String expdate) {
         this.expdate = expdate;
     }
 
-    public void setTaskPriority(String taskpriority)
-    {
+    public void setTaskpriority(String taskpriority) {
         this.taskpriority = taskpriority;
     }
 
-    public void setTaskStatus(String taskstatus)
-    {
+    public void setTaskstatus(String taskstatus) {
         this.taskstatus = taskstatus;
     }
-
-    //Геты
 
     public Long getId() {
         return id;
     }
 
-    public String getHeadId()
-    {
+    public String getHeadid() {
         return headid;
     }
 
-    public String getEmpId()
-    {
+    public String getEmpid() {
         return empid;
     }
 
-    public String getTaskName()
-    {
+    public String getTaskname() {
         return taskname;
     }
 
-    public String setTascDesc()
-    {
-        return tascdesc;
+    public String getTaskdesc() {
+        return taskdesc;
     }
 
-    public String getExpDate()
-    {
+    public String getExpdate() {
         return expdate;
     }
 
-    public String getTaskPriority()
-    {
+    public String getTaskpriority() {
         return taskpriority;
     }
 
-    public String getTaskStatus()
-    {
+    public String getTaskstatus() {
         return taskstatus;
     }
-
-
 }
