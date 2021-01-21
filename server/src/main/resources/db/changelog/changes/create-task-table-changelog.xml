@@ -7,27 +7,39 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet author="maximka" id="3">
         <createTable tableName="tasks">
+
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="head_id" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="emp_id" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
+
             <column name="task_name" type="VARCHAR(255)">
                 <constraints nullable="true"/>
             </column>
+
             <column name="task_desc" type="VARCHAR(255)">
                 <constraints nullable="true"/>
             </column>
+
+            <column name="beg_date" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
             <column name="exp_date" type="VARCHAR(255)">
                 <constraints nullable="true"/>
             </column>
+
+            <column name="head_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="emp_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="task_priority" type="VARCHAR(255)">
                 <constraints nullable="true"/>
             </column>
+
             <column name="task_status" type="VARCHAR(255)">
                 <constraints nullable="true"/>
             </column>
