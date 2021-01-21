@@ -41,6 +41,14 @@ public class AddTaskController
         return emplist;
     }
 
+    @RequestMapping(value={"/listTaskId"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public List<Task> ListTaskId(@RequestBody Task task)
+    {
+        Long idl = task.getId();
+        List<Task> idlist = taskRepository.findById(idl);
+        return idlist;
+    }
+
 
 
 }

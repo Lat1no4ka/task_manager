@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends CrudRepository<Task, String> {
     List<Task> findByempid(String empid);
+    List<Task> findById(Long idl);
 }

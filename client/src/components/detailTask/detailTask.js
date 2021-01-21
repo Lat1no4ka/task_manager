@@ -5,25 +5,28 @@ export const DetailTask = (props) => {
     <div className={"modal-window"}>
       <div className="container p-5 ">
         <div>
-          <h3>{data.title}</h3>
+          <h3>{data.taskname}</h3>
         </div>
         <div>
-          <h4>Описание: {data.description}</h4>
+          <h4>Описание: {data.taskdesc}</h4>
         </div>
         <div>
-          <p>Дата начала: {data.date_of_begin}</p>
+          <p>Дата начала: {data.begdate}</p>
         </div>
         <div>
-          <p>Дата окончания: {data.date_of_end}</p>
+          <p>Дата окончания: {data.expdate}</p>
         </div>
         <div>
-          <p>Участники: {data.members}</p>
+          <p>Участники: {data.empid}</p>
         </div>
         <div>
-          <p>Приоритет: {data.priority}</p>
+          <p>Приоритет: {data.taskpriority}</p>
         </div>
         <div>
-          <p>Статус: {data.position}</p>
+          <p>Статус: {data.taskstatus}</p>
+        </div>
+        <div>
+          <p>Задание назначил: {data.headid}</p>
         </div>
       </div>
     </div>
