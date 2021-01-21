@@ -21,7 +21,7 @@
 
             <column name="head_id" value="Andrei Nadropov"/>
 
-            <column name="emp_id" value="Sergei Parkangelov"/>
+            <column name="emp_id" value="1"/>
 
             <column name="task_priority" value="Extremely important"/>
 
