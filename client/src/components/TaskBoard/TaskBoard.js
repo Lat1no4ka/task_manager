@@ -15,8 +15,8 @@ const TaskBoard = () => {
   const [block, setBlock] = useState("");
   const getTask = async () => {
     try {
-      const testid = {id:1};
-      const data = await request("http://127.0.0.1:8080/listTaskId", "POST", JSON.stringify(testid));
+      const testid = {empid:"Sergei Parkangelov"};
+      const data = await request("http://127.0.0.1:8080/listTask", "POST", JSON.stringify(testid));
       setData(data);
     } catch (error) {
       console.log(error);
