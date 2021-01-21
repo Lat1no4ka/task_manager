@@ -7,8 +7,8 @@ export const useAuth = () => {
   const [userId, setUserId] = useState(null);
 
   const login = useCallback((fToken, id) => {
-    setToken(fToken);
     setUserId(id);
+    setToken(fToken);
     localStorage.setItem(
       "userData",
       JSON.stringify({ userId: id, token: fToken })

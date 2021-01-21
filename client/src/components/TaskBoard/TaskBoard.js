@@ -18,7 +18,6 @@ const TaskBoard = () => {
       const userData = JSON.parse(localStorage.getItem("userData"));
       const body = {empid:userData.userId};
       const data = await request("http://127.0.0.1:8080/listTask", "POST", JSON.stringify(body));
-      console.log(data)
       setData(data);
     } catch (error) {
       console.log(error);
