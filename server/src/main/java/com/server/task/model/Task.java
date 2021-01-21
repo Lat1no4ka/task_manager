@@ -74,9 +74,7 @@ public class Task implements Serializable {
 
     public void setTaskdesc(String taskdesc) { this.taskdesc = taskdesc; }
 
-    public void setBegdate(String expdate) {
-        this.begdate = begdate;
-    }
+    public void setBegdate(String begdate) { this.begdate = begdate; }
 
     public void setExpdate(String expdate) {
         this.expdate = expdate;
