@@ -45,8 +45,8 @@ const Header = () => {
           <Nav.Link href="addTask">
             <PlusCircle size={28} />
           </Nav.Link>
-          <Nav.Link href=" logout">
-            <DoorOpen size={28} onClick={(e) => logoutHandler(e)} />
+          <Nav.Link href="">
+            <DoorOpen size={28} onClick={(e) => {logoutHandler(e)}} />
           </Nav.Link>
         </Nav>
       </Navbar.Collapse>
