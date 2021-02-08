@@ -36,7 +36,7 @@ public class AuthController {
         String name = data.getUserName();
         User user = userRepository.findByUserName(name);
         if (bCryptPasswordEncoder.matches(data.getPassword(), user.getPassword())) {
-            String token = tokenService.getJWTToken(name);
+                String token = tokenService.getJWTToken(name);
             String key = user.getId().toString();
             ActiveUser.save(new UserSession(key, token));
             Map<String, String> userData = new HashMap<String, String>();
@@ -50,6 +50,9 @@ public class AuthController {
     @RequestMapping(value = {"/checkToken"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     @ResponseBody
     public boolean checkToken(@RequestBody Map<String, String> data) {
+        if(data.get("userId") == null){
+            return false;
+        }
         Optional<UserSession> session = ActiveUser.findById(data.get("userId"));
         try {
             String token = session.get().getToken().toString();

@@ -18,7 +18,6 @@ export const useAuth = () => {
   const logout = useCallback(() => {
     setToken(null);
     setUserId(null);
-
     localStorage.removeItem("userData");
   }, []);
 
@@ -40,7 +39,8 @@ export const useAuth = () => {
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("userData"));
-    const check = checkToken(data);
+    const notAuth = {userId:null,token:null};
+    const check = checkToken(data ? data : notAuth);
 
     if (data && data.token) {
       login(data.token, data.userId);
