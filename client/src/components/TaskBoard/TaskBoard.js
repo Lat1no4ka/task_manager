@@ -61,8 +61,8 @@ const TaskBoard = () => {
           {data &&
             data.map((item) => {
               return (
-                <div className="col-4" onClick={() => detailTaskHandler(item)}>
-                  <TaskItem key={item.id} props={item} actvie={taskActive} />
+                <div key={item.id.toString()} className="col-4" onClick={() => detailTaskHandler(item)}>
+                  <TaskItem props={item} actvie={taskActive} />
                 </div>
               );
             })}
