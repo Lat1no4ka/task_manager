@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
-//Конторллер для восстановления пароля (не работает)
 
 @CrossOrigin("*")
 @RestController
@@ -50,7 +49,7 @@ public class RestoreController {
 
             SimpleMailMessage mailMessage = new SimpleMailMessage(templateMessage);
 
-            mailMessage.setTo("latinosmk@gmail.com");//адрес получателя
+            mailMessage.setTo("dashkovtemk@mail.ru");//адрес получателя
 
             mailMessage.setText("Забыл пароль блять? Ну вот нахуй ты такой тупой-то? Ладно, введи этот код: " + i + "\nЕще раз забудешь свой ебаный пароль - я самоуничтожу твой компьютер");
             try {
