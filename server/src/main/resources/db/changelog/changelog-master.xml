@@ -18,4 +18,6 @@
     <include file="/db/changelog/changes/insert-PrioDir-table-changelog.xml"/>
     <include file="/db/changelog/changes/insert-StateDir-table-changelog.xml"/>
 
+    <include file="/db/changelog/changes/alter-FK-tables-changelog.xml"/>
+
 </databaseChangeLog>

@@ -27,12 +27,16 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "role_id")
+    private int roleId;
+
     public User() {
         this.userName = null;
         this.password = null;
         this.firstName = null;
         this.lastName = null;
         this.email = null;
+        this.roleId = 1;
     }
 
     public User(String userName, String password) {
@@ -41,15 +45,17 @@ public class User implements Serializable {
         this.firstName = null;
         this.lastName = null;
         this.email = null;
+        this.roleId = 1;
     }
 
-    public User(Long id,String userName, String password, String firstName, String lastName, String email) {
+    public User(Long id,String userName, String password, String firstName, String lastName, String email, int roleid) {
         this.id = id;
         this.userName = userName;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.roleId = roleId;
     }
 
 
@@ -71,6 +77,10 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 
     public Long getId() {
@@ -96,6 +106,8 @@ public class User implements Serializable {
     public String getEmail() {
         return email;
     }
+
+    public int RoleId() {return roleId;}
 
 
 }

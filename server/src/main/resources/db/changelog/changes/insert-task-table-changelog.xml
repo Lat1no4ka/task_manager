@@ -19,13 +19,13 @@
 
             <column name="exp_date" value="30.01.2021"/>
 
-            <column name="head_id" value="Andrei Nadropov"/>
+            <column name="head_id" value="3"/>
 
-            <column name="emp_id" value="1"/>
+            <column name="emp_id" value="2"/>
 
-            <column name="task_priority" value="Extremely important"/>
+            <column name="task_priority_id" value="2"/>
 
-            <column name="task_status" value="not done"/>
+            <column name="task_status_id" value="2"/>
 
         </insert>
     </changeSet>

@@ -36,11 +36,11 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="task_priority" type="VARCHAR(255)">
+            <column name="task_priority_id" type="INT">
                 <constraints nullable="true"/>
             </column>
 
-            <column name="task_status" type="VARCHAR(255)">
+            <column name="task_status_id" type="INT">
                 <constraints nullable="true"/>
             </column>
         </createTable>

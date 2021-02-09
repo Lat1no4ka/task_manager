@@ -30,11 +30,11 @@ public class Task implements Serializable {
     @Column(name = "emp_id", nullable = false)
     private String empid;
 
-    @Column(name = "task_priority")
-    private String taskpriority;
+    @Column(name = "task_priority_id")
+    private String taskpriorityid;
 
-    @Column(name = "task_status")
-    private String taskstatus;
+    @Column(name = "task_status_id")
+    private String taskstatusid;
 
     public Task(Long id, String taskname,String begdate, String expdate, String taskdesc, String headid, String empid, String taskpriority, String taskstatus) {
         this.id = id;
@@ -44,8 +44,8 @@ public class Task implements Serializable {
         this.expdate = expdate;
         this.headid = headid;
         this.empid = empid;
-        this.taskpriority = taskpriority;
-        this.taskstatus = taskstatus;
+        this.taskpriorityid = taskpriority;
+        this.taskstatusid = taskstatus;
     }
 
     public Task(Long id, String headid, String empid) {
@@ -62,8 +62,8 @@ public class Task implements Serializable {
         this.expdate = null;
         this.headid = null;
         this.empid = null;
-        this.taskpriority = null;
-        this.taskstatus = null;
+        this.taskpriorityid = null;
+        this.taskstatusid = null;
     }
 
     public void setId(Long id) {
@@ -88,12 +88,12 @@ public class Task implements Serializable {
         this.empid = empid;
     }
 
-    public void setTaskpriority(String taskpriority) {
-        this.taskpriority = taskpriority;
+    public void setTaskpriorityid(String taskpriorityid) {
+        this.taskpriorityid = taskpriorityid;
     }
 
-    public void setTaskstatus(String taskstatus) {
-        this.taskstatus = taskstatus;
+    public void setTaskstatusid(String taskstatusid) {
+        this.taskstatusid = taskstatusid;
     }
 
     public Long getId() {
@@ -124,11 +124,11 @@ public class Task implements Serializable {
         return empid;
     }
 
-    public String getTaskpriority() {
-        return taskpriority;
+    public String getTaskpriorityid() {
+        return taskpriorityid;
     }
 
-    public String getTaskstatus() {
-        return taskstatus;
+    public String getTaskstatusid() {
+        return taskstatusid;
     }
 }
