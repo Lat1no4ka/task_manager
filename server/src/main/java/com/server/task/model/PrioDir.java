@@ -1,5 +1,8 @@
 package com.server.task.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -14,6 +17,10 @@ public class PrioDir implements Serializable {
 
     @Column(name = "prio_name", nullable = false)
     private String prioName;
+
+    @OneToMany(mappedBy = "taskpriorityid", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Task> tasks;
 
 
     public PrioDir() {

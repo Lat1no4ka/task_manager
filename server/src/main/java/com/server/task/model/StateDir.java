@@ -1,7 +1,10 @@
 package com.server.task.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "statedir")
@@ -14,6 +17,10 @@ public class StateDir implements Serializable {
 
     @Column(name = "state_name", unique = true, nullable = false)
     private String stateName;
+
+    @OneToMany(mappedBy = "taskstatusid", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Task> tasks;
 
     public StateDir() {
         this.id = null;

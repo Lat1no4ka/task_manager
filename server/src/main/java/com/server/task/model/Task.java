@@ -30,13 +30,15 @@ public class Task implements Serializable {
     @Column(name = "emp_id", nullable = false)
     private String empid;
 
-    @Column(name = "task_priority_id")
-    private String taskpriorityid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_priority_id"), name = "task_priority_id")
+    private PrioDir taskpriorityid;
 
-    @Column(name = "task_status_id")
-    private String taskstatusid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_status_id"), name = "task_status_id")
+    private StateDir taskstatusid;
 
-    public Task(Long id, String taskname,String begdate, String expdate, String taskdesc, String headid, String empid, String taskpriority, String taskstatus) {
+    public Task(Long id, String taskname,String begdate, String expdate, String taskdesc, String headid, String empid, PrioDir taskpriorityid, StateDir taskstatusid) {
         this.id = id;
         this.taskname = taskname;
         this.taskdesc = taskdesc;
@@ -44,8 +46,8 @@ public class Task implements Serializable {
         this.expdate = expdate;
         this.headid = headid;
         this.empid = empid;
-        this.taskpriorityid = taskpriority;
-        this.taskstatusid = taskstatus;
+        this.taskpriorityid = taskpriorityid;
+        this.taskstatusid = taskstatusid;
     }
 
     public Task(Long id, String headid, String empid) {
@@ -88,11 +90,11 @@ public class Task implements Serializable {
         this.empid = empid;
     }
 
-    public void setTaskpriorityid(String taskpriorityid) {
+    public void setTaskpriorityid(PrioDir taskpriorityid) {
         this.taskpriorityid = taskpriorityid;
     }
 
-    public void setTaskstatusid(String taskstatusid) {
+    public void setTaskstatusid(StateDir taskstatusid) {
         this.taskstatusid = taskstatusid;
     }
 
@@ -124,11 +126,11 @@ public class Task implements Serializable {
         return empid;
     }
 
-    public String getTaskpriorityid() {
+    public PrioDir getTaskpriorityid() {
         return taskpriorityid;
     }
 
-    public String getTaskstatusid() {
+    public StateDir getTaskstatusid() {
         return taskstatusid;
     }
 }
