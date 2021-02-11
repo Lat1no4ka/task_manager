@@ -18,10 +18,6 @@ public class StateDir implements Serializable {
     @Column(name = "state_name", unique = true, nullable = false)
     private String stateName;
 
-    @OneToMany(mappedBy = "taskstatusid", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<Task> tasks;
-
     public StateDir() {
         this.id = null;
         this.stateName = null;

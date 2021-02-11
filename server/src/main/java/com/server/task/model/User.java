@@ -27,8 +27,9 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "role_id")
-    private int roleId;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private RoleDir roleDir;
 
     public User() {
         this.userName = null;
@@ -36,7 +37,6 @@ public class User implements Serializable {
         this.firstName = null;
         this.lastName = null;
         this.email = null;
-        this.roleId = 1;
     }
 
     public User(String userName, String password) {
@@ -45,7 +45,6 @@ public class User implements Serializable {
         this.firstName = null;
         this.lastName = null;
         this.email = null;
-        this.roleId = 1;
     }
 
     public User(Long id,String userName, String password, String firstName, String lastName, String email, int roleid) {
@@ -55,9 +54,15 @@ public class User implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.roleId = roleId;
     }
 
+    public RoleDir getRole() {
+        return roleDir;
+    }
+
+    public void setPriority(RoleDir roleDir) {
+        this.roleDir = roleDir;
+    }
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -79,9 +84,6 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public void setRoleId(int roleId) {
-        this.roleId = roleId;
-    }
 
     public Long getId() {
         return id;
@@ -107,7 +109,6 @@ public class User implements Serializable {
         return email;
     }
 
-    public int RoleId() {return roleId;}
 
 
 }

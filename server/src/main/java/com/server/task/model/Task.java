@@ -1,7 +1,12 @@
 package com.server.task.model;
 
+import jdk.nashorn.internal.objects.annotations.Getter;
+import jdk.nashorn.internal.objects.annotations.Setter;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import javax.persistence.*;
 import java.io.Serializable;
+
 
 @Entity
 @Table(name = "tasks")
@@ -30,15 +35,16 @@ public class Task implements Serializable {
     @Column(name = "emp_id", nullable = false)
     private String empid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_priority_id"), name = "task_priority_id")
-    private PrioDir taskpriorityid;
+    @ManyToOne
+    @JoinColumn(name ="task_priority_id")
+    private PrioDir prioDir;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_status_id"), name = "task_status_id")
-    private StateDir taskstatusid;
+    @ManyToOne
+    @JoinColumn(name = "task_status_id")
+    private StateDir stateDir;
 
-    public Task(Long id, String taskname,String begdate, String expdate, String taskdesc, String headid, String empid, PrioDir taskpriorityid, StateDir taskstatusid) {
+
+    public Task(Long id, String taskname,String begdate, String expdate, String taskdesc, String headid, String empid) {
         this.id = id;
         this.taskname = taskname;
         this.taskdesc = taskdesc;
@@ -46,8 +52,7 @@ public class Task implements Serializable {
         this.expdate = expdate;
         this.headid = headid;
         this.empid = empid;
-        this.taskpriorityid = taskpriorityid;
-        this.taskstatusid = taskstatusid;
+
     }
 
     public Task(Long id, String headid, String empid) {
@@ -64,8 +69,22 @@ public class Task implements Serializable {
         this.expdate = null;
         this.headid = null;
         this.empid = null;
-        this.taskpriorityid = null;
-        this.taskstatusid = null;
+    }
+
+    public PrioDir getPriority() {
+        return prioDir;
+    }
+
+    public void setPriority(PrioDir prioDir) {
+        this.prioDir = prioDir;
+    }
+
+    public StateDir getStatus() {
+        return stateDir;
+    }
+
+    public void setStatus(StateDir stateDir) {
+        this.stateDir = stateDir;
     }
 
     public void setId(Long id) {
@@ -90,13 +109,6 @@ public class Task implements Serializable {
         this.empid = empid;
     }
 
-    public void setTaskpriorityid(PrioDir taskpriorityid) {
-        this.taskpriorityid = taskpriorityid;
-    }
-
-    public void setTaskstatusid(StateDir taskstatusid) {
-        this.taskstatusid = taskstatusid;
-    }
 
     public Long getId() {
         return id;
@@ -126,11 +138,4 @@ public class Task implements Serializable {
         return empid;
     }
 
-    public PrioDir getTaskpriorityid() {
-        return taskpriorityid;
-    }
-
-    public StateDir getTaskstatusid() {
-        return taskstatusid;
-    }
 }

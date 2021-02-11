@@ -11,19 +11,19 @@
                                   baseTableName="tasks"
                                   constraintName="fk_status_id"
                                   referencedColumnNames="id"
-                                  referencedTableName="StateDir"/>
+                                  referencedTableName="statedir"/>
 
         <addForeignKeyConstraint  baseColumnNames="task_priority_id"
                                   baseTableName="tasks"
                                   constraintName="fk_priority_id"
                                   referencedColumnNames="id"
-                                  referencedTableName="PrioDir"/>
+                                  referencedTableName="priodir"/>
 
         <addForeignKeyConstraint  baseColumnNames="role_id"
                                   baseTableName="users"
                                   constraintName="fk_role_id"
                                   referencedColumnNames="id"
-                                  referencedTableName="RoleDir"/>
+                                  referencedTableName="roledir"/>
 
     </changeSet>
 </databaseChangeLog>
