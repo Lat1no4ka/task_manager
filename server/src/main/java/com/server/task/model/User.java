@@ -69,8 +69,14 @@ public class User implements Serializable {
         return roleDir;
     }
 
-    public void setPriority(RoleDir roleDir) {
+    public void setRole(RoleDir roleDir) {
         this.roleDir = roleDir;
+    }
+
+    public Set<Task> getTasks() {return tasks;}
+
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public void setUserName(String userName) {

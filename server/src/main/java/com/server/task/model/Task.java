@@ -84,6 +84,10 @@ public class Task implements Serializable {
         this.prioDir = prioDir;
     }
 
+    //public Set<User> getUsers() {return users;}
+
+    //public void setUsers(Set<User> users) { this.users = users;} они пока не нужны, при необходимости можно подрубить
+
     public StateDir getStatus() {
         return stateDir;
     }
