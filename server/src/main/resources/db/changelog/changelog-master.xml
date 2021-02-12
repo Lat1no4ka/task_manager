@@ -14,10 +14,15 @@
     <include file="/db/changelog/changes/create-RoleDir-table-changelog.xml"/>
     <include file="/db/changelog/changes/create-StateDir-table-changelog.xml"/>
 
+    <include file="/db/changelog/changes/create-UTconnector-table-changelog.xml"/>
+    <include file="/db/changelog/changes/insert-UTconnector-table-changelog.xml"/>
+
     <include file="/db/changelog/changes/insert-RoleDir-table-changelog.xml"/>
     <include file="/db/changelog/changes/insert-PrioDir-table-changelog.xml"/>
     <include file="/db/changelog/changes/insert-StateDir-table-changelog.xml"/>
 
     <include file="/db/changelog/changes/alter-FK-tables-changelog.xml"/>
+
+
 
 </databaseChangeLog>

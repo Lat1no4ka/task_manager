@@ -2,6 +2,7 @@ package com.server.task.controller;
 
 
 import com.server.task.interfaces.TokenService;
+import com.server.task.model.Task;
 import com.server.task.model.User;
 import com.server.task.model.UserSession;
 import com.server.task.repo.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -89,6 +91,15 @@ public class AuthController {
     @RequestMapping("/test")
     public String test() {
         return "test";
+    }
+
+
+    @RequestMapping(value={"/userTest"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public User ListUserTest(@RequestBody User user)
+    {
+        Long idl = user.getId();
+        User list1 = userRepository.findById(idl);
+        return list1;
     }
 
 

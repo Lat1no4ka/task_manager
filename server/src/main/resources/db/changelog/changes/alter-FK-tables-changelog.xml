@@ -25,5 +25,17 @@
                                   referencedColumnNames="id"
                                   referencedTableName="roledir"/>
 
+        <addForeignKeyConstraint  baseColumnNames="user_id"
+                                  baseTableName="utconnector"
+                                  constraintName="fk_userconnector_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="users"/>
+
+        <addForeignKeyConstraint  baseColumnNames="task_id"
+                                  baseTableName="utconnector"
+                                  constraintName="fk_taskconnector_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="tasks"/>
+
     </changeSet>
 </databaseChangeLog>

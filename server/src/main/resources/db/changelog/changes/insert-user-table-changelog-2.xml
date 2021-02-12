@@ -11,5 +11,12 @@
             <column name="user_name" value="admin"/>
             <column name="password" value="123"/>
         </insert>
+
+        <insert tableName="users">
+            <column name="id" valueNumeric="2"/>
+            <column name="user_name" value="user"/>
+            <column name="password" value="1234"/>
+        </insert>
+
     </changeSet>
 </databaseChangeLog>

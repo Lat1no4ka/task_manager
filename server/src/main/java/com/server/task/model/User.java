@@ -2,6 +2,8 @@ package com.server.task.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -30,6 +32,13 @@ public class User implements Serializable {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private RoleDir roleDir;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "utconnector",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id")
+    )
+    Set<Task> tasks = new HashSet<>();
 
     public User() {
         this.userName = null;

@@ -5,20 +5,24 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-    <changeSet author="admin" id="7">
-        <createTable tableName="statedir">
+    <changeSet author="admin" id="12">
+        <createTable tableName="utconnector">
 
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
             </column>
 
-            <column name="state_name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="task_id" type="INT">
+                <constraints nullable="true"/>
             </column>
 
         </createTable>
         <rollback>
-            <dropTable tableName="statedir"/>
+            <dropTable tableName="utconnector"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>

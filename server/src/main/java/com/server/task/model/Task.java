@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -43,6 +46,8 @@ public class Task implements Serializable {
     @JoinColumn(name = "task_status_id")
     private StateDir stateDir;
 
+    @ManyToMany(mappedBy = "tasks")
+    private Set<User> users = new HashSet<>();
 
     public Task(Long id, String taskname,String begdate, String expdate, String taskdesc, String headid, String empid) {
         this.id = id;
