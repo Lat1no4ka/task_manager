@@ -115,15 +115,12 @@ public class AuthController {
         for (int i=0; i<user.size(); i++)
         {
             User usr = user.get(i);
-            System.out.println("----пользователь");
-            System.out.println(usr);
-            System.out.println("----id пользователя");
+
             Long idu = usr.getId();
-            System.out.println(idu);
-            User testing = userRepository.findById(idu);
-            usrList.add(testing);
-            System.out.println("----пользователь целиком");
-            System.out.println(testing);
+
+            User ousr = userRepository.findById(idu);
+            usrList.add(ousr);
+
         }
 
         return usrList;
