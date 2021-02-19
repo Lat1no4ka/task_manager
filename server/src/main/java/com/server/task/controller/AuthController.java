@@ -85,46 +85,4 @@ public class AuthController {
     }
 
 
-    @RequestMapping("/test")
-    public String test() {
-        return "test";
-    }
-
-/* Тестовая поебень, при надобности - врубите
-    @RequestMapping(value={"/userTest"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<User> ListUserTest(@RequestBody User user)
-    {
-        Long idl = user.getId();
-        List<User> list1 = userRepository.findById(idl);
-        return list1;
-    }
-*/
-    //вывод всех пользователей
-    @RequestMapping(value={"/allUsers"}, method=RequestMethod.GET, headers = {"Content-type=application/json"})
-    public List<User> ListAllUsers()
-    {
-        return userRepository.findAll();
-    }
-
-    //Ловит лист id, юзеров
-    @RequestMapping(value={"/sendUsersId"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<User> ListUsersById(@RequestBody List<User> user)
-    {
-        List<User> usrList = new ArrayList<>();
-
-        for (int i=0; i<user.size(); i++)
-        {
-            User usr = user.get(i);
-
-            Long idu = usr.getId();
-
-            User ousr = userRepository.findById(idu);
-            usrList.add(ousr);
-
-        }
-
-        return usrList;
-    }
-
-
 }

@@ -33,6 +33,8 @@ public class AddTaskController
         return task;
     }
 
+    //TODO обновить фронд под новые функции в UserController (2 нижних уходят)
+
     @RequestMapping(value={"/listTask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
     public List<Task> ListTask(@RequestBody Task task)
     {
@@ -48,6 +50,8 @@ public class AddTaskController
         List<Task> idlist = taskRepository.findById(idl);
         return idlist;
     }
+
+
 
 
 
