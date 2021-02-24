@@ -51,6 +51,15 @@ public class AddTaskController
         return idlist;
     }
 
+    //ловит id родителя и кидает его подзадачи
+    @RequestMapping(value={"/getSubtasks"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public List<Task> ListSubtask(@RequestBody Task task)
+    {
+        Long parid = task.getId();
+        List<Task> subtlist = taskRepository.findByparid(parid);
+        return subtlist;
+    }
+
 
 
 

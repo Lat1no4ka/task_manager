@@ -49,7 +49,10 @@ public class Task implements Serializable {
     @ManyToMany(mappedBy = "tasks")
     private Set<User> users = new HashSet<>();
 
-    public Task(Long id, String taskname,String begdate, String expdate, String taskdesc, String headid, String empid) {
+    @Column(name = "par_task_id")
+    private Long parid;
+
+    public Task(Long id, String taskname,String begdate, String expdate, String taskdesc, String headid, String empid, Long parid) {
         this.id = id;
         this.taskname = taskname;
         this.taskdesc = taskdesc;
@@ -57,6 +60,7 @@ public class Task implements Serializable {
         this.expdate = expdate;
         this.headid = headid;
         this.empid = empid;
+        this.parid = parid;
 
     }
 
@@ -74,6 +78,7 @@ public class Task implements Serializable {
         this.expdate = null;
         this.headid = null;
         this.empid = null;
+        this.parid = null;
     }
 
     public PrioDir getPriority() {
@@ -118,6 +123,10 @@ public class Task implements Serializable {
         this.empid = empid;
     }
 
+    public void setParid(Long parid) {
+        this.parid = parid;
+    }
+
 
     public Long getId() {
         return id;
@@ -145,6 +154,10 @@ public class Task implements Serializable {
 
     public String getEmpid() {
         return empid;
+    }
+
+    public Long getParid() {
+        return parid;
     }
 
 }
