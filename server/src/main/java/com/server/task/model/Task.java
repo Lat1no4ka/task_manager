@@ -1,7 +1,15 @@
 package com.server.task.model;
 
+import jdk.nashorn.internal.objects.annotations.Getter;
+import jdk.nashorn.internal.objects.annotations.Setter;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "tasks")
@@ -30,13 +38,21 @@ public class Task implements Serializable {
     @Column(name = "emp_id", nullable = false)
     private String empid;
 
-    @Column(name = "task_priority")
-    private String taskpriority;
+    @ManyToOne
+    @JoinColumn(name ="task_priority_id")
+    private PrioDir prioDir;
 
-    @Column(name = "task_status")
-    private String taskstatus;
+    @ManyToOne
+    @JoinColumn(name = "task_status_id")
+    private StateDir stateDir;
 
-    public Task(Long id, String taskname,String begdate, String expdate, String taskdesc, String headid, String empid, String taskpriority, String taskstatus) {
+    @ManyToMany(mappedBy = "tasks")
+    private Set<User> users = new HashSet<>();
+
+    @Column(name = "par_task_id")
+    private Long parid;
+
+    public Task(Long id, String taskname,String begdate, String expdate, String taskdesc, String headid, String empid, Long parid) {
         this.id = id;
         this.taskname = taskname;
         this.taskdesc = taskdesc;
@@ -44,8 +60,8 @@ public class Task implements Serializable {
         this.expdate = expdate;
         this.headid = headid;
         this.empid = empid;
-        this.taskpriority = taskpriority;
-        this.taskstatus = taskstatus;
+        this.parid = parid;
+
     }
 
     public Task(Long id, String headid, String empid) {
@@ -62,8 +78,27 @@ public class Task implements Serializable {
         this.expdate = null;
         this.headid = null;
         this.empid = null;
-        this.taskpriority = null;
-        this.taskstatus = null;
+        this.parid = null;
+    }
+
+    public PrioDir getPriority() {
+        return prioDir;
+    }
+
+    public void setPriority(PrioDir prioDir) {
+        this.prioDir = prioDir;
+    }
+
+    //public Set<User> getUsers() {return users;}
+    //public void setUsers(Set<User> users) { this.users = users;}
+    //они пока не нужны, при необходимости можно подрубить
+
+    public StateDir getStatus() {
+        return stateDir;
+    }
+
+    public void setStatus(StateDir stateDir) {
+        this.stateDir = stateDir;
     }
 
     public void setId(Long id) {
@@ -88,13 +123,10 @@ public class Task implements Serializable {
         this.empid = empid;
     }
 
-    public void setTaskpriority(String taskpriority) {
-        this.taskpriority = taskpriority;
+    public void setParid(Long parid) {
+        this.parid = parid;
     }
 
-    public void setTaskstatus(String taskstatus) {
-        this.taskstatus = taskstatus;
-    }
 
     public Long getId() {
         return id;
@@ -124,11 +156,8 @@ public class Task implements Serializable {
         return empid;
     }
 
-    public String getTaskpriority() {
-        return taskpriority;
+    public Long getParid() {
+        return parid;
     }
 
-    public String getTaskstatus() {
-        return taskstatus;
-    }
 }

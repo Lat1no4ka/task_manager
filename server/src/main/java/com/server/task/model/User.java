@@ -2,6 +2,8 @@ package com.server.task.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -27,6 +29,17 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private RoleDir roleDir;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "utconnector",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id")
+    )
+    Set<Task> tasks = new HashSet<>();
+
     public User() {
         this.userName = null;
         this.password = null;
@@ -43,7 +56,7 @@ public class User implements Serializable {
         this.email = null;
     }
 
-    public User(Long id,String userName, String password, String firstName, String lastName, String email) {
+    public User(Long id,String userName, String password, String firstName, String lastName, String email, int roleid) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -52,6 +65,19 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    public RoleDir getRole() {
+        return roleDir;
+    }
+
+    public void setRole(RoleDir roleDir) {
+        this.roleDir = roleDir;
+    }
+
+    public Set<Task> getTasks() {return tasks;}
+
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
+    }
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -72,6 +98,7 @@ public class User implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
 
     public Long getId() {
         return id;
@@ -96,6 +123,7 @@ public class User implements Serializable {
     public String getEmail() {
         return email;
     }
+
 
 
 }

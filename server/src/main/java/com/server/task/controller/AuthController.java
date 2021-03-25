@@ -2,6 +2,7 @@ package com.server.task.controller;
 
 
 import com.server.task.interfaces.TokenService;
+import com.server.task.model.Task;
 import com.server.task.model.User;
 import com.server.task.model.UserSession;
 import com.server.task.repo.UserRepository;
@@ -10,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin("*")
 @RestController
@@ -86,12 +85,6 @@ public class AuthController {
         }else{
             return "added";
         }
-    }
-
-
-    @RequestMapping("/test")
-    public String test() {
-        return "test";
     }
 
 

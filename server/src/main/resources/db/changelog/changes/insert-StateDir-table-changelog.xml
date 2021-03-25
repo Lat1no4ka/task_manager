@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="admin" id="10">
+
+        <insert tableName="StateDir">
+
+            <column name="id" valueNumeric="1"/>
+
+            <column name="state_name" value="Новое"/>
+
+        </insert>
+
+        <insert tableName="StateDir">
+
+            <column name="id" valueNumeric="2"/>
+
+            <column name="state_name" value="В работе"/>
+
+        </insert>
+
+        <insert tableName="StateDir">
+
+            <column name="id" valueNumeric="3"/>
+
+            <column name="state_name" value="На проверке"/>
+
+        </insert>
+
+        <insert tableName="StateDir">
+
+            <column name="id" valueNumeric="4"/>
+
+            <column name="state_name" value="Возврещено на доработку"/>
+
+        </insert>
+
+        <insert tableName="StateDir">
+
+            <column name="id" valueNumeric="5"/>
+
+            <column name="state_name" value="Принято"/>
+
+        </insert>
+
+        <insert tableName="StateDir">
+
+            <column name="id" valueNumeric="6"/>
+
+            <column name="state_name" value="Закрыто"/>
+
+        </insert>
+    </changeSet>
+</databaseChangeLog>

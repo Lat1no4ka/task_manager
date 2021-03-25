@@ -20,10 +20,10 @@ export const DetailTask = (props) => {
           <p>Участники: {data.empid}</p>
         </div>
         <div>
-          <p>Приоритет: {data.taskpriority}</p>
+          <p>Приоритет: {data.taskpriorityid}</p>
         </div>
         <div>
-          <p>Статус: {data.taskstatus}</p>
+          <p>Статус: {data.taskstatusid}</p>
         </div>
         <div>
           <p>Задание назначил: {data.headid}</p>
