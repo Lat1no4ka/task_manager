@@ -9,7 +9,7 @@
         <insert tableName="users">
             <column name="id" valueNumeric="1"/>
             <column name="user_name" value="admin"/>
-            <column name="password" value="123"/>
+            <column name="password" value="$2a$12$rPbZcJwGhQ515Cx9YwPgSeefwc.Ag.yFOMhCJR0i.LgeDRpStQu7G"/>
         </insert>
 
         <insert tableName="users">

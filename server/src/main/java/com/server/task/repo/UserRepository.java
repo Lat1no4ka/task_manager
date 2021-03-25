@@ -1,12 +1,8 @@
 package com.server.task.repo;
 
-import com.server.task.model.PrioDir;
-import com.server.task.model.Task;
 import com.server.task.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import com.server.task.model.UserSession;
 
 import java.util.List;
 

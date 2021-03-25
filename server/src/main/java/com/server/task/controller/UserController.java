@@ -1,14 +1,10 @@
 package com.server.task.controller;
 
 
-import com.server.task.interfaces.TokenService;
 import com.server.task.model.Task;
 import com.server.task.model.User;
-import com.server.task.model.UserSession;
 import com.server.task.repo.UserRepository;
-import com.server.task.repo.UserSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -19,8 +15,6 @@ import java.util.*;
 @ResponseBody
 public class UserController {
 
-    @Autowired
-    UserSessionRepository ActiveUser;
     @Autowired
     UserRepository userRepository;
 

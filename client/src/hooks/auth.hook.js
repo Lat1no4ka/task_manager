@@ -21,26 +21,10 @@ export const useAuth = () => {
     localStorage.removeItem("userData");
   }, []);
 
-  const checkToken = async (body) => {
-    try {
-      const data = await request(
-        "http://127.0.0.1:8080/checkToken",
-        "POST",
-        JSON.stringify(body)
-      );
-
-      if(!data){
-        logout();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("userData"));
     const notAuth = {userId:null,token:null};
-    const check = checkToken(data ? data : notAuth);
 
     if (data && data.token) {
       login(data.token, data.userId);
