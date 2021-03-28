@@ -13,6 +13,9 @@ const UseRoutes = (isAuthenticated) => {
         <Route path="/home">
          <Home/>
         </Route>
+        <Route path="/profile">
+         <Profile/>
+        </Route>
         <Redirect to="/home" />
       </Switch>
     );
