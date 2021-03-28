@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import {
+  HouseDoor,
   CalendarWeek,
   PersonSquare,
   CardChecklist,
@@ -27,19 +28,22 @@ const Header = () => {
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className=" m-auto w-50 justify-content-around">
-          <Nav.Link href=" calendar">
+          <Nav.Link href=" home">
+            <HouseDoor size={28} />
+          </Nav.Link>
+          <Nav.Link href="calendar">
             <CalendarWeek size={28} />
           </Nav.Link>
-          <Nav.Link href=" profile">
+          <Nav.Link href="profile">
             <PersonSquare size={28} />
           </Nav.Link>
-          <Nav.Link href=" list">
+          <Nav.Link href="list">
             <CardChecklist size={28} />
           </Nav.Link>
-          <Nav.Link href=" bell">
+          <Nav.Link href="bell">
             <Bell size={28} />
           </Nav.Link>
-          <Nav.Link href=" table">
+          <Nav.Link href="table">
             <Table size={28} />
           </Nav.Link>
           <Nav.Link href="addTask">

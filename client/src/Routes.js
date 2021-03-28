@@ -4,6 +4,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 import AuthPage from "./pages/AuthPage";
 import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 
 const UseRoutes = (isAuthenticated) => {
   if (isAuthenticated) {
