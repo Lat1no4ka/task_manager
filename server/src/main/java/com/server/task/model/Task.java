@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,7 +48,7 @@ public class Task implements Serializable {
     private StateDir stateDir;
 
     @ManyToMany(mappedBy = "tasks")
-    private Set<User> users = new HashSet<>();
+    private List<User> users = new ArrayList<>();
 
     @Column(name = "par_task_id")
     private Long parid;

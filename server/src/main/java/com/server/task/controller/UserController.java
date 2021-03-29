@@ -40,7 +40,7 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    //Ловит лист id, юзеров
+    //Ловит лист id, выводит список юзеров
     @RequestMapping(value={"/sendUsersId"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
     public List<User> ListUsersById(@RequestBody List<User> user)
     {
@@ -57,13 +57,26 @@ public class UserController {
         return usrList;
     }
 
-    //выводит set задач пользователя по id
+    //выводит set родительских задач по id пользователя
     @RequestMapping(value={"/listUsersTasks"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Set<Task> ListUsersTasks(@RequestBody User user)
+    public List<Task> ListUsersTasks(@RequestBody User user)
     {
         Long idl = user.getId();
         User usr1 = userRepository.findById(idl);
-        return usr1.getTasks();
+        List<Task> taskList = usr1.getTasks();
+        List<Task> parTasks = new ArrayList<>();
+
+        for (int i=0; i<taskList.size(); i++)
+        {
+            Task tsk = taskList.get(i);
+            Long idpt = tsk.getParid();
+            if(idpt==null)
+            {
+                parTasks.add(tsk);
+            }
+        }
+
+        return parTasks;
     }
 
 

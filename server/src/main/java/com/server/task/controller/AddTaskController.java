@@ -60,11 +60,4 @@ public class AddTaskController
         return subtlist;
     }
 
-    //TODO контроллер принимает тело подзадачи и id открытого родителя
-
-
-
-
-
-
 }

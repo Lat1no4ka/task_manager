@@ -2,7 +2,9 @@ package com.server.task.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,7 +40,7 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "task_id")
     )
-    Set<Task> tasks = new HashSet<>();
+    List<Task> tasks = new ArrayList<>();
 
     public User() {
         this.userName = null;
@@ -73,9 +75,9 @@ public class User implements Serializable {
         this.roleDir = roleDir;
     }
 
-    public Set<Task> getTasks() {return tasks;}
+    public List<Task> getTasks() {return tasks;}
 
-    public void setTasks(Set<Task> tasks) {
+    public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
 
