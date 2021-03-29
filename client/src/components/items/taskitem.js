@@ -7,7 +7,7 @@ import { PersonCircle } from "react-bootstrap-icons";
 import "./item.scss";
 
 const TaskItem = (props) => {
-  const [active, setActive] = useState(props.active);
+
   const [item, setItem] = useState(null);
   const useItem = useEffect(() => {
     if (props) {
