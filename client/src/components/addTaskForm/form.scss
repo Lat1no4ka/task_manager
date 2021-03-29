@@ -1,0 +1,11 @@
+.taskForm{
+    display: block;
+    max-width: 900px;
+    margin: 50px auto 50px;
+    border-radius: 10px;
+    box-shadow: 0  0 15px 1px rgba(0, 0, 0, 0.37) ;
+    padding: 40px;
+    textarea {
+        resize: none;
+      }
+}

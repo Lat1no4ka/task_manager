@@ -1,26 +1,23 @@
-import "./App.scss";
+
+import { useAuth } from "./hooks/auth.hook";
+import { useSelector } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import UseRoutes from "./Routes";
-import { useAuth } from "./hooks/auth.hook";
-import { AuthContext } from "./context/AuthContext";
 import Header from "./components/header/header";
-
+import "./App.scss";
 function App() {
-  const { login, logout, token, userId } = useAuth();
-
-  const isAuthenticated = !!token;
-  const routes = UseRoutes(isAuthenticated);
+  //const { login, logout, token, userId } = useAuth();
+  const auth = useSelector((state) => state.auth)
+  const isAuthenticated = !!auth.token;
+  const routes = UseRoutes(auth.isAuthenticated);
+  console.log(auth)
   return (
-    <AuthContext.Provider
-      value={{ login, logout, token, userId, isAuthenticated }}
-    >
-      <Router>
-        <div className="d-flex">
-          {isAuthenticated && <Header />}
-          <div>{routes}</div>
-        </div>
-      </Router>
-    </AuthContext.Provider>
+    <Router>
+      <div className="d-flex">
+        {isAuthenticated && <Header />}
+        <div>{routes}</div>
+      </div>
+    </Router>
   );
 }
 

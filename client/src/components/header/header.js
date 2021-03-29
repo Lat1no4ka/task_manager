@@ -10,15 +10,14 @@ import {
   DoorOpen,
   PlusCircle,
 } from "react-bootstrap-icons";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/auth.hook";
 
 const Header = () => {
   const history = useHistory();
-  const auth = useContext(AuthContext);
-
+  const {logout} = useAuth();
   const logoutHandler = (e) => {
     e.preventDefault();
-    auth.logout();
+    logout();
     history.push("/");
   };
 
