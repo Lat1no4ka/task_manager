@@ -18,29 +18,13 @@ export const useAuth = () => {
   const logout = useCallback(() => {
     setToken(null);
     setUserId(null);
-
     localStorage.removeItem("userData");
   }, []);
 
-  const checkToken = async (body) => {
-    try {
-      const data = await request(
-        "http://127.0.0.1:8080/checkToken",
-        "POST",
-        JSON.stringify(body)
-      );
-
-      if(!data){
-        logout();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("userData"));
-    const check = checkToken(data);
+    const notAuth = {userId:null,token:null};
 
     if (data && data.token) {
       login(data.token, data.userId);

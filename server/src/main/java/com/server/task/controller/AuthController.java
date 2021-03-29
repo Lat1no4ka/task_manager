@@ -2,11 +2,8 @@ package com.server.task.controller;
 
 
 import com.server.task.interfaces.TokenService;
-import com.server.task.model.Task;
 import com.server.task.model.User;
-import com.server.task.model.UserSession;
 import com.server.task.repo.UserRepository;
-import com.server.task.repo.UserSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +16,6 @@ import java.util.*;
 @ResponseBody
 public class AuthController {
 
-    @Autowired
-    UserSessionRepository ActiveUser;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -37,7 +32,7 @@ public class AuthController {
         if (bCryptPasswordEncoder.matches(data.getPassword(), user.getPassword())) {
             String token = tokenService.getJWTToken(name);
             String key = user.getId().toString();
-            ActiveUser.save(new UserSession(key, token));
+
             Map<String, String> userData = new HashMap<String, String>();
             userData.put("userId", key);
             userData.put("token", token);
@@ -46,40 +41,23 @@ public class AuthController {
         return null;
     }
 
-    @RequestMapping(value = {"/checkToken"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    @ResponseBody
-    public boolean checkToken(@RequestBody Map<String, String> data) {
-        Optional<UserSession> session = ActiveUser.findById(data.get("userId"));
-        try {
-            String token = session.get().getToken().toString();
-            boolean check = data.get("token").matches(token);
-            if (check) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     @RequestMapping(value = {"/registerUser"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     @ResponseBody
     public String registerUser(@RequestBody User user) {
         String name = user.getUserName();
-        if(user.getPassword().length() < 4 || user.getUserName().length()<4){
+        if (user.getPassword().length() < 4 || user.getUserName().length() < 4) {
             return "reg error";
         }
-        if(userRepository.findByUserName(name) == null){
-            try{
+        if (userRepository.findByUserName(name) == null) {
+            try {
                 String password = bCryptPasswordEncoder.encode(user.getPassword());
                 user.setPassword(password);
                 userRepository.save(user);
                 return "successful";
-            }catch (Exception e){
+            } catch (Exception e) {
                 return "reg error";
             }
-        }else{
+        } else {
             return "added";
         }
     }
