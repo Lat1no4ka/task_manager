@@ -1,10 +1,12 @@
 package com.server.task.controller;
 
 import com.server.task.repo.TaskRepository;
+import com.server.task.repo.UTconnectorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.server.task.model.Task;
+import com.server.task.model.UTconnector;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +20,28 @@ public class AddTaskController
 {
     @Autowired
     TaskRepository taskRepository;
+    @Autowired
+    UTconnectorRepository utRepository;
 
-    @RequestMapping(value={"/addTask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    @RequestMapping(value={"/addTaskOld"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
     public Task addNewTaskPiece(@RequestBody Task task)
     {
         taskRepository.save(task);
         return task;
     }
+
+    //новый вариант создания задачи, сразу добавляет связь в таблицу UTconnector
+    @RequestMapping(value={"/addTask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Task addNewTask(@RequestBody Task task)
+    {
+        taskRepository.save(task);
+        UTconnector link = new UTconnector();
+        link.setCUserId(task.getEmpid());
+        link.setCTaskId(task.getId());
+        utRepository.save(link);
+        return task;
+    }
+
 
     @RequestMapping(value={"/delete"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
     public Task deleteTask(@RequestBody Task task)
@@ -38,7 +55,7 @@ public class AddTaskController
     @RequestMapping(value={"/listTask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
     public List<Task> ListTask(@RequestBody Task task)
     {
-        String empl = task.getEmpid();
+        Long empl = task.getEmpid();
         List<Task> emplist = taskRepository.findByempid(empl);
         return emplist;
     }

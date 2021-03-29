@@ -34,10 +34,10 @@ public class Task implements Serializable {
     private String expdate;
 
     @Column(name = "head_id", nullable = false)
-    private String headid;
+    private Long headid;
 
     @Column(name = "emp_id", nullable = false)
-    private String empid;
+    private Long empid;
 
     @ManyToOne
     @JoinColumn(name ="task_priority_id")
@@ -53,7 +53,7 @@ public class Task implements Serializable {
     @Column(name = "par_task_id")
     private Long parid;
 
-    public Task(Long id, String taskname,String begdate, String expdate, String taskdesc, String headid, String empid, Long parid) {
+    public Task(Long id, String taskname,String begdate, String expdate, String taskdesc, Long headid, Long empid, Long parid) {
         this.id = id;
         this.taskname = taskname;
         this.taskdesc = taskdesc;
@@ -65,7 +65,7 @@ public class Task implements Serializable {
 
     }
 
-    public Task(Long id, String headid, String empid) {
+    public Task(Long id, Long headid, Long empid) {
         this.id = id;
         this.headid = headid;
         this.empid = empid;
@@ -116,11 +116,11 @@ public class Task implements Serializable {
         this.expdate = expdate;
     }
 
-    public void setHeadid(String headid) {
+    public void setHeadid(Long headid) {
         this.headid = headid;
     }
 
-    public void setEmpid(String empid) {
+    public void setEmpid(Long empid) {
         this.empid = empid;
     }
 
@@ -149,11 +149,11 @@ public class Task implements Serializable {
         return expdate;
     }
 
-    public String getHeadid() {
+    public Long getHeadid() {
         return headid;
     }
 
-    public String getEmpid() {
+    public Long getEmpid() {
         return empid;
     }
 

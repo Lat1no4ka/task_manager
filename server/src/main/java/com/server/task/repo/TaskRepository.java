@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends CrudRepository<Task, String> {
-    List<Task> findByempid(String empid);
+    List<Task> findByempid(Long empid);
     List<Task> findById(Long idl);
     List<Task> findByparid(Long pid);
 }

@@ -28,11 +28,11 @@
                 <constraints nullable="true"/>
             </column>
 
-            <column name="head_id" type="VARCHAR(255)">
+            <column name="head_id" type="INT">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="emp_id" type="VARCHAR(255)">
+            <column name="emp_id" type="INT">
                 <constraints nullable="false"/>
             </column>
 
