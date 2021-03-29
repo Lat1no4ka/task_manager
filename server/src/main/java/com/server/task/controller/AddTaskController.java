@@ -1,5 +1,6 @@
 package com.server.task.controller;
 
+import com.server.task.model.User;
 import com.server.task.repo.TaskRepository;
 import com.server.task.repo.UTconnectorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +31,35 @@ public class AddTaskController
         return task;
     }
 
-    //новый вариант создания задачи, сразу добавляет связь в таблицу UTconnector
+    //новый вариант создания задачи, сразу добавляет связь в таблицу UTconnector, возвращает id
     @RequestMapping(value={"/addTask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Task addNewTask(@RequestBody Task task)
+    public Long addNewTask(@RequestBody Task task)
     {
         taskRepository.save(task);
         UTconnector link = new UTconnector();
         link.setCUserId(task.getEmpid());
         link.setCTaskId(task.getId());
         utRepository.save(link);
-        return task;
+        return task.getId();
+    }
+
+
+
+    //создание подзадачи, ловит List тел и записывет их.
+    @RequestMapping(value={"/addSubtask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public List addNewSubtask(@RequestBody List<Task> tasks)
+    {
+        for (int i=0; i<tasks.size(); i++)
+        {
+            Task subtsk = tasks.get(i);
+            taskRepository.save(subtsk);
+
+            UTconnector link = new UTconnector();
+            link.setCUserId(subtsk.getEmpid());
+            link.setCTaskId(subtsk.getId());
+            utRepository.save(link);
+        }
+        return tasks;
     }
 
 
