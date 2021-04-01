@@ -11,7 +11,7 @@
                                   baseTableName="tasks"
                                   constraintName="fk_status_id"
                                   referencedColumnNames="id"
-                                  referencedTableName="statedir"/>
+                                  referencedTableName="statusdir"/>
 
         <addForeignKeyConstraint  baseColumnNames="task_priority_id"
                                   baseTableName="tasks"

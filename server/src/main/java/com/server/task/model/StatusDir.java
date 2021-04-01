@@ -7,39 +7,39 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "statedir")
-public class StateDir implements Serializable {
+@Table(name = "statusdir")
+public class StatusDir implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "state_name", unique = true, nullable = false)
-    private String stateName;
+    @Column(name = "status_name", unique = true, nullable = false)
+    private String statusName;
 
-    public StateDir() {
+    public StatusDir() {
         this.id = null;
-        this.stateName = null;
+        this.statusName = null;
     }
 
-    public StateDir(Long id, String stateName) {
+    public StatusDir(Long id, String statusName) {
         this.id = id;
-        this.stateName = stateName;
+        this.statusName = statusName;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setStatename(String stateName) { this.stateName = stateName; }
+    public void setStatusname(String stateName) { this.statusName = stateName; }
 
     public Long getId() {
         return id;
     }
 
-    public String getStatename() {
-        return stateName;
+    public String getStatusname() {
+        return statusName;
     }
 
 

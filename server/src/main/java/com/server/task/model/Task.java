@@ -1,15 +1,9 @@
 package com.server.task.model;
 
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
@@ -45,7 +39,7 @@ public class Task implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "task_status_id")
-    private StateDir stateDir;
+    private StatusDir statusDir;
 
     @ManyToMany(mappedBy = "tasks")
     private List<User> users = new ArrayList<>();
@@ -94,12 +88,12 @@ public class Task implements Serializable {
     //public void setUsers(Set<User> users) { this.users = users;}
     //они пока не нужны, при необходимости можно подрубить
 
-    public StateDir getStatus() {
-        return stateDir;
+    public StatusDir getStatus() {
+        return statusDir;
     }
 
-    public void setStatus(StateDir stateDir) {
-        this.stateDir = stateDir;
+    public void setStatus(StatusDir statusDir) {
+        this.statusDir = statusDir;
     }
 
     public void setId(Long id) {
