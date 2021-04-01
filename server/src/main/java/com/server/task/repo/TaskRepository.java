@@ -14,4 +14,5 @@ public interface TaskRepository extends CrudRepository<Task, String> {
     Task findById(Long idl);
     List<Task> findByparid(Long pid);
     List<Task> findByheadid(Long headid);
+    Task findFirstByHeadidOrderByIdDesc (Long headid);
 }

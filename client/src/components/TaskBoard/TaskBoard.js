@@ -9,15 +9,15 @@ import "./home.scss";
 const TaskBoard = () => {
   const [data, setData] = useState(null);
   const [detail, setDetail] = useState(null);
-  const { loading, error, request } = useHttp();
+  const { request } = useHttp();
   const [active, setActive] = useState(false);
   const [taskActive, setTaskActive] = useState(false);
   const [block, setBlock] = useState("");
   const getTask = async () => {
     try {
       const userData = JSON.parse(localStorage.getItem("userData"));
-      const body = {empid:userData.userId};
-      const data = await request("http://127.0.0.1:8080/listTask", "POST", JSON.stringify(body));
+      const body = {id:userData.userId};
+      const data = await request("http://127.0.0.1:8080/listUsersTasks", "POST", JSON.stringify(body));
       setData(data);
     } catch (error) {
       console.log(error);

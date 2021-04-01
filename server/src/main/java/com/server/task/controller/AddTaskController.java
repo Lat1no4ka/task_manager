@@ -39,11 +39,9 @@ public class AddTaskController
         link.setCTaskId(task.getId());
         utRepository.save(link);
 
-        //бля я хуй знает. работает правильно но логика пиздец конечно у этого
-        List<Task> listUsrTask = taskRepository.findByheadid(task.getHeadid());
-        Task lastTask = listUsrTask.get(listUsrTask.size() - 1);
+        Task usrTask = taskRepository.findFirstByHeadidOrderByIdDesc(task.getHeadid());
 
-        return lastTask.getId();
+        return usrTask.getId();
     }
 
 
