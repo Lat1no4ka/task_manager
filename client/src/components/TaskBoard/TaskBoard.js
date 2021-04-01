@@ -16,11 +16,11 @@ const TaskBoard = () => {
   const getTask = async () => {
     try {
       const userData = JSON.parse(localStorage.getItem("userData"));
-    console.log(userData);
+    //console.log(userData);
       const body = {empid:userData.userId};
-  console.log(body);
+  //console.log(body);
       const data = await request("http://127.0.0.1:8080/listTask", "POST", JSON.stringify(body));
-      console.log(data);
+      //console.log(data);
       setData(data);
     } catch (error) {
       console.log(error);
