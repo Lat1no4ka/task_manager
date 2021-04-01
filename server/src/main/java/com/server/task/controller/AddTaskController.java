@@ -69,6 +69,26 @@ public class AddTaskController
         return tasks;
     }
 
+    //Изменение задач (необходимо добавить в JSON id изменяемой задачи)
+    @RequestMapping(value={"/alterTask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Task alterTask(@RequestBody Task newTask)
+    {
+        //
+        List<UTconnector> conList = utRepository.findBycTaskId(newTask.getId());
+        utRepository.deleteAll(conList);
+        //
+        taskRepository.save(newTask);
+        //Task oldTask = taskRepository.findById(newTask.getId());
+        //
+        UTconnector link = new UTconnector();
+        link.setCUserId(newTask.getEmpid());
+        link.setCTaskId(newTask.getId());
+        utRepository.save(link);
+
+        return newTask;
+    }
+
+
 
     @RequestMapping(value={"/delete"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
     public Task deleteTask(@RequestBody Task task)
