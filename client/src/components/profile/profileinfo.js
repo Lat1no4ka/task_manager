@@ -8,24 +8,31 @@ const ProfileInfo = () => {
     const { loading, error, request } = useHttp();
 
 
+    const [userInfo, setUserInfo] = useState(0);
+
+
     useEffect(() => {
         getInfo();
       }, []);
 
     const getInfo = async () => {
+        const userData = JSON.parse(localStorage.getItem("userData"));
         try {
-
-          //const data = await request("http://127.0.0.1:8080/sendUsersId", "POST", JSON.stringify());
-          //console.log(data);
+          const body = [
+            {
+            "id": userData.userId
+            }
+        ]
+        console.log(body)
+          const data = await request("http://127.0.0.1:8080/sendUsersId", "POST", JSON.stringify(body));
+          const userInfo = data[0]
+          console.log("userInfo", userInfo);
+          setUserInfo(userInfo)
           //setData(data);
         } catch (error) {
           console.log(error);
         }
       };
-
-   
-
-
 
     return (
 
@@ -33,7 +40,7 @@ const ProfileInfo = () => {
             
                 <div className="container p-5 ">
                     <div>
-                        <h3>data.firstName</h3>
+                        <h3>{userInfo.firstName} {userInfo.lastName}</h3>
                     </div>
                     <div>
                         <h4>Описание: data.taskdesc</h4>
