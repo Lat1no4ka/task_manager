@@ -6,19 +6,19 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet author="admin" id="7">
-        <createTable tableName="statedir">
+        <createTable tableName="statusdir">
 
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
             </column>
 
-            <column name="state_name" type="VARCHAR(255)">
+            <column name="status_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
 
         </createTable>
         <rollback>
-            <dropTable tableName="statedir"/>
+            <dropTable tableName="statusdir"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>

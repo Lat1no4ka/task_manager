@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.server.task.model.Task;
 import com.server.task.model.UTconnector;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.util.*;
 
 @CrossOrigin("*")
 @RestController
@@ -40,7 +38,12 @@ public class AddTaskController
         link.setCUserId(task.getEmpid());
         link.setCTaskId(task.getId());
         utRepository.save(link);
-        return task.getId();
+
+        //бля я хуй знает. работает правильно но логика пиздец конечно у этого
+        List<Task> listUsrTask = taskRepository.findByheadid(task.getHeadid());
+        Task lastTask = listUsrTask.get(listUsrTask.size() - 1);
+
+        return lastTask.getId();
     }
 
 
@@ -49,18 +52,42 @@ public class AddTaskController
     @RequestMapping(value={"/addSubtask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
     public List addNewSubtask(@RequestBody List<Task> tasks)
     {
+        List<UTconnector> linkList = new ArrayList<>();
+
         for (int i=0; i<tasks.size(); i++)
         {
             Task subtsk = tasks.get(i);
-            taskRepository.save(subtsk);
-
             UTconnector link = new UTconnector();
             link.setCUserId(subtsk.getEmpid());
             link.setCTaskId(subtsk.getId());
-            utRepository.save(link);
+            linkList.add(link);
         }
+
+        taskRepository.saveAll(tasks);
+        utRepository.saveAll(linkList);
+
         return tasks;
     }
+
+    //Изменение задач (необходимо добавить в JSON id изменяемой задачи)
+    @RequestMapping(value={"/alterTask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Task alterTask(@RequestBody Task newTask)
+    {
+        //
+        List<UTconnector> conList = utRepository.findBycTaskId(newTask.getId());
+        utRepository.deleteAll(conList);
+        //
+        taskRepository.save(newTask);
+        //Task oldTask = taskRepository.findById(newTask.getId());
+        //
+        UTconnector link = new UTconnector();
+        link.setCUserId(newTask.getEmpid());
+        link.setCTaskId(newTask.getId());
+        utRepository.save(link);
+
+        return newTask;
+    }
+
 
 
     @RequestMapping(value={"/delete"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
@@ -72,6 +99,7 @@ public class AddTaskController
 
     //TODO обновить фронд под новые функции в UserController (2 нижних уходят)
 
+    /* Надеюсь фронт уже работает по новым функциям в UserController, эти нужно будет удалить
     @RequestMapping(value={"/listTask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
     public List<Task> ListTask(@RequestBody Task task)
     {
@@ -87,6 +115,8 @@ public class AddTaskController
         List<Task> idlist = taskRepository.findById(idl);
         return idlist;
     }
+    */
+
 
     //ловит id родителя и кидает его подзадачи
     @RequestMapping(value={"/getSubtasks"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
