@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import {
+  HouseDoor,
   CalendarWeek,
   PersonSquare,
   CardChecklist,
@@ -26,6 +27,9 @@ const Header = () => {
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className=" m-auto w-50 justify-content-around">
+          <Nav.Link href=" home">
+          <HouseDoor size={28} />
+          </Nav.Link>
           <Nav.Link href=" calendar">
             <CalendarWeek size={28} />
           </Nav.Link>

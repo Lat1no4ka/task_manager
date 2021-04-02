@@ -1,0 +1,23 @@
+.profileForm{
+    display: block;
+    max-width: 900px;
+    margin: 50px auto 50px;
+    border-radius: 10px;
+    box-shadow: 0  0 15px 1px rgba(0, 0, 0, 0.37) ;
+    padding: 40px;
+    textarea {
+        resize: none;
+      }
+}
+.modal-window {
+    width: 800px;
+    display: block;
+    min-height: 400px;
+    height: auto;
+    position:absolute;
+    z-index: 2;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin: auto;
+  }
