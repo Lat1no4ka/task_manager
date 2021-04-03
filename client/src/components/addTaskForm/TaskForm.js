@@ -4,9 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { taskAtions } from "../../redux/task/action";
 import "./form.scss";
 
-export const TaskForm = () => {
-    const { loading, error, request } = useHttp();
+export const TaskForm = (props) => {
+    const { request } = useHttp();
     const task = useSelector((state) => state.task);
+    const [users, setUsers] = useState([]);
+    const [priority, setPriority] = useState([]);
+    const [usersFilter, setUsersFilter] = useState([]);
+    const [searchListUser, setSearchListUser] = useState(false);
+    const [listPriority, setListPriority] = useState(false);
     const dispatch = useDispatch();
     const form = {
         taskname: "",
@@ -49,9 +54,32 @@ export const TaskForm = () => {
         e.preventDefault();
         dispatch(taskAtions.setTask(param))
     }
+
     const saveTask = (e) => {
         e.preventDefault();
         sendForm();
+    }
+
+    const getUsers = async () => {
+        const users = await request("http://127.0.0.1:8080/allUsers", "GET");
+        setUsers(users);
+    }
+
+    const getPriority = async () => {
+        const priority = await request("http://127.0.0.1:8080/getPriority", "GET");
+        setPriority(priority);
+    }
+
+    const searchListUserVisible = (searchText, visible) => {
+        setSearchListUser(visible);
+        if (searchText.length > 1) {
+            let filterUser = users.filter((user) => {
+                return user ? !user.userName.indexOf(searchText) : null;
+            })
+            setUsersFilter(filterUser);
+        } else {
+            setUsersFilter(users);
+        }
     }
 
     return (
@@ -78,18 +106,71 @@ export const TaskForm = () => {
                     <input type="date" className="form-control" id="expdate" value={task.task.expdate} onChange={(e) => cacheTaskForm(e, { ...task.task, expdate: e.target.value })}></input>
                 </div>
                 <div className="form-group col-6">
-                    <label htmlFor="select">Назначена:</label>
-                    <select className="form-control" id="executor" value={task.task.executor} onChange={e => cacheTaskForm(e, { ...task.task, executor: e.target.value })}>
-                        <option>1</option>
-                        <option>2</option>
-                    </select>
+                    <label>Назначена:</label>
+                    <input type="input" className="form-control" id="expdate"
+                        value={task.task.executor.userName}
+                        onFocus={(e) => searchListUserVisible(e.target.value, true)}
+                        onChange={(e) => {
+                            if (users.length < 1) { getUsers(); }
+                            cacheTaskForm(e, { ...task.task, executor: { id: "", userName: e.target.value } });
+                            searchListUserVisible(e.target.value, true);
+                        }}>
+                    </input>
+                    {searchListUser ?
+                        <div className="list-group">
+                            {usersFilter.map((user) => {
+                                return (
+                                    <button
+                                        type="button"
+                                        className="list-group-item list-group-item-action"
+                                        id={user.id}
+                                        key={user.id}
+                                        onClick={(e) => {
+                                            cacheTaskForm(e, { ...task.task, executor: { id: user.id, userName: user.userName } })
+                                            setSearchListUser(false)
+                                        }}
+                                    >
+                                        {user.userName}
+                                    </button>
+                                )
+                            })}
+                        </div>
+                        : ""
+                    }
                 </div>
                 <div className="form-group col-6">
                     <label htmlFor="select">Приоритет</label>
-                    <select className="form-control" id="prioDir" value={task.task.prioDir} onChange={e => cacheTaskForm(e, { ...task.task, prioDir: e.target.value })}>
-                        <option></option>
-                        <option>2</option>
-                    </select>
+                    <input type="input" className="form-control" id="prioDir" readOnly={true}
+                        value={task.task.prioDir.prioname}
+                        onFocus={(e) => {
+                            setListPriority(true);
+                            if (priority.length < 1) { getPriority(); }
+                        }}
+                        onChange={(e) => {
+                            cacheTaskForm(e, { ...task.task, prioDir: { id: "", prioDir: e.target.value } });
+                        }}>
+                    </input>
+                    {listPriority ?
+                        <div className="list-group">
+                            {priority.map((item) => {
+                                return (
+                                    <button
+                                        type="button"
+                                        className="list-group-item list-group-item-action"
+                                        id={item.id}
+                                        key={item.id}
+                                        onClick={(e) => {
+                                            cacheTaskForm(e, { ...task.task, prioDir: { id: item.id, prioname: item.prioname } })
+                                            setListPriority(false)
+                                        }}
+                                    >
+                                        {item.prioname}
+                                    </button>
+                                )
+                            })}
+                        </div>
+                        : ""
+                    }
                 </div>
                 <div className="form-group col-6">
                     <button type="button" className="btn btn-secondary" onClick={e => VisibleSubTaskFrom(e)} >Добавить подзадачу</button>

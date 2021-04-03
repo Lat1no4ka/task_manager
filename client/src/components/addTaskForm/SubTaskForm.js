@@ -1,18 +1,25 @@
 import { useState } from "react";
 import "./form.scss";
+import { useHttp } from "../../hooks/http.hook";
 import { useDispatch, useSelector } from "react-redux";
 import { taskAtions } from "../../redux/task/action";
 export const SubTask = () => {
     const dispatch = useDispatch();
+    const { request } = useHttp();
     const task = useSelector((state) => state.task);
+    const [users, setUsers] = useState([]);
+    const [priority, setPriority] = useState([]);
+    const [usersFilter, setUsersFilter] = useState([]);
+    const [searchListUser, setSearchListUser] = useState(false);
+    const [listPriority, setListPriority] = useState(false);
     const [form, setForm] = useState(
         {
             taskname: "",
             taskdesc: "",
             begdate: "",
             expdate: "",
-            prioDir: "",
-            executor: "",
+            prioDir: { id: "", prioname: "" },
+            executor: { id: "", userName: "" },
             files: "",
             empid: 1,
             stateDir: 1,
@@ -31,8 +38,32 @@ export const SubTask = () => {
     const cancel = (e) => {
         dispatch(taskAtions.setVisible(false));
     }
+
+    const getUsers = async () => {
+        const users = await request("http://127.0.0.1:8080/allUsers", "GET");
+        setUsers(users);
+    }
+
+    const getPriority = async () => {
+        const priority = await request("http://127.0.0.1:8080/getPriority", "GET");
+        setPriority(priority);
+    }
+
+    const searchListUserVisible = (searchText, visible) => {
+        setSearchListUser(visible);
+        if (searchText.length > 1) {
+            let filterUser = users.filter((user) => {
+                return user ? !user.userName.indexOf(searchText) : null;
+            })
+            setUsersFilter(filterUser);
+        } else {
+            setUsersFilter(users);
+        }
+    }
+
     return (
         <div className="subTaskForm">
+            {console.log(form)}
             <div>
                 <h1>Дополнительная задача</h1>
             </div>
@@ -55,18 +86,77 @@ export const SubTask = () => {
                     <input type="date" className="form-control" id="expdate" value={form.expdate} onChange={(e) => setForm({ ...form, expdate: e.target.value })}></input>
                 </div>
                 <div className="form-group col-6">
-                    <label htmlFor="select">Назначена:</label>
-                    <select className="form-control" id="executor" value={form.executor} onChange={e => setForm({ ...form, executor: e.target.value })}>
-                        <option>1</option>
-                        <option>2</option>
-                    </select>
+                    <label>Назначена:</label>
+                    <input type="input" className="form-control" id="expdate"
+                        value={form.executor.userName}
+                        onFocus={
+                            (e) => {
+                                searchListUserVisible(e.target.value, true);
+                                console.log(form)
+                            }
+
+                        }
+                        onChange={(e) => {
+                            if (users.length < 1) { getUsers(); }
+                            setForm({ ...form, executor: { id: "", userName: e.target.value } });
+                            searchListUserVisible(e.target.value, true);
+                        }}>
+                    </input>
+                    {searchListUser ?
+                        <div className="list-group">
+                            {usersFilter.map((user) => {
+                                return (
+                                    <button
+                                        type="button"
+                                        className="list-group-item list-group-item-action"
+                                        id={user.id}
+                                        key={user.id}
+                                        onClick={(e) => {
+                                            setForm({ ...form, executor: { id: user.id, userName: user.userName } })
+                                            setSearchListUser(false)
+                                        }}
+                                    >
+                                        {user.userName}
+                                    </button>
+                                )
+                            })}
+                        </div>
+                        : ""
+                    }
                 </div>
                 <div className="form-group col-6">
                     <label htmlFor="select">Приоритет</label>
-                    <select className="form-control" id="prioDir" value={form.prioDir} onChange={e => setForm({ ...form, prioDir: e.target.value })}>
-                        <option></option>
-                        <option>2</option>
-                    </select>
+                    <input type="input" className="form-control" id="prioDir" readOnly={true}
+                        value={form.prioDir.prioname}
+                        onFocus={(e) => {
+                            setListPriority(true);
+                            if (priority.length < 1) { getPriority(); }
+                        }}
+                        onChange={(e) => {
+                            setForm({ ...form, prioDir: { id: "", prioDir: e.target.value } });
+                        }}>
+                    </input>
+                    {listPriority ?
+                        <div className="list-group">
+                            {priority.map((item) => {
+                                return (
+                                    <button
+                                        type="button"
+                                        className="list-group-item list-group-item-action"
+                                        id={item.id}
+                                        key={item.id}
+                                        onClick={(e) => {
+                                            setForm({ ...form, prioDir: { id: item.id, prioname: item.prioname } })
+                                            setListPriority(false)
+                                        }}
+                                    >
+                                        {item.prioname}
+                                    </button>
+                                )
+                            })}
+                        </div>
+                        : ""
+                    }
                 </div>
                 <div className="form-group col-12">
                     <label htmlFor="file">Прикрепить документы</label>

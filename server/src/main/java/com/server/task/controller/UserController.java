@@ -31,7 +31,11 @@ public class UserController {
     @RequestMapping(value={"/allUsers"}, method=RequestMethod.GET, headers = {"Content-type=application/json"})
     public List<User> ListAllUsers()
     {
-        return userRepository.findAll();
+        List<User> Users = userRepository.findAll();
+        for(User user: Users) {
+            user.setPassword("");
+        }
+        return Users;
     }
 
     //Ловит лист id, выводит список юзеров
