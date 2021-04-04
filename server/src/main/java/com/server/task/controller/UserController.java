@@ -49,34 +49,10 @@ public class UserController {
             User usr = user.get(i);
             Long idu = usr.getId();
             User ousr = userRepository.findById(idu);
+            ousr.setPassword("");
             usrList.add(ousr);
         }
 
         return usrList;
     }
-
-    //выводит set родительских задач по id пользователя
-    @RequestMapping(value={"/listUsersTasks"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<Task> ListUsersTasks(@RequestBody User user)
-    {
-        Long idl = user.getId();
-        User usr1 = userRepository.findById(idl);
-        List<Task> taskList = usr1.getTasks();
-        List<Task> parTasks = new ArrayList<>();
-
-        for (int i=0; i<taskList.size(); i++)
-        {
-            Task tsk = taskList.get(i);
-            Long idpt = tsk.getParid();
-            if(idpt==null)
-            {
-                parTasks.add(tsk);
-            }
-        }
-
-        return parTasks;
-    }
-
-
-
 }

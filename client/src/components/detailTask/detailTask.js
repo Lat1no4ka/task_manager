@@ -1,12 +1,20 @@
 import "./detail.scss";
-export const DetailTask = (props) => {
+import { Modal } from "react-bootstrap";
+
+export const DetailSubTaskCreate = (props) => {
   const data = props.data;
   return (
-    <div className={"modal-window"}>
-      <div className="container p-5 ">
-        <div>
-          <h3>{data.taskname}</h3>
-        </div>
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>{data.taskname}</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
         <div>
           <h4>Описание: {data.taskdesc}</h4>
         </div>
@@ -17,18 +25,46 @@ export const DetailTask = (props) => {
           <p>Дата окончания: {data.expdate}</p>
         </div>
         <div>
-          <p>Участники: {data.empid}</p>
+          <p>Исполнитель: {data.executor.userName}</p>
         </div>
         <div>
-          <p>Приоритет: {data.taskpriorityid}</p>
+          <p>Приоритет: {data.prioDir.prioname}</p>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+};
+
+export const DetailTask = (props) => {
+  const data = props.data;
+  { console.log(data) }
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>{data.taskname}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div>
+          <h4>Описание: {data.taskdesc}</h4>
         </div>
         <div>
-          <p>Статус: {data.taskstatusid}</p>
+          <p>Дата начала: {data.begdate}</p>
         </div>
         <div>
-          <p>Задание назначил: {data.headid}</p>
+          <p>Дата окончания: {data.expdate}</p>
         </div>
-      </div>
-    </div>
+        <div>
+          <p>Исполнитель: {data.emp.userName}</p>
+        </div>
+        <div>
+          <p>Приоритет: {data.priority.prioname}</p>
+        </div>
+      </Modal.Body>
+    </Modal>
   );
 };

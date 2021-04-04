@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { CaretDownFill } from 'react-bootstrap-icons';
+import { CaretDownFill, XCircleFill } from 'react-bootstrap-icons';
 import { useHttp } from "../../hooks/http.hook";
 import { useDispatch, useSelector } from "react-redux";
 import { taskAtions } from "../../redux/task/action";
+import { DetailSubTaskCreate } from "../detailTask/detailTask"
 import "./form.scss";
 
 export const TaskForm = (props) => {
     const { request } = useHttp();
     const task = useSelector((state) => state.task);
+    const [showDetail, setShowDetail] = useState(false)
+    const [selectedSubTaskId, setSelectedSubTaskId] = useState(false)
     const [toggle, setToggle] = useState(false);
     const [users, setUsers] = useState([]);
     const [priority, setPriority] = useState([]);
@@ -43,6 +46,10 @@ export const TaskForm = (props) => {
                         subTask.parid = id;
                     });
                     try {
+                        task.subTask.forEach(item => {
+                            console.log(item);
+                            item.priority = {id:item.prioDir.id,prioName:item.prioDir.prioname}
+                        });
                         request("http://127.0.0.1:8080/addSubtask", "POST", JSON.stringify(task.subTask))
                     } catch (error) {
                         console.log(error);
@@ -84,6 +91,36 @@ export const TaskForm = (props) => {
         }
     }
 
+
+    const SubTask = (props) => {
+        const deleteSubTask = (id) => {
+            let newSubTaskArray = task.subTask;
+            newSubTaskArray.splice(id, 1)
+            dispatch(taskAtions.setSubTask(newSubTaskArray));
+        }
+
+        return (
+            <div>
+                <div className="d-flex subtask-info m-1">
+                    <div>
+                        <button type="button"
+                            onClick={e => {
+                                setShowDetail(true);
+                                setSelectedSubTaskId(props.id)
+                            }}>
+                            <span>{task.subTask[props.id].taskname}</span>
+                        </button>
+                    </div>
+                    <div>
+                        <button onClick={e => deleteSubTask(props.id)}>
+                            <XCircleFill />
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        )
+    }
     return (
         <div className="taskForm">
             <div>
@@ -180,8 +217,17 @@ export const TaskForm = (props) => {
                         : ""
                     }
                 </div>
-                <div className="form-group col-6">
-                    <button type="button" className="btn btn-secondary" onClick={e => VisibleSubTaskFrom(e)} >Добавить подзадачу</button>
+                <div className="form-group col-3">
+                    <button type="button" className="btn btn-secondary"
+                        onClick={e => VisibleSubTaskFrom(e)} >Добавить подзадачу
+                    </button>
+                </div>
+                <div className="col-9 d-flex row">
+                    {
+                        task.subTask.map((item, index) => {
+                            return (<SubTask key={index} id={index} />)
+                        })
+                    }
                 </div>
                 <div className="form-group col-6">
                     <label htmlFor="file">Прикрепить документы</label>
@@ -191,7 +237,14 @@ export const TaskForm = (props) => {
                     <button type="button" className="btn btn-secondary" onClick={e => saveTask(e)} >Создать задачу</button>
                 </div>
             </form>
+            <div className="detail-task-window">
+                {showDetail ? <DetailSubTaskCreate
+                    data={task.subTask[selectedSubTaskId]}
+                    show={showDetail} onHide={() => setShowDetail(false)}
+                /> : ""}
+            </div>
         </div >
+
     )
 }
 

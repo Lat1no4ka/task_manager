@@ -65,7 +65,6 @@ export const SubTask = () => {
 
     return (
         <div className="subTaskForm">
-            {console.log(form)}
             <div>
                 <h1>Дополнительная задача</h1>
             </div>
