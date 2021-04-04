@@ -27,3 +27,25 @@
 .subTaskHide{
   display: none;
 }
+
+input:read-only{
+  background-color: white !important;
+}
+
+.toggle-arrow{
+  position: absolute;
+  right: 25px;
+  top: 45px;
+}
+.toggle-arrow-active{
+  transform: rotate(180deg);
+  position: absolute;
+  right: 25px;
+  top: 45px;
+}
+
+.list-group-pos{
+  position: absolute !important;
+  z-index: 2;
+  padding-right: 30px !important;
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CaretDownFill } from 'react-bootstrap-icons';
 import { useHttp } from "../../hooks/http.hook";
 import { useDispatch, useSelector } from "react-redux";
 import { taskAtions } from "../../redux/task/action";
@@ -7,6 +8,7 @@ import "./form.scss";
 export const TaskForm = (props) => {
     const { request } = useHttp();
     const task = useSelector((state) => state.task);
+    const [toggle, setToggle] = useState(false);
     const [users, setUsers] = useState([]);
     const [priority, setPriority] = useState([]);
     const [usersFilter, setUsersFilter] = useState([]);
@@ -117,7 +119,7 @@ export const TaskForm = (props) => {
                         }}>
                     </input>
                     {searchListUser ?
-                        <div className="list-group">
+                        <div className="list-group list-group-pos col-12">
                             {usersFilter.map((user) => {
                                 return (
                                     <button
@@ -138,20 +140,25 @@ export const TaskForm = (props) => {
                         : ""
                     }
                 </div>
-                <div className="form-group col-6">
+                <div className="form-group col-6" >
                     <label htmlFor="select">Приоритет</label>
-                    <input type="input" className="form-control" id="prioDir" readOnly={true}
-                        value={task.task.prioDir.prioname}
-                        onFocus={(e) => {
-                            setListPriority(true);
-                            if (priority.length < 1) { getPriority(); }
-                        }}
-                        onChange={(e) => {
-                            cacheTaskForm(e, { ...task.task, prioDir: { id: "", prioDir: e.target.value } });
-                        }}>
-                    </input>
+                    <div className="d-flex">
+                        <input type="input" className="form-control priotity-style" id="prioDir" readOnly={true}
+                            value={task.task.prioDir.prioname}
+                            onFocus={(e) => {
+                                if (priority.length < 1) { getPriority(); }
+                            }}
+                            onClick={e => {
+                                setListPriority(!listPriority);
+                                setToggle(!toggle)
+                            }}
+                            onChange={(e) => {
+                                cacheTaskForm(e, { ...task.task, prioDir: { id: "", prioDir: e.target.value } });
+                            }}
+                        >
+                        </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} /></div>
                     {listPriority ?
-                        <div className="list-group">
+                        <div className="list-group list-group-pos col-12">
                             {priority.map((item) => {
                                 return (
                                     <button
@@ -160,6 +167,7 @@ export const TaskForm = (props) => {
                                         id={item.id}
                                         key={item.id}
                                         onClick={(e) => {
+                                            setToggle(false)
                                             cacheTaskForm(e, { ...task.task, prioDir: { id: item.id, prioname: item.prioname } })
                                             setListPriority(false)
                                         }}
