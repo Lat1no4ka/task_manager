@@ -55,7 +55,7 @@ const ProfileInfo = () => {
             console.log(error);
         }
     };
-    console.log("userInfo",userInfo);
+    //console.log("userInfo",userInfo);
     if (userInfo?.role?.rolename == "admin"){
     return (
 
@@ -76,9 +76,9 @@ const ProfileInfo = () => {
                     <div>
                         <p>Роль: {roleinf}</p>
                     </div>
-                    <ModalCreateUser />
                     <div className="form-group">
-                        <button type="button" className="btn btn-secondary" onClick={() => console.log("создание")}>Создать пользователя</button>
+                    <ModalCreateUser />
+                    
                     </div>
 
                 </div>
