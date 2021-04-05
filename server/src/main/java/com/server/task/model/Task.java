@@ -82,11 +82,11 @@ public class Task implements Serializable {
         this.priorityId = priorityId;
     }
 
-    public int getStatusId() {
+    public int getStatus() {
         return statusId;
     }
 
-    public void setStatusId(int statusId) {
+    public void setStatus(int statusId) {
         this.statusId = statusId;
     }
 
@@ -104,15 +104,15 @@ public class Task implements Serializable {
         this.endDate = endDate;
     }
 
-    public void setAuthorId(Long authorId) {
+    public void setAuthor(Long authorId) {
         this.authorId = authorId;
     }
 
-    public void setEmployeeId(Long employeeId) {
+    public void setEmployee(Long employeeId) {
         this.employeeId = employeeId;
     }
 
-    public void setParentId(Long parentId) {
+    public void setParent(Long parentId) {
         this.parentId = parentId;
     }
 
@@ -137,15 +137,15 @@ public class Task implements Serializable {
         return endDate;
     }
 
-    public Long getAuthorId() {
+    public Long getAuthor() {
         return authorId;
     }
 
-    public Long getEmployeeId() {
+    public Long getEmployee() {
         return employeeId;
     }
 
-    public Long getParentId() {
+    public Long getParent() {
         return parentId;
     }
 

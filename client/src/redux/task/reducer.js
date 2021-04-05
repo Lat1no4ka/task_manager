@@ -3,17 +3,16 @@ import { taskActionTypes } from "./action";
 const initialState = {
     visible: false,
     task: {
-        taskname: "",
-        taskdesc: "",
-        begdate: "",
-        expdate: "",
-        prioDir:  { id: "", prioname: "" },
-        executor: {id:"", userName:""},
+        taskName: "",
+        taskDesc: "",
+        begDate: "",
+        endDate: "",
+        priority: { id: "", priorityName: "" },
+        employee: { id: "", userName: "" },
         files: "",
-        empid: 1,
-        statusDir: 1,
-        headid: 1,
-        parid: null
+        status: 1,
+        author: 1,
+        parentId: null
     },
     subTask: []
 }

@@ -11,24 +11,24 @@ export const DetailSubTaskCreate = (props) => {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title>{data.taskname}</Modal.Title>
+        <Modal.Title>{data.taskName}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <div>
-          <h4>Описание: {data.taskdesc}</h4>
+          <h4>Описание: {data.taskDesc}</h4>
         </div>
         <div>
-          <p>Дата начала: {data.begdate}</p>
+          <p>Дата начала: {data.begDate}</p>
         </div>
         <div>
-          <p>Дата окончания: {data.expdate}</p>
+          <p>Дата окончания: {data.endDate}</p>
         </div>
         <div>
-          <p>Исполнитель: {data.executor.userName}</p>
+          <p>Исполнитель: {data.employee.userName}</p>
         </div>
         <div>
-          <p>Приоритет: {data.prioDir.prioname}</p>
+          <p>Приоритет: {data.priority.priorityName}</p>
         </div>
       </Modal.Body>
     </Modal>
@@ -46,23 +46,23 @@ export const DetailTask = (props) => {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title>{data.taskname}</Modal.Title>
+        <Modal.Title>{data.taskName}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div>
-          <h4>Описание: {data.taskdesc}</h4>
+          <h4>Описание: {data.taskDesc}</h4>
         </div>
         <div>
-          <p>Дата начала: {data.begdate}</p>
+          <p>Дата начала: {data.begDate}</p>
         </div>
         <div>
-          <p>Дата окончания: {data.expdate}</p>
+          <p>Дата окончания: {data.endDate}</p>
         </div>
         <div>
-          <p>Исполнитель: {data.emp.userName}</p>
+          <p>Исполнитель: {data.employee.userName}</p>
         </div>
         <div>
-          <p>Приоритет: {data.priority.prioname}</p>
+          <p>Приоритет: {data.priority.priorityName}</p>
         </div>
       </Modal.Body>
     </Modal>

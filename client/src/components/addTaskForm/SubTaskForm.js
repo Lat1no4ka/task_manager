@@ -16,17 +16,16 @@ export const SubTask = () => {
     const [listPriority, setListPriority] = useState(false);
     const [form, setForm] = useState(
         {
-            taskname: "",
-            taskdesc: "",
-            begdate: "",
-            expdate: "",
-            prioDir: { id: "", prioname: "" },
-            executor: { id: "", userName: "" },
+            taskName: "",
+            taskDesc: "",
+            begDate: "",
+            endDate: "",
+            priority: { id: "", priorityName: "" },
+            employee: { id: "", userName: "" },
             files: "",
-            empid: 1,
-            stateDir: 1,
-            headid: 1,
-            parid: null
+            status: 1,
+            author: 1,
+            parentId: null
         }
     );
 
@@ -72,24 +71,24 @@ export const SubTask = () => {
             <form className="d-flex row">
                 <div className="form-group col-6">
                     <label>Название</label>
-                    <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.taskname} onChange={(e) => setForm({ ...form, taskname: e.target.value })}></input>
+                    <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.taskName} onChange={(e) => setForm({ ...form, taskName: e.target.value })}></input>
                 </div>
                 <div className="form-group col-12">
                     <label>Описание</label>
-                    <textarea className="form-control" id="descOfTask" value={form.taskdesc} onChange={e => setForm({ ...form, taskdesc: e.target.value })}></textarea>
+                    <textarea className="form-control" id="descOfTask" value={form.taskDesc} onChange={e => setForm({ ...form, taskDesc: e.target.value })}></textarea>
                 </div>
                 <div className="form-group col-6">
                     <label>Дата начала:</label>
-                    <input type="date" className="form-control" id="begdate" value={form.begdate} onChange={(e) => setForm({ ...form, begdate: e.target.value })}></input>
+                    <input type="date" className="form-control" id="begdate" value={form.begDate} onChange={(e) => setForm({ ...form, begDate: e.target.value })}></input>
                 </div>
                 <div className="form-group col-6">
                     <label>Дата окончания:</label>
-                    <input type="date" className="form-control" id="expdate" value={form.expdate} onChange={(e) => setForm({ ...form, expdate: e.target.value })}></input>
+                    <input type="date" className="form-control" id="expdate" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })}></input>
                 </div>
                 <div className="form-group col-6">
                     <label>Назначена:</label>
                     <input type="input" className="form-control" id="expdate"
-                        value={form.executor.userName}
+                        value={form.employee.userName}
                         onFocus={
                             (e) => {
                                 searchListUserVisible(e.target.value, true);
@@ -99,7 +98,7 @@ export const SubTask = () => {
                         }
                         onChange={(e) => {
                             if (users.length < 1) { getUsers(); }
-                            setForm({ ...form, executor: { id: "", userName: e.target.value } });
+                            setForm({ ...form, employee: { id: "", userName: e.target.value } });
                             searchListUserVisible(e.target.value, true);
                         }}>
                     </input>
@@ -113,7 +112,7 @@ export const SubTask = () => {
                                         id={user.id}
                                         key={user.id}
                                         onClick={(e) => {
-                                            setForm({ ...form, executor: { id: user.id, userName: user.userName } })
+                                            setForm({ ...form, employee: { id: user.id, userName: user.userName } })
                                             setSearchListUser(false)
                                         }}
                                     >
@@ -126,10 +125,10 @@ export const SubTask = () => {
                     }
                 </div>
                 <div className="form-group col-6">
-                        <label>Приоритет</label>
-                        <div className="d-flex">
+                    <label>Приоритет</label>
+                    <div className="d-flex">
                         <input type="input" className="form-control" id="prioDir" readOnly={true}
-                            value={form.prioDir.prioname}
+                            value={form.priority.priorityName}
                             onFocus={(e) => {
                                 if (priority.length < 1) { getPriority(); }
                             }}
@@ -138,7 +137,7 @@ export const SubTask = () => {
                                 setToggle(!toggle)
                             }}
                             onChange={(e) => {
-                                setForm({ ...form, prioDir: { id: "", prioDir: e.target.value } });
+                                setForm({ ...form, priority: { id: "", priorityName: e.target.value } });
                             }}>
                         </input>
                         <CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} />
@@ -153,11 +152,11 @@ export const SubTask = () => {
                                         id={item.id}
                                         key={item.id}
                                         onClick={(e) => {
-                                            setForm({ ...form, prioDir: { id: item.id, prioname: item.prioname } })
+                                            setForm({ ...form, priority: { id: item.id, priorityName: item.priorityName } })
                                             setListPriority(false)
                                         }}
                                     >
-                                        {item.prioname}
+                                        {item.priorityName}
                                     </button>
                                 )
                             })}

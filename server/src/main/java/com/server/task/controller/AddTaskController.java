@@ -39,10 +39,10 @@ public class AddTaskController {
     public Long addNewTask(@RequestBody Task task) {
         taskRepository.save(task);
         UTconnector link = new UTconnector();
-        link.setCUserId(task.getEmployeeId());
+        link.setCUserId(task.getEmployee());
         link.setCTaskId(task.getId());
         utRepository.save(link);
-        Task usrTask = taskRepository.findFirstByAuthorIdOrderByIdDesc(task.getAuthorId());
+        Task usrTask = taskRepository.findFirstByAuthorIdOrderByIdDesc(task.getAuthor());
         return usrTask.getId();
     }
 
@@ -55,7 +55,7 @@ public class AddTaskController {
         for (int i = 0; i < tasks.size(); i++) {
             Task subtsk = tasks.get(i);
             UTconnector link = new UTconnector();
-            link.setCUserId(subtsk.getEmployeeId());
+            link.setCUserId(subtsk.getEmployee());
             link.setCTaskId(subtsk.getId());
             subLinkList.add(link);
         }
@@ -74,7 +74,7 @@ public class AddTaskController {
         //Task oldTask = taskRepository.findById(newTask.getId());
         //
         UTconnector link = new UTconnector();
-        link.setCUserId(newTask.getEmployeeId());
+        link.setCUserId(newTask.getEmployee());
         link.setCTaskId(newTask.getId());
         utRepository.save(link);
         return newTask;

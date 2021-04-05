@@ -19,17 +19,16 @@ export const TaskForm = (props) => {
     const [listPriority, setListPriority] = useState(false);
     const dispatch = useDispatch();
     const form = {
-        taskname: "",
-        taskdesc: "",
-        begdate: "",
-        expdate: "",
-        prioDir: "",
-        executor: "",
+        taskName: "",
+        taskDesc: "",
+        begDate: "",
+        endDate: "",
+        priority: { id: "", priorityName: "" },
+        employee: { id: "", userName: "" },
         files: "",
-        empid: 1,
-        statusDir: 1,
-        headid: 1,
-        parid: null
+        status: 1,
+        author: 1,
+        parentId: null
     }
 
     const VisibleSubTaskFrom = (e) => {
@@ -39,16 +38,19 @@ export const TaskForm = (props) => {
 
     const sendForm = async () => {
         try {
-            const data = await request("http://127.0.0.1:8080/addTask", "POST", JSON.stringify({ ...task.task }))
+            const parenTask = {...task.task};
+            parenTask.priority = task.task.priority.id;
+            parenTask.employee = task.task.employee.id;
+            console.log(parenTask)
+            const data = await request("http://127.0.0.1:8080/addTask", "POST", JSON.stringify({ ...parenTask }))
                 .then((id) => {
                     dispatch(taskAtions.setTask(form));
-                    task.subTask.forEach(subTask => {
-                        subTask.parid = id;
-                    });
+                   
                     try {
-                        task.subTask.forEach(item => {
-                            console.log(item);
-                            item.priority = {id:item.prioDir.id,prioName:item.prioDir.prioname}
+                        task.subTask.forEach(subTask => {
+                            subTask.parent = id;
+                            subTask.priority = task.task.priority.id;
+                            subTask.employee = task.task.employee.id;
                         });
                         request("http://127.0.0.1:8080/addSubtask", "POST", JSON.stringify(task.subTask))
                     } catch (error) {
@@ -108,7 +110,7 @@ export const TaskForm = (props) => {
                                 setShowDetail(true);
                                 setSelectedSubTaskId(props.id)
                             }}>
-                            <span>{task.subTask[props.id].taskname}</span>
+                            <span>{task.subTask[props.id].taskName}</span>
                         </button>
                     </div>
                     <div>
@@ -130,28 +132,28 @@ export const TaskForm = (props) => {
             <form className="d-flex row">
                 <div className="form-group col-6">
                     <label>Название</label>
-                    <input type="value" className="form-control" id="nameOfTask" placeholder="" value={task.task.taskname} onChange={(e) => cacheTaskForm(e, { ...task.task, taskname: e.target.value })}></input>
+                    <input type="value" className="form-control" id="nameOfTask" placeholder="" value={task.task.taskName} onChange={(e) => cacheTaskForm(e, { ...task.task, taskName: e.target.value })}></input>
                 </div>
                 <div className="form-group col-12">
                     <label>Описание</label>
-                    <textarea className="form-control" id="descOfTask" value={task.task.taskdesc} onChange={e => cacheTaskForm(e, { ...task.task, taskdesc: e.target.value })}></textarea>
+                    <textarea className="form-control" id="descOfTask" value={task.task.taskDesc} onChange={e => cacheTaskForm(e, { ...task.task, taskDesc: e.target.value })}></textarea>
                 </div>
                 <div className="form-group col-6">
                     <label>Дата начала:</label>
-                    <input type="date" className="form-control" id="begdate" value={task.task.begdate} onChange={(e) => cacheTaskForm(e, { ...task.task, begdate: e.target.value })}></input>
+                    <input type="date" className="form-control" id="begdate" value={task.task.begDate} onChange={(e) => cacheTaskForm(e, { ...task.task, begDate: e.target.value })}></input>
                 </div>
                 <div className="form-group col-6">
                     <label>Дата окончания:</label>
-                    <input type="date" className="form-control" id="expdate" value={task.task.expdate} onChange={(e) => cacheTaskForm(e, { ...task.task, expdate: e.target.value })}></input>
+                    <input type="date" className="form-control" id="expdate" value={task.task.endDate} onChange={(e) => cacheTaskForm(e, { ...task.task, endDate: e.target.value })}></input>
                 </div>
                 <div className="form-group col-6">
                     <label>Назначена:</label>
                     <input type="input" className="form-control" id="expdate"
-                        value={task.task.executor.userName}
+                        value={task.task.employee.userName}
                         onFocus={(e) => searchListUserVisible(e.target.value, true)}
                         onChange={(e) => {
                             if (users.length < 1) { getUsers(); }
-                            cacheTaskForm(e, { ...task.task, executor: { id: "", userName: e.target.value } });
+                            cacheTaskForm(e, { ...task.task, employee: { id: "", userName: e.target.value } });
                             searchListUserVisible(e.target.value, true);
                         }}>
                     </input>
@@ -165,7 +167,7 @@ export const TaskForm = (props) => {
                                         id={user.id}
                                         key={user.id}
                                         onClick={(e) => {
-                                            cacheTaskForm(e, { ...task.task, executor: { id: user.id, userName: user.userName } })
+                                            cacheTaskForm(e, { ...task.task, employee: { id: user.id, userName: user.userName } })
                                             setSearchListUser(false)
                                         }}
                                     >
@@ -181,7 +183,7 @@ export const TaskForm = (props) => {
                     <label htmlFor="select">Приоритет</label>
                     <div className="d-flex">
                         <input type="input" className="form-control priotity-style" id="prioDir" readOnly={true}
-                            value={task.task.prioDir.prioname}
+                            value={task.task.priority.priorityName}
                             onFocus={(e) => {
                                 if (priority.length < 1) { getPriority(); }
                             }}
@@ -190,7 +192,7 @@ export const TaskForm = (props) => {
                                 setToggle(!toggle)
                             }}
                             onChange={(e) => {
-                                cacheTaskForm(e, { ...task.task, prioDir: { id: "", prioDir: e.target.value } });
+                                cacheTaskForm(e, { ...task.task, priority: { id: "", priorityName: e.target.value } });
                             }}
                         >
                         </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} /></div>
@@ -205,11 +207,11 @@ export const TaskForm = (props) => {
                                         key={item.id}
                                         onClick={(e) => {
                                             setToggle(false)
-                                            cacheTaskForm(e, { ...task.task, prioDir: { id: item.id, prioname: item.prioname } })
+                                            cacheTaskForm(e, { ...task.task, priority: { id: item.id, priorityName: item.priorityName } })
                                             setListPriority(false)
                                         }}
                                     >
-                                        {item.prioname}
+                                        {item.priorityName}
                                     </button>
                                 )
                             })}
