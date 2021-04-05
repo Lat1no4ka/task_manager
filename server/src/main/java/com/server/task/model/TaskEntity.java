@@ -78,23 +78,19 @@ public class TaskEntity implements Serializable {
         this.parid = null;
     }
 
-    public PrioDir getPriority() {
+    public PrioDir getPriodir() {
         return prioDir;
     }
 
-    public void setPriority(PrioDir prioDir) {
+    public void setPriodir(PrioDir prioDir) {
         this.prioDir = prioDir;
     }
 
-    //public Set<User> getUsers() {return users;}
-    //public void setUsers(Set<User> users) { this.users = users;}
-    //они пока не нужны, при необходимости можно подрубить
-
-    public StatusDir getStatus() {
+    public StatusDir getStatusdir() {
         return statusDir;
     }
 
-    public void setStatus(StatusDir statusDir) {
+    public void setStatusdir(StatusDir statusDir) {
         this.statusDir = statusDir;
     }
 
@@ -110,14 +106,6 @@ public class TaskEntity implements Serializable {
 
     public void setExpdate(String expdate) {
         this.expdate = expdate;
-    }
-
-    public void setHeadid(UserEntity headid) {
-        this.headid = headid;
-    }
-
-    public void setEmpid(UserEntity emp) {
-        this.empid = emp;
     }
 
     public void setParid(Long parid) {
@@ -145,20 +133,14 @@ public class TaskEntity implements Serializable {
         return expdate;
     }
 
-    public Long getHeadid() {
-        return headid.getId();
-    }
     public UserEntity getHead() {
         return headid;
-    }
-
-    public Long getEmpid() {
-        return empid.getId();
     }
 
     public UserEntity getEmp() {
         return empid;
     }
+
     public Long getParid() {
         return parid;
     }

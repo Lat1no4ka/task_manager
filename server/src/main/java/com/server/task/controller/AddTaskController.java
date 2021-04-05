@@ -128,8 +128,8 @@ public class AddTaskController {
 
         for (TaskEntity tasks : taskList) {
             if (tasks.getParid() == null) {
-                tasks.setPriority(tasks.getPriority());
-                tasks.setStatus(tasks.getStatus());
+                tasks.setPriodir(tasks.getPriodir());
+                tasks.setStatusdir(tasks.getStatusdir());
                 parTasks.add(tasks);
             }
         }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class UserAlterEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,18 +29,7 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private RoleDir roleDir;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "utconnector",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id")
-    )
-    List<TaskEntity> tasks = new ArrayList<>();
-
-    public User() {
+    public UserAlterEntity() {
         this.userName = null;
         this.password = null;
         this.firstName = null;
@@ -48,7 +37,7 @@ public class User implements Serializable {
         this.email = null;
     }
 
-    public User(String userName, String password) {
+    public UserAlterEntity(String userName, String password) {
         this.userName = userName;
         this.password = password;
         this.firstName = null;
@@ -56,27 +45,13 @@ public class User implements Serializable {
         this.email = null;
     }
 
-    public User(Long id,String userName, String password, String firstName, String lastName, String email) {
+    public UserAlterEntity(Long id, String userName, String password, String firstName, String lastName, String email) {
         this.id = id;
         this.userName = userName;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-    }
-
-    public RoleDir getRole() {
-        return roleDir;
-    }
-
-    public void setRole(RoleDir roleDir) {
-        this.roleDir = roleDir;
-    }
-
-    public List<TaskEntity> getTasks() {return tasks;}
-
-    public void setTasks(List<TaskEntity> tasks) {
-        this.tasks = tasks;
     }
 
     public void setUserName(String userName) {
