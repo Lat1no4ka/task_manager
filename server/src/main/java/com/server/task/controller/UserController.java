@@ -3,9 +3,12 @@ package com.server.task.controller;
 
 import com.server.task.model.Task;
 import com.server.task.model.User;
+import com.server.task.model.UserAlterEntity;
 import com.server.task.repo.UserRepository;
+import com.server.task.repo.UserAlterEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.*;
 
@@ -17,16 +20,12 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserAlterEntityRepository userAlterEntityRepository;
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
-/* Тестовая поебень, при надобности - врубите (просто выводит пользоваетля по id)
-    @RequestMapping(value={"/userTest"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<User> ListUserTest(@RequestBody User user)
-    {
-        Long idl = user.getId();
-        List<User> list1 = userRepository.findById(idl);
-        return list1;
-    }
-*/
+
     //вывод всех пользователей
     @RequestMapping(value={"/allUsers"}, method=RequestMethod.GET, headers = {"Content-type=application/json"})
     public List<User> ListAllUsers()
@@ -55,4 +54,28 @@ public class UserController {
 
         return usrList;
     }
+
+    //изменение Пользователя
+    @RequestMapping(value={"/alterUser"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public String ListUsersById(@RequestBody UserAlterEntity user)
+    {
+        UserAlterEntity newusr = userAlterEntityRepository.findById(user.getId());
+
+        if (user.getUserName()!=null) {
+            String name = user.getUserName();
+            if (userRepository.findByUserName(name) == null) {
+                    newusr.setUserName(name);
+            }
+            else {return "Данное имя пользователя уже занято";}
+        }
+        if (user.getEmail()!=null){newusr.setEmail(user.getEmail());}
+        if (user.getFirstName()!=null){newusr.setFirstName(user.getFirstName());}
+        if (user.getLastName()!=null){newusr.setLastName(user.getLastName());}
+
+        if (user.getPassword()!=null){newusr.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));}
+
+        userAlterEntityRepository.save(newusr);
+        return "Информация обновлена";
+    }
+
 }

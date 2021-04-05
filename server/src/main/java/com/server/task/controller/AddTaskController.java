@@ -3,6 +3,7 @@ package com.server.task.controller;
 import com.server.task.model.TaskEntity;
 import com.server.task.model.User;
 import com.server.task.repo.TaskRepository;
+import com.server.task.repo.TaskEntityRepository;
 import com.server.task.repo.UTconnectorRepository;
 import com.server.task.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class AddTaskController {
     UTconnectorRepository utRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TaskEntityRepository taskEntityRepository;
 
     @RequestMapping(value = {"/addTaskOld"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public Task addNewTaskPiece(@RequestBody Task task) {
@@ -39,9 +42,7 @@ public class AddTaskController {
         link.setCUserId(task.getEmpid());
         link.setCTaskId(task.getId());
         utRepository.save(link);
-
         Task usrTask = taskRepository.findFirstByHeadidOrderByIdDesc(task.getHeadid());
-
         return usrTask.getId();
     }
 
@@ -49,20 +50,17 @@ public class AddTaskController {
     //создание подзадачи, ловит List тел и записывет их.
     @RequestMapping(value = {"/addSubtask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public List addNewSubtask(@RequestBody List<Task> tasks) {
-        List<UTconnector> linkList = new ArrayList<>();
-
+        List<UTconnector> subLinkList = new ArrayList<>();
+        taskRepository.saveAll(tasks);
         for (int i = 0; i < tasks.size(); i++) {
             Task subtsk = tasks.get(i);
             UTconnector link = new UTconnector();
             link.setCUserId(subtsk.getEmpid());
             link.setCTaskId(subtsk.getId());
-            linkList.add(link);
+            subLinkList.add(link);
         }
-
-        taskRepository.saveAll(tasks);
-        utRepository.saveAll(linkList);
-
-        return tasks;
+        utRepository.saveAll(subLinkList);
+        return subLinkList;
     }
 
     //Изменение задач (необходимо добавить в JSON id изменяемой задачи)
@@ -79,7 +77,6 @@ public class AddTaskController {
         link.setCUserId(newTask.getEmpid());
         link.setCTaskId(newTask.getId());
         utRepository.save(link);
-
         return newTask;
     }
 
@@ -111,7 +108,7 @@ public class AddTaskController {
     */
 
 
-    //ловит id родителя и кидает его подзадачи
+    //ловит id родительской задачи и кидает его подзадачи
     @RequestMapping(value = {"/getSubtasks"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public List<Task> ListSubtask(@RequestBody Task task) {
         Long parid = task.getId();
@@ -128,9 +125,12 @@ public class AddTaskController {
 
         for (TaskEntity tasks : taskList) {
             if (tasks.getParid() == null) {
-                tasks.setPriority(tasks.getPriority());
-                tasks.setStatus(tasks.getStatus());
+                tasks.setPriodir(tasks.getPriodir());
+                tasks.setStatusdir(tasks.getStatusdir());
                 parTasks.add(tasks);
+            }
+            else {
+                parTasks.add(taskEntityRepository.findById(tasks.getParid()));
             }
         }
         return parTasks;

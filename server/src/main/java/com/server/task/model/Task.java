@@ -33,13 +33,11 @@ public class Task implements Serializable {
     @Column(name = "emp_id", nullable = false)
     private Long empid;
 
-    @ManyToOne
-    @JoinColumn(name ="task_priority_id")
-    private PrioDir prioDir;
+    @Column(name ="task_priority_id")
+    private int prioDir;
 
-    @ManyToOne
-    @JoinColumn(name = "task_status_id")
-    private StatusDir statusDir;
+    @Column(name = "task_status_id")
+    private int statusDir;
 
     @ManyToMany(mappedBy = "tasks")
     private List<User> users = new ArrayList<>();
@@ -76,23 +74,19 @@ public class Task implements Serializable {
         this.parid = null;
     }
 
-    public PrioDir getPriority() {
+    public int getPriodir() {
         return prioDir;
     }
 
-    public void setPriority(PrioDir prioDir) {
+    public void setPriodir(int prioDir) {
         this.prioDir = prioDir;
     }
 
-    //public Set<User> getUsers() {return users;}
-    //public void setUsers(Set<User> users) { this.users = users;}
-    //они пока не нужны, при необходимости можно подрубить
-
-    public StatusDir getStatus() {
+    public int getStatusdir() {
         return statusDir;
     }
 
-    public void setStatus(StatusDir statusDir) {
+    public void setStatusdir(int statusDir) {
         this.statusDir = statusDir;
     }
 
