@@ -1,4 +1,8 @@
-package com.server.task.model;
+package com.server.task.model.entity;
+
+import com.server.task.model.User;
+import com.server.task.model.dictionary.Priority;
+import com.server.task.model.dictionary.Status;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "tasks")
-public class Task implements Serializable {
+public class TaskEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,17 +31,21 @@ public class Task implements Serializable {
     @Column(name = "exp_date")
     private String endDate;
 
-    @Column(name = "head_id", nullable = false)
-    private Long authorId;
+    @ManyToOne
+    @JoinColumn(name ="head_id", nullable = false)
+    private UserEntity author;
 
-    @Column(name = "emp_id", nullable = false)
-    private Long employeeId;
+    @ManyToOne
+    @JoinColumn(name ="emp_id", nullable = false)
+    private UserEntity employee;
 
-    @Column(name ="task_priority_id")
-    private int priorityId;
+    @ManyToOne
+    @JoinColumn(name ="task_priority_id")
+    private Priority priorityName;
 
-    @Column(name = "task_status_id")
-    private int statusId;
+    @ManyToOne
+    @JoinColumn(name = "task_status_id")
+    private Status status;
 
     @ManyToMany(mappedBy = "tasks")
     private List<User> users = new ArrayList<>();
@@ -45,49 +53,49 @@ public class Task implements Serializable {
     @Column(name = "par_task_id")
     private Long parentId;
 
-    public Task(Long id, String taskName,String begDate, String endDate, String taskDesc, Long authorId, Long employeeId, Long parentId) {
+    public TaskEntity(Long id, String taskName, String begDate, String endDate, String taskDesc, UserEntity author, UserEntity employee, Long parentId) {
         this.id = id;
         this.taskName = taskName;
         this.taskDesc = taskDesc;
         this.begDate = begDate;
         this.endDate = endDate;
-        this.authorId = authorId;
-        this.employeeId = employeeId;
+        this.author = author;
+        this.employee = employee;
         this.parentId = parentId;
 
     }
 
-    public Task(Long id, Long authorId, Long employeeId) {
+    public TaskEntity(Long id, UserEntity author, UserEntity employee) {
         this.id = id;
-        this.authorId = authorId;
-        this.employeeId = employeeId;
+        this.author = author;
+        this.employee = employee;
     }
 
-    public Task() {
+    public TaskEntity() {
         this.id = null;
         this.taskName = null;
         this.taskDesc = null;
         this.begDate = null;
         this.endDate = null;
-        this.authorId = null;
-        this.employeeId = null;
+        this.author = null;
+        this.employee = null;
         this.parentId = null;
     }
 
-    public int getPriority() {
-        return priorityId;
+    public Priority getPriority() {
+        return priorityName;
     }
 
-    public void setPriority(int priorityId) {
-        this.priorityId = priorityId;
+    public void setPriority(Priority priorityName) {
+        this.priorityName = priorityName;
     }
 
-    public int getStatusId() {
-        return statusId;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setStatusId(int statusId) {
-        this.statusId = statusId;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public void setId(Long id) {
@@ -102,14 +110,6 @@ public class Task implements Serializable {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
-    }
-
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
-    }
-
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
     }
 
     public void setParentId(Long parentId) {
@@ -137,12 +137,12 @@ public class Task implements Serializable {
         return endDate;
     }
 
-    public Long getAuthorId() {
-        return authorId;
+    public UserEntity getAuthor() {
+        return author;
     }
 
-    public Long getEmployeeId() {
-        return employeeId;
+    public UserEntity getEmployee() {
+        return employee;
     }
 
     public Long getParentId() {

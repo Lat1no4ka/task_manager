@@ -1,6 +1,6 @@
 package com.server.task.controller;
 
-import com.server.task.model.StatusDir;
+import com.server.task.model.dictionary.Status;
 import com.server.task.repo.StatusDirRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ public class StatusDirController {
     StatusDirRepository statusDirRepository;
 
     @RequestMapping(value={"/getStatus"}, headers = {"Content-type=application/json"}, method= RequestMethod.GET)
-    public List<StatusDir> GetStatus()
+    public List<Status> GetStatus()
     {
         return statusDirRepository.findAll();
     }

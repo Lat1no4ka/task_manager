@@ -1,5 +1,8 @@
 package com.server.task.model;
 
+import com.server.task.model.dictionary.Role;
+import com.server.task.model.entity.TaskEntity;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,7 +34,7 @@ public class User implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "role_id")
-    private RoleDir roleDir;
+    private Role role;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "utconnector",
@@ -65,12 +68,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public RoleDir getRole() {
-        return roleDir;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRole(RoleDir roleDir) {
-        this.roleDir = roleDir;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public List<TaskEntity> getTasks() {return tasks;}

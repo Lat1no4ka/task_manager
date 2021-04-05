@@ -1,9 +1,8 @@
 package com.server.task.controller;
 
 
-import com.server.task.model.Task;
 import com.server.task.model.User;
-import com.server.task.model.UserAlterEntity;
+import com.server.task.model.entity.UserAlterEntity;
 import com.server.task.repo.UserRepository;
 import com.server.task.repo.UserAlterEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;

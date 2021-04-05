@@ -1,15 +1,11 @@
 package com.server.task.controller;
 
-import com.server.task.model.Task;
 import com.server.task.repo.PrioDirRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.server.task.model.PrioDir;
+import com.server.task.model.dictionary.Priority;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 
 @CrossOrigin("*")
@@ -22,7 +18,7 @@ public class PrioDirController {
     PrioDirRepository prioDirRepository;
 
     @RequestMapping(value={"/getPriority"}, headers = {"Content-type=application/json"}, method= RequestMethod.GET)
-    public List<PrioDir> GetPriority()
+    public List<Priority> GetPriority()
     {
         return prioDirRepository.findAll();
     }

@@ -1,11 +1,11 @@
-package com.server.task.model;
+package com.server.task.model.dictionary;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "roledir")
-public class RoleDir implements Serializable {
+public class Role implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,12 +16,12 @@ public class RoleDir implements Serializable {
     private String roleName;
 
 
-    public RoleDir() {
+    public Role() {
         this.id = null;
         this.roleName = null;
     }
 
-    public RoleDir(Long id, String roleName) {
+    public Role(Long id, String roleName) {
         this.id = id;
         this.roleName = roleName;
     }
@@ -30,13 +30,13 @@ public class RoleDir implements Serializable {
         this.id = id;
     }
 
-    public void setRolename(String roleName) { this.roleName = roleName; }
+    public void setRoleName(String roleName) { this.roleName = roleName; }
 
     public Long getId() {
         return id;
     }
 
-    public String getRolename() {
+    public String getRoleName() {
         return roleName;
     }
 

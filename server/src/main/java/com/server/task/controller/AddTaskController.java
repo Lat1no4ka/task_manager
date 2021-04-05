@@ -1,6 +1,6 @@
 package com.server.task.controller;
 
-import com.server.task.model.TaskEntity;
+import com.server.task.model.entity.TaskEntity;
 import com.server.task.model.User;
 import com.server.task.repo.TaskRepository;
 import com.server.task.repo.TaskEntityRepository;
@@ -39,10 +39,10 @@ public class AddTaskController {
     public Long addNewTask(@RequestBody Task task) {
         taskRepository.save(task);
         UTconnector link = new UTconnector();
-        link.setCUserId(task.getEmpid());
+        link.setCUserId(task.getEmployeeId());
         link.setCTaskId(task.getId());
         utRepository.save(link);
-        Task usrTask = taskRepository.findFirstByHeadidOrderByIdDesc(task.getHeadid());
+        Task usrTask = taskRepository.findFirstByAuthorIdOrderByIdDesc(task.getAuthorId());
         return usrTask.getId();
     }
 
@@ -55,7 +55,7 @@ public class AddTaskController {
         for (int i = 0; i < tasks.size(); i++) {
             Task subtsk = tasks.get(i);
             UTconnector link = new UTconnector();
-            link.setCUserId(subtsk.getEmpid());
+            link.setCUserId(subtsk.getEmployeeId());
             link.setCTaskId(subtsk.getId());
             subLinkList.add(link);
         }
@@ -74,7 +74,7 @@ public class AddTaskController {
         //Task oldTask = taskRepository.findById(newTask.getId());
         //
         UTconnector link = new UTconnector();
-        link.setCUserId(newTask.getEmpid());
+        link.setCUserId(newTask.getEmployeeId());
         link.setCTaskId(newTask.getId());
         utRepository.save(link);
         return newTask;
@@ -112,7 +112,7 @@ public class AddTaskController {
     @RequestMapping(value = {"/getSubtasks"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public List<Task> ListSubtask(@RequestBody Task task) {
         Long parid = task.getId();
-        List<Task> subtlist = taskRepository.findByparid(parid);
+        List<Task> subtlist = taskRepository.findByParentId(parid);
         return subtlist;
     }
 
@@ -124,13 +124,11 @@ public class AddTaskController {
         List<TaskEntity> parTasks = new ArrayList<>();
 
         for (TaskEntity tasks : taskList) {
-            if (tasks.getParid() == null) {
-                tasks.setPriodir(tasks.getPriodir());
-                tasks.setStatusdir(tasks.getStatusdir());
+            if (tasks.getParentId() == null) {
                 parTasks.add(tasks);
             }
             else {
-                parTasks.add(taskEntityRepository.findById(tasks.getParid()));
+                parTasks.add(taskEntityRepository.findById(tasks.getParentId()));
             }
         }
         return parTasks;

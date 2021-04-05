@@ -1,14 +1,11 @@
-package com.server.task.model;
+package com.server.task.model.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class UserAlterEntity implements Serializable {
-
+public class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -16,9 +13,6 @@ public class UserAlterEntity implements Serializable {
 
     @Column(name = "user_name", unique = true, nullable = false)
     private String userName;
-
-    @Column(name = "password", nullable = false)
-    private String password;
 
     @Column(name = "first_name")
     private String firstName;
@@ -29,26 +23,23 @@ public class UserAlterEntity implements Serializable {
     @Column(name = "email")
     private String email;
 
-    public UserAlterEntity() {
+    public UserEntity() {
         this.userName = null;
-        this.password = null;
         this.firstName = null;
         this.lastName = null;
         this.email = null;
     }
 
-    public UserAlterEntity(String userName, String password) {
+    public UserEntity(String userName, String password) {
         this.userName = userName;
-        this.password = password;
         this.firstName = null;
         this.lastName = null;
         this.email = null;
     }
 
-    public UserAlterEntity(Long id, String userName, String password, String firstName, String lastName, String email) {
+    public UserEntity(Long id, String userName, String password, String firstName, String lastName, String email) {
         this.id = id;
         this.userName = userName;
-        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -56,10 +47,6 @@ public class UserAlterEntity implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public void setFirstName(String firstName) {
@@ -83,10 +70,6 @@ public class UserAlterEntity implements Serializable {
         return userName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -98,7 +81,4 @@ public class UserAlterEntity implements Serializable {
     public String getEmail() {
         return email;
     }
-
-
-
 }
