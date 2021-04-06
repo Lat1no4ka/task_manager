@@ -126,10 +126,12 @@ public class AddTaskController {
         for (TaskEntity tasks : taskList) {
             if (tasks.getParentId() == null) {
                 parTasks.add(tasks);
+
             }
             else {
                 parTasks.add(taskEntityRepository.findById(tasks.getParentId()));
             }
+
         }
         return parTasks;
     }
