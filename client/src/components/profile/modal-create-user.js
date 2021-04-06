@@ -22,8 +22,7 @@ const ModalCreateUser = () => {
     lastName: "",
     email: "",
     role: {
-      id: 1,
-      rolename: "user"
+      id: null
     }
 
   });
@@ -35,6 +34,7 @@ const ModalCreateUser = () => {
     } catch (error) {
         console.log(error);
     }
+    console.log(typeof(form.role.id));
     handleClose();
 };
 
@@ -72,6 +72,13 @@ const ModalCreateUser = () => {
             <div className="form-group col-6">
               <label>Имя</label>
               <input type="value" className="form-control" id="firstName" placeholder="" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })}></input>            </div>
+              <div className="form-group col-6">
+                    <label htmlFor="select">Роль:</label>
+                    <select className="form-control" id="role" value={form.role.id} onChange={(e) => setForm({ ...form, role:{id: Number(e.target.value)} })}>
+                        <option value = {2}>Администратор</option>
+                        <option value = {1}>Пользователь</option>
+                    </select> 
+              </div>
           </form>
 
         </Modal.Body>

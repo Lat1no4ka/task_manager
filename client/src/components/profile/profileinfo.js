@@ -45,7 +45,7 @@ const ProfileInfo = () => {
             setFirstName(userInfo.firstName);
             setLastName(userInfo.lastName);
             setUserName(userInfo.userName);
-            if (userInfo.role.rolename == "admin") {
+            if (userInfo.role.roleName == "admin") {
                 setRole("Администратор");
             }
             else {
@@ -56,46 +56,13 @@ const ProfileInfo = () => {
         }
     };
     //console.log("userInfo",userInfo);
-    if (userInfo?.role?.rolename == "admin"){
-    return (
-
-        <div className="profileForm">
-
-            <div className="d-flex justify-content-center">
-
-                <div className="container p-5 ">
-                    <div>
-                        <h3>Никнейм: {userNameinf}</h3>
-                    </div>
-                    <div>
-                        <h4>ФИО: {firstNameinf} {lastnameinf}</h4>
-                    </div>
-                    <div>
-                        <p>Почтовый адрес: {emailinf}</p>
-                    </div>
-                    <div>
-                        <p>Роль: {roleinf}</p>
-                    </div>
-                    <div className="form-group">
-                    <ModalCreateUser />
-                    
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    );
-    }
-    else {
+    if (userInfo?.role?.roleName == "admin") {
         return (
 
             <div className="profileForm">
-    
+
                 <div className="d-flex justify-content-center">
-    
+
                     <div className="container p-5 ">
                         <div>
                             <h3>Никнейм: {userNameinf}</h3>
@@ -109,14 +76,47 @@ const ProfileInfo = () => {
                         <div>
                             <p>Роль: {roleinf}</p>
                         </div>
-                        
-    
+                        <div className="form-group">
+                            <ModalCreateUser />
+
+                        </div>
+
                     </div>
-    
+
                 </div>
-    
+
             </div>
-    
+
+        );
+    }
+    else {
+        return (
+
+            <div className="profileForm">
+
+                <div className="d-flex justify-content-center">
+
+                    <div className="container p-5 ">
+                        <div>
+                            <h3>Никнейм: {userNameinf}</h3>
+                        </div>
+                        <div>
+                            <h4>ФИО: {firstNameinf} {lastnameinf}</h4>
+                        </div>
+                        <div>
+                            <p>Почтовый адрес: {emailinf}</p>
+                        </div>
+                        <div>
+                            <p>Роль: {roleinf}</p>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
         );
 
     }
