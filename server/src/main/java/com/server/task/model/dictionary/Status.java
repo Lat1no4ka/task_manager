@@ -1,14 +1,11 @@
-package com.server.task.model;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package com.server.task.model.dictionary;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Table(name = "statusdir")
-public class StatusDir implements Serializable {
+public class Status implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,12 +15,12 @@ public class StatusDir implements Serializable {
     @Column(name = "status_name", unique = true, nullable = false)
     private String statusName;
 
-    public StatusDir() {
+    public Status() {
         this.id = null;
         this.statusName = null;
     }
 
-    public StatusDir(Long id, String statusName) {
+    public Status(Long id, String statusName) {
         this.id = id;
         this.statusName = statusName;
     }
@@ -32,13 +29,13 @@ public class StatusDir implements Serializable {
         this.id = id;
     }
 
-    public void setStatusname(String stateName) { this.statusName = stateName; }
+    public void setStatusName(String statusName) { this.statusName = statusName; }
 
     public Long getId() {
         return id;
     }
 
-    public String getStatusname() {
+    public String getStatusName() {
         return statusName;
     }
 

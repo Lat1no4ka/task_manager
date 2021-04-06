@@ -1,6 +1,6 @@
 package com.server.task.controller;
 
-import com.server.task.model.RoleDir;
+import com.server.task.model.dictionary.Role;
 import com.server.task.repo.RoleDirRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ public class RoleDirController {
     RoleDirRepository roleDirRepository;
 
     @RequestMapping(value={"/getRole"}, headers = {"Content-type=application/json"}, method= RequestMethod.GET)
-    public List<RoleDir> GetRole()
+    public List<Role> GetRole()
     {
         return roleDirRepository.findAll();
     }

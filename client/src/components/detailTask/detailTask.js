@@ -1,34 +1,70 @@
 import "./detail.scss";
-export const DetailTask = (props) => {
+import { Modal } from "react-bootstrap";
+
+export const DetailSubTaskCreate = (props) => {
   const data = props.data;
   return (
-    <div className={"modal-window"}>
-      <div className="container p-5 ">
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>{data.taskName}</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
         <div>
-          <h3>{data.taskname}</h3>
+          <h4>Описание: {data.taskDesc}</h4>
         </div>
         <div>
-          <h4>Описание: {data.taskdesc}</h4>
+          <p>Дата начала: {data.begDate}</p>
         </div>
         <div>
-          <p>Дата начала: {data.begdate}</p>
+          <p>Дата окончания: {data.endDate}</p>
         </div>
         <div>
-          <p>Дата окончания: {data.expdate}</p>
+          <p>Исполнитель: {data.employee.userName}</p>
         </div>
         <div>
-          <p>Участники: {data.empid}</p>
+          <p>Приоритет: {data.priority.priorityName}</p>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+};
+
+export const DetailTask = (props) => {
+  const data = props.data;
+  { console.log(data) }
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>{data.taskName}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div>
+          <h4>Описание: {data.taskDesc}</h4>
         </div>
         <div>
-          <p>Приоритет: {data.taskpriorityid}</p>
+          <p>Дата начала: {data.begDate}</p>
         </div>
         <div>
-          <p>Статус: {data.taskstatusid}</p>
+          <p>Дата окончания: {data.endDate}</p>
         </div>
         <div>
-          <p>Задание назначил: {data.headid}</p>
+          <p>Исполнитель: {data.employee.userName}</p>
         </div>
-      </div>
-    </div>
+        <div>
+          <p>Приоритет: {data.priority.priorityName}</p>
+        </div>
+      </Modal.Body>
+    </Modal>
   );
 };

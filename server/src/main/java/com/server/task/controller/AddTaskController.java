@@ -1,8 +1,11 @@
 package com.server.task.controller;
 
+import com.server.task.model.entity.TaskEntity;
 import com.server.task.model.User;
 import com.server.task.repo.TaskRepository;
+import com.server.task.repo.TaskEntityRepository;
 import com.server.task.repo.UTconnectorRepository;
+import com.server.task.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,62 +18,54 @@ import java.util.*;
 @RestController
 @RequestMapping(produces = "application/json")
 @ResponseBody
-public class AddTaskController
-{
+public class AddTaskController {
     @Autowired
     TaskRepository taskRepository;
     @Autowired
     UTconnectorRepository utRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    TaskEntityRepository taskEntityRepository;
 
-    @RequestMapping(value={"/addTaskOld"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Task addNewTaskPiece(@RequestBody Task task)
-    {
+    @RequestMapping(value = {"/addTaskOld"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Task addNewTaskPiece(@RequestBody Task task) {
         taskRepository.save(task);
         return task;
     }
 
     //новый вариант создания задачи, сразу добавляет связь в таблицу UTconnector, возвращает id
-    @RequestMapping(value={"/addTask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Long addNewTask(@RequestBody Task task)
-    {
+    @RequestMapping(value = {"/addTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Long addNewTask(@RequestBody Task task) {
         taskRepository.save(task);
         UTconnector link = new UTconnector();
-        link.setCUserId(task.getEmpid());
+        link.setCUserId(task.getEmployee());
         link.setCTaskId(task.getId());
         utRepository.save(link);
-
-        Task usrTask = taskRepository.findFirstByHeadidOrderByIdDesc(task.getHeadid());
-
+        Task usrTask = taskRepository.findFirstByAuthorIdOrderByIdDesc(task.getAuthor());
         return usrTask.getId();
     }
 
 
-
     //создание подзадачи, ловит List тел и записывет их.
-    @RequestMapping(value={"/addSubtask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List addNewSubtask(@RequestBody List<Task> tasks)
-    {
-        List<UTconnector> linkList = new ArrayList<>();
-
-        for (int i=0; i<tasks.size(); i++)
-        {
+    @RequestMapping(value = {"/addSubtask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public List addNewSubtask(@RequestBody List<Task> tasks) {
+        List<UTconnector> subLinkList = new ArrayList<>();
+        taskRepository.saveAll(tasks);
+        for (int i = 0; i < tasks.size(); i++) {
             Task subtsk = tasks.get(i);
             UTconnector link = new UTconnector();
-            link.setCUserId(subtsk.getEmpid());
+            link.setCUserId(subtsk.getEmployee());
             link.setCTaskId(subtsk.getId());
-            linkList.add(link);
+            subLinkList.add(link);
         }
-
-        taskRepository.saveAll(tasks);
-        utRepository.saveAll(linkList);
-
-        return tasks;
+        utRepository.saveAll(subLinkList);
+        return subLinkList;
     }
 
     //Изменение задач (необходимо добавить в JSON id изменяемой задачи)
-    @RequestMapping(value={"/alterTask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Task alterTask(@RequestBody Task newTask)
-    {
+    @RequestMapping(value = {"/alterTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Task alterTask(@RequestBody Task newTask) {
         //
         List<UTconnector> conList = utRepository.findBycTaskId(newTask.getId());
         utRepository.deleteAll(conList);
@@ -79,18 +74,15 @@ public class AddTaskController
         //Task oldTask = taskRepository.findById(newTask.getId());
         //
         UTconnector link = new UTconnector();
-        link.setCUserId(newTask.getEmpid());
+        link.setCUserId(newTask.getEmployee());
         link.setCTaskId(newTask.getId());
         utRepository.save(link);
-
         return newTask;
     }
 
 
-
-    @RequestMapping(value={"/delete"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Task deleteTask(@RequestBody Task task)
-    {
+    @RequestMapping(value = {"/delete"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Task deleteTask(@RequestBody Task task) {
         taskRepository.delete(task);
         return task;
     }
@@ -116,13 +108,30 @@ public class AddTaskController
     */
 
 
-    //ловит id родителя и кидает его подзадачи
-    @RequestMapping(value={"/getSubtasks"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<Task> ListSubtask(@RequestBody Task task)
-    {
+    //ловит id родительской задачи и кидает его подзадачи
+    @RequestMapping(value = {"/getSubtasks"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public List<Task> ListSubtask(@RequestBody Task task) {
         Long parid = task.getId();
-        List<Task> subtlist = taskRepository.findByparid(parid);
+        List<Task> subtlist = taskRepository.findByParentId(parid);
         return subtlist;
+    }
+
+    //выводит set родительских задач по id пользователя
+    @RequestMapping(value = {"/getTasks"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public List<TaskEntity> ListUsersTasks(@RequestBody User user) {
+        User findUser = userRepository.findById(user.getId());
+        List<TaskEntity> taskList = findUser.getTasks();
+        List<TaskEntity> parTasks = new ArrayList<>();
+
+        for (TaskEntity tasks : taskList) {
+            if (tasks.getParentId() == null) {
+                parTasks.add(tasks);
+            }
+            else {
+                parTasks.add(taskEntityRepository.findById(tasks.getParentId()));
+            }
+        }
+        return parTasks;
     }
 
 }

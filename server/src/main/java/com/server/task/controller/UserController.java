@@ -1,11 +1,13 @@
 package com.server.task.controller;
 
 
-import com.server.task.model.Task;
 import com.server.task.model.User;
+import com.server.task.model.entity.UserAlterEntity;
 import com.server.task.repo.UserRepository;
+import com.server.task.repo.UserAlterEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.*;
 
@@ -17,21 +19,21 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserAlterEntityRepository userAlterEntityRepository;
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
-/* Тестовая поебень, при надобности - врубите (просто выводит пользоваетля по id)
-    @RequestMapping(value={"/userTest"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<User> ListUserTest(@RequestBody User user)
-    {
-        Long idl = user.getId();
-        List<User> list1 = userRepository.findById(idl);
-        return list1;
-    }
-*/
+
     //вывод всех пользователей
     @RequestMapping(value={"/allUsers"}, method=RequestMethod.GET, headers = {"Content-type=application/json"})
     public List<User> ListAllUsers()
     {
-        return userRepository.findAll();
+        List<User> Users = userRepository.findAll();
+        for(User user: Users) {
+            user.setPassword("");
+        }
+        return Users;
     }
 
     //Ловит лист id, выводит список юзеров
@@ -45,34 +47,34 @@ public class UserController {
             User usr = user.get(i);
             Long idu = usr.getId();
             User ousr = userRepository.findById(idu);
+            ousr.setPassword("");
             usrList.add(ousr);
         }
 
         return usrList;
     }
 
-    //выводит set родительских задач по id пользователя
-    @RequestMapping(value={"/listUsersTasks"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<Task> ListUsersTasks(@RequestBody User user)
+    //изменение Пользователя
+    @RequestMapping(value={"/alterUser"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public String ListUsersById(@RequestBody UserAlterEntity user)
     {
-        Long idl = user.getId();
-        User usr1 = userRepository.findById(idl);
-        List<Task> taskList = usr1.getTasks();
-        List<Task> parTasks = new ArrayList<>();
+        UserAlterEntity newusr = userAlterEntityRepository.findById(user.getId());
 
-        for (int i=0; i<taskList.size(); i++)
-        {
-            Task tsk = taskList.get(i);
-            Long idpt = tsk.getParid();
-            if(idpt==null)
-            {
-                parTasks.add(tsk);
+        if (user.getUserName()!=null) {
+            String name = user.getUserName();
+            if (userRepository.findByUserName(name) == null) {
+                    newusr.setUserName(name);
             }
+            else {return "Данное имя пользователя уже занято";}
         }
+        if (user.getEmail()!=null){newusr.setEmail(user.getEmail());}
+        if (user.getFirstName()!=null){newusr.setFirstName(user.getFirstName());}
+        if (user.getLastName()!=null){newusr.setLastName(user.getLastName());}
 
-        return parTasks;
+        if (user.getPassword()!=null){newusr.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));}
+
+        userAlterEntityRepository.save(newusr);
+        return "Информация обновлена";
     }
-
-
 
 }

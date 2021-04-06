@@ -19,12 +19,12 @@ const TaskItem = (props) => {
       <div >
         <div className="task mt-5 p-3">
           <div className="task-header">
-            <p>{item.taskname}</p>
+            <p>{item.taskName}</p>
           </div>
-          <div className="task-body">{item.taskdesc}</div>
+          <div className="task-body">{item.taskDesc}</div>
           <hr size="3" color="#000" />
           <div className="task-foother d-flex">
-            <div title={item.empid}>
+            <div title={item.employee.userName}>
               <PersonCircle size={28} className="mr-3" />
             </div>
             <div>
