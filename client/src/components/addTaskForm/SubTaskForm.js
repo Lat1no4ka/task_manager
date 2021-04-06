@@ -8,6 +8,7 @@ export const SubTask = () => {
     const dispatch = useDispatch();
     const { request } = useHttp();
     const task = useSelector((state) => state.task);
+    const userId = useSelector((state) => state.auth.userId);
     const [toggle, setToggle] = useState(false);
     const [users, setUsers] = useState([]);
     const [priority, setPriority] = useState([]);
@@ -24,7 +25,7 @@ export const SubTask = () => {
             employee: { id: "", userName: "" },
             files: "",
             status: 1,
-            author: 1,
+            author: userId,
             parentId: null
         }
     );
