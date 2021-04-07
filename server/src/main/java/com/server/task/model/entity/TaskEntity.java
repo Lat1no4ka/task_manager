@@ -42,7 +42,7 @@ public class TaskEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name ="task_priority_id")
-    private Priority priorityName;
+    private Priority priority;
 
     @ManyToOne
     @JoinColumn(name = "task_status_id")
@@ -92,11 +92,11 @@ public class TaskEntity implements Serializable {
     public void setFiles(List<Files> files) { this.files = files; }
 
     public Priority getPriority() {
-        return priorityName;
+        return priority;
     }
 
-    public void setPriority(Priority priorityName) {
-        this.priorityName = priorityName;
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 
     public Status getStatus() {
@@ -124,7 +124,6 @@ public class TaskEntity implements Serializable {
     public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
-
 
     public Long getId() {
         return id;

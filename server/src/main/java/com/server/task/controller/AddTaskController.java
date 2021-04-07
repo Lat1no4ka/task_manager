@@ -1,6 +1,7 @@
 package com.server.task.controller;
 
 import com.server.task.model.entity.TaskEntity;
+import com.server.task.model.entity.TaskAlterEntity;
 import com.server.task.model.User;
 import com.server.task.model.entity.UserEntity;
 import com.server.task.repo.TaskRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.server.task.model.Task;
 import com.server.task.model.UTconnector;
 
+import javax.persistence.Column;
 import java.util.*;
 
 @CrossOrigin("*")
@@ -40,8 +42,8 @@ public class AddTaskController {
     public Long addNewTask(@RequestBody Task task) {
         taskRepository.save(task);
         UTconnector link = new UTconnector();
-        link.setCUserId(task.getEmployee());
-        link.setCTaskId(task.getId());
+        link.setUserId(task.getEmployee());
+        link.setTaskId(task.getId());
         utRepository.save(link);
         Task usrTask = taskRepository.findFirstByAuthorIdOrderByIdDesc(task.getAuthor());
         return usrTask.getId();
@@ -56,8 +58,8 @@ public class AddTaskController {
         for (int i = 0; i < tasks.size(); i++) {
             Task subtsk = tasks.get(i);
             UTconnector link = new UTconnector();
-            link.setCUserId(subtsk.getEmployee());
-            link.setCTaskId(subtsk.getId());
+            link.setUserId(subtsk.getEmployee());
+            link.setTaskId(subtsk.getId());
             subLinkList.add(link);
         }
         utRepository.saveAll(subLinkList);
@@ -66,48 +68,32 @@ public class AddTaskController {
 
     //Изменение задач (необходимо добавить в JSON id изменяемой задачи)
     @RequestMapping(value = {"/alterTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Task alterTask(@RequestBody Task newTask) {
-        //
-        List<UTconnector> conList = utRepository.findBycTaskId(newTask.getId());
-        utRepository.deleteAll(conList);
-        //TODO переписать нахуй
-        taskRepository.save(newTask);
-        //Task oldTask = taskRepository.findById(newTask.getId());
-        //
+    public UTconnector alterTask(@RequestBody TaskAlterEntity task) {
         UTconnector link = new UTconnector();
-        link.setCUserId(newTask.getEmployee());
-        link.setCTaskId(newTask.getId());
-        utRepository.save(link);
-        return newTask;
+        Task newtask = taskRepository.findById(task.getId());
+        if (task.getTaskName()!=null){newtask.setTaskName(task.getTaskName());}
+        if (task.getTaskDesc()!=null){newtask.setTaskDesc(task.getTaskDesc());}
+        if (task.getBegDate()!=null){newtask.setBegDate(task.getBegDate());}
+        if (task.getBegDate()!=null){newtask.setEndDate(task.getBegDate());}
+        if (task.getEmployee()!=null){
+            link = utRepository.findByUserIdAndTaskId(newtask.getEmployee(), task.getId());
+            link.setUserId(task.getEmployee());
+            utRepository.save(link);
+            newtask.setEmployee(task.getEmployee());
+        }
+        if (task.getPriority()!=null){newtask.setPriority(task.getPriority());}
+        if (task.getStatus()!=null){newtask.setStatus(task.getStatus());}
+        taskRepository.save(newtask);
+        return link;
     }
 
 
     @RequestMapping(value = {"/delete"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public Task deleteTask(@RequestBody Task task) {
         taskRepository.delete(task);
+        //дописать
         return task;
     }
-
-    //TODO обновить фронд под новые функции в UserController (2 нижних уходят)
-
-    /* Надеюсь фронт уже работает по новым функциям в UserController, эти нужно будет удалить
-    @RequestMapping(value={"/listTask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<Task> ListTask(@RequestBody Task task)
-    {
-        Long empl = task.getEmpid();
-        List<Task> emplist = taskRepository.findByempid(empl);
-        return emplist;
-    }
-
-    @RequestMapping(value={"/listTaskId"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<Task> ListTaskId(@RequestBody Task task)
-    {
-        Long idl = task.getId();
-        List<Task> idlist = taskRepository.findById(idl);
-        return idlist;
-    }
-    */
-
 
     //ловит id родительской задачи и кидает его подзадачи
     @RequestMapping(value = {"/getSubtasks"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
@@ -140,12 +126,10 @@ public class AddTaskController {
         for (TaskEntity tasks : taskListEmp) {
             if (tasks.getParentId() == null) {
                 parTasksSet.add(tasks);
-
             }
             else{
                 parTasksSet.add(taskEntityRepository.findById(tasks.getParentId()));
             }
-
         }
         return parTasksSet;
     }

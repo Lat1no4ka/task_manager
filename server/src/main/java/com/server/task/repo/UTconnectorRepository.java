@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface UTconnectorRepository extends CrudRepository<UTconnector, String> {
-    List<UTconnector> findBycTaskId(Long tid);
+    UTconnector findByUserIdAndTaskId(Long uId,Long tId);
 }

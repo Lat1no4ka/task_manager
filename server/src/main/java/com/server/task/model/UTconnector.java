@@ -18,11 +18,8 @@ public class UTconnector implements Serializable {
     private Long id;
 
     @Column(name = "user_id")
-    private Long cUserId;
+    private Long userId;
 
     @Column(name = "task_id")
-    private Long cTaskId;
-
-
-
+    private Long taskId;
 }
