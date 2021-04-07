@@ -30,17 +30,10 @@ const ProfileInfo = () => {
 
             ]
 
-
-
-
-
             console.log(body)
             const data = await request("http://127.0.0.1:8080/sendUsersId", "POST", JSON.stringify(body));
             const userInfo = data[0];
-            //console.log("userInfo", userInfo);
             setUserInfo(userInfo);
-            //setData(data);
-            //console.log (userInfo.role.rolename); 
             setEmail(userInfo.email);
             setFirstName(userInfo.firstName);
             setLastName(userInfo.lastName);
@@ -55,7 +48,6 @@ const ProfileInfo = () => {
             console.log(error);
         }
     };
-    //console.log("userInfo",userInfo);
     if (userInfo?.role?.roleName == "admin") {
         return (
 
