@@ -10,3 +10,36 @@
   border-radius: 10px;
   margin: auto;
 }
+
+.subtask-info {
+  border: 1px solid rgba(141, 141, 141, 0.822);
+  background-color: rgba(190, 190, 190, 0.5);
+  border-radius: 15px;
+  padding: 0px 5px !important;
+  overflow: hidden;
+  justify-content: space-between;
+
+  button {
+    vertical-align: text-bottom;
+    background: none;
+    border: none;
+    white-space: nowrap;
+    max-width: 150px;
+    overflow: hidden;
+    span {
+      text-overflow: ellipsis;
+      width: 140px;
+      overflow: hidden;
+      white-space: nowrap;
+      display: block;
+    }
+  }
+}
+
+.detail-task-window {
+  position: absolute;
+  top: 0;
+  display: block;
+  margin-top: 150px;
+  width: 800px;
+}

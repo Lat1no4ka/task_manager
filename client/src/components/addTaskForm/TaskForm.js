@@ -9,6 +9,7 @@ import "./form.scss";
 export const TaskForm = (props) => {
     const { request } = useHttp();
     const task = useSelector((state) => state.task);
+    const userId = useSelector((state) => state.auth.userId);
     const [showDetail, setShowDetail] = useState(false)
     const [selectedSubTaskId, setSelectedSubTaskId] = useState(false)
     const [toggle, setToggle] = useState(false);
@@ -27,7 +28,7 @@ export const TaskForm = (props) => {
         employee: { id: "", userName: "" },
         files: "",
         status: 1,
-        author: 1,
+        author: userId,
         parentId: null
     }
 
@@ -123,6 +124,7 @@ export const TaskForm = (props) => {
 
         )
     }
+    
     return (
         <div className="taskForm">
             <div>

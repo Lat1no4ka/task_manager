@@ -110,10 +110,10 @@ public class AddTaskController {
 
     //ловит id родительской задачи и кидает его подзадачи
     @RequestMapping(value = {"/getSubtasks"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<Task> ListSubtask(@RequestBody Task task) {
-        Long parid = task.getId();
-        List<Task> subtlist = taskRepository.findByParentId(parid);
-        return subtlist;
+    public List<TaskEntity> ListSubtask(@RequestBody TaskEntity task) {
+        Long parentId = task.getId();
+        List<TaskEntity> subTaskList = taskEntityRepository.findByParentId(parentId);
+        return subTaskList;
     }
 
     //выводит set родительских задач по id пользователя

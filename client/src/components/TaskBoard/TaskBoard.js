@@ -16,7 +16,6 @@ const TaskBoard = () => {
   const [block, setBlock] = useState("");
   const id = useSelector(auth => auth.auth.userId)
 
-
   const getTask = async () => {
     const tasks = await request("http://127.0.0.1:8080/getTasks", "POST", JSON.stringify({ id }))
     setTasks(tasks);
