@@ -11,7 +11,7 @@ const initialState = {
         employee: { id: "", userName: "" },
         files: "",
         status: 1,
-        author: JSON.parse(localStorage.getItem("userData")).userId,
+        author: JSON.parse(localStorage.getItem("userData")) ? JSON.parse(localStorage.getItem("userData")).userId : null,
         parentId: null
     },
     subTask: []

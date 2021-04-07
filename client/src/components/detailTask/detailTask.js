@@ -2,7 +2,8 @@ import "./detail.scss";
 import { useHttp } from "../../hooks/http.hook";
 import { Modal } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { DetailSubTaskCreate as DetailSubTask } from "./detailTask"
+import { useSelector } from "react-redux";
+import { DetailTask as DetailSubTask } from "./detailTask"
 import { CaretDownFill, XCircleFill } from 'react-bootstrap-icons';
 
 export const DetailSubTaskCreate = (props) => {
@@ -47,6 +48,7 @@ export const DetailTask = (props) => {
   const [selectedSubTaskId, setSelectedSubTaskId] = useState(null);
   const [edit, setEdit] = useState(false);
   const [toggle, setToggle] = useState(false);
+  const [toggleStatus, setToggleStatus] = useState(false);
   const [users, setUsers] = useState([]);
   const [priority, setPriority] = useState([]);
   const [status, setStatus] = useState([]);
@@ -54,6 +56,7 @@ export const DetailTask = (props) => {
   const [searchListUser, setSearchListUser] = useState(false);
   const [listPriority, setListPriority] = useState(false);
   const [listStatus, setListStatus] = useState(false);
+  const userId = useSelector((state) => state.auth.userId);
   const [form, setForm] = useState({
     id: data.id,
     taskName: data.taskName,
@@ -70,6 +73,7 @@ export const DetailTask = (props) => {
   useEffect(() => {
     getSubTasks();
   }, [])
+
 
   const getPriority = async () => {
     const priority = await request("http://127.0.0.1:8080/getPriority", "GET");
@@ -137,33 +141,33 @@ export const DetailTask = (props) => {
         centered
       >
         <Modal.Header closeButton>
-          <div className="d-flex justify-content-between w-100">
-            <Modal.Title>
+          <div className="d-flex justify-content-between row w-100">
+            <Modal.Title className="col-6">
               {
                 edit ?
                   <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.taskName} onChange={(e) => setForm({ ...form, taskName: e.target.value })}></input>
                   : data.taskName
               }
             </Modal.Title>
-            <Modal.Title>
+            <Modal.Title className="col-6">
               {
                 edit ?
                   <div>
                     <div className="d-flex">
-                      <input type="input" className="form-control priotity-style " id="prioDir" readOnly={true}
+                      <input type="input" className="form-control priotity-style pr-4" id="prioDir" readOnly={true}
                         value={form.status.statusName}
                         onFocus={(e) => {
                           if (status.length < 1) { getStatus(); }
                         }}
                         onClick={e => {
                           setListStatus(!listStatus);
-                          setToggle(!toggle)
+                          setToggleStatus(!toggleStatus)
                         }}
                         onChange={(e) => {
                           setForm({ ...form, status: { statusName: e.target.value } })
                         }}
                       >
-                      </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} />
+                      </input><CaretDownFill className={toggleStatus ? "toggle-arrow" : "toggle-arrow-active"} />
                     </div>
                     {listStatus ?
                       <div className="list-group list-group-pos">
@@ -175,7 +179,7 @@ export const DetailTask = (props) => {
                               id={item.id}
                               key={item.id}
                               onClick={(e) => {
-                                setToggle(false)
+                                setToggleStatus(false)
                                 setForm({ ...form, status: { id: item.id, statusName: item.statusName } })
                                 setListStatus(false)
                               }}
@@ -193,11 +197,11 @@ export const DetailTask = (props) => {
             </Modal.Title>
           </div>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="d-flex flex-column">
           <div>
             {
               edit ?
-                <div className="m-1 w-50">
+                <div className="m-1 col-6">
                   <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.taskDesc} onChange={(e) => setForm({ ...form, taskDesc: e.target.value })}></input>
                 </div>
                 : <h4>Описание: {data.taskDesc}</h4>
@@ -206,7 +210,7 @@ export const DetailTask = (props) => {
           <div>
             {
               edit ?
-                <div className="m-1 w-50">
+                <div className="m-1 col-6">
                   <input type="date" className="form-control" id="nameOfTask" placeholder="" value={form.begDate} onChange={(e) => setForm({ ...form, begDate: e.target.value })}></input>
                 </div>
                 : <p>Дата начала: {data.begDate}</p>
@@ -215,7 +219,7 @@ export const DetailTask = (props) => {
           <div>
             {
               edit ?
-                <div className="m-1 w-50">
+                <div className="m-1 col-6">
                   <input type="date" className="form-control" id="nameOfTask" placeholder="" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })}></input>
                 </div>
                 : <p>Дата окончания: {data.endDate}</p>
@@ -262,7 +266,6 @@ export const DetailTask = (props) => {
           <div>
             {edit ?
               <div className="m-1 col-6">
-                {/* <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.priority.priorityName} onChange={(e) => setForm({ ...form, priority: { priorityName: e.target.value } })}></input> */}
                 <div className="d-flex">
                   <input type="input" className="form-control priotity-style" id="prioDir" readOnly={true}
                     value={form.priority.priorityName}
@@ -316,22 +319,24 @@ export const DetailTask = (props) => {
                   }) : ""
                 }
               </div>
-              <div>
-                {
-                  edit ?
-                    <div className="d-flex">
-                      <div className="m-1">
-                        <button type="button" className="btn btn-secondary" onClick={e => saveEdit()} >Сохранить</button>
+              {data.author.id == userId ?
+                <div>
+                  {
+                    edit ?
+                      <div className="d-flex">
+                        <div className="m-1">
+                          <button type="button" className="btn btn-secondary" onClick={e => saveEdit()} >Сохранить</button>
+                        </div>
+                        <div className="m-1">
+                          <button type="button" className="btn btn-secondary" onClick={e => setEdit(!edit)} >Отмена</button>
+                        </div>
                       </div>
-                      <div className="m-1">
-                        <button type="button" className="btn btn-secondary" onClick={e => setEdit(!edit)} >Отмена</button>
-                      </div>
-                    </div>
-                    :
-                    <button type="button" className="btn btn-secondary" onClick={e => setEdit(!edit)} >Редактировать</button>
-                }
-
-              </div>
+                      :
+                      <button type="button" className="btn btn-secondary" onClick={e => setEdit(!edit)} >Редактировать</button>
+                  }
+                </div>
+                : ""
+              }
             </div>
           </div>
         </Modal.Footer>
