@@ -34,10 +34,10 @@ public class Task implements Serializable {
     private Long employeeId;
 
     @Column(name ="task_priority_id")
-    private int priorityId;
+    private Long priorityId;
 
     @Column(name = "task_status_id")
-    private int statusId;
+    private Long statusId;
 
     @ManyToMany(mappedBy = "tasks")
     private List<User> users = new ArrayList<>();
@@ -74,19 +74,19 @@ public class Task implements Serializable {
         this.parentId = null;
     }
 
-    public int getPriority() {
+    public Long getPriority() {
         return priorityId;
     }
 
-    public void setPriority(int priorityId) {
+    public void setPriority(Long priorityId) {
         this.priorityId = priorityId;
     }
 
-    public int getStatus() {
+    public Long getStatus() {
         return statusId;
     }
 
-    public void setStatus(int statusId) {
+    public void setStatus(Long statusId) {
         this.statusId = statusId;
     }
 
