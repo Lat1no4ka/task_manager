@@ -1,5 +1,6 @@
 package com.server.task.model.entity;
 
+import com.server.task.model.Files;
 import com.server.task.model.User;
 import com.server.task.model.dictionary.Priority;
 import com.server.task.model.dictionary.Status;
@@ -53,6 +54,10 @@ public class TaskEntity implements Serializable {
     @Column(name = "par_task_id")
     private Long parentId;
 
+    @OneToMany
+    @JoinColumn(name = "task_id")
+    private List<Files> files = new ArrayList<>();
+
     public TaskEntity(Long id, String taskName, String begDate, String endDate, String taskDesc, UserEntity author, UserEntity employee, Long parentId) {
         this.id = id;
         this.taskName = taskName;
@@ -81,6 +86,10 @@ public class TaskEntity implements Serializable {
         this.employee = null;
         this.parentId = null;
     }
+
+    public List<Files> getFiles() {return files;}
+
+    public void setFiles(List<Files> files) { this.files = files; }
 
     public Priority getPriority() {
         return priorityName;
