@@ -2,6 +2,7 @@ package com.server.task.controller;
 
 import com.server.task.model.entity.TaskEntity;
 import com.server.task.model.User;
+import com.server.task.model.entity.UserEntity;
 import com.server.task.repo.TaskRepository;
 import com.server.task.repo.TaskEntityRepository;
 import com.server.task.repo.UTconnectorRepository;
@@ -60,7 +61,7 @@ public class AddTaskController {
             subLinkList.add(link);
         }
         utRepository.saveAll(subLinkList);
-        return subLinkList;
+        return tasks;
     }
 
     //Изменение задач (необходимо добавить в JSON id изменяемой задачи)
@@ -69,7 +70,7 @@ public class AddTaskController {
         //
         List<UTconnector> conList = utRepository.findBycTaskId(newTask.getId());
         utRepository.deleteAll(conList);
-        //
+        //TODO переписать нахуй
         taskRepository.save(newTask);
         //Task oldTask = taskRepository.findById(newTask.getId());
         //
@@ -118,22 +119,35 @@ public class AddTaskController {
 
     //выводит set родительских задач по id пользователя
     @RequestMapping(value = {"/getTasks"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<TaskEntity> ListUsersTasks(@RequestBody User user) {
+    public Set<TaskEntity> ListUsersTasks(@RequestBody UserEntity user) {
         User findUser = userRepository.findById(user.getId());
-        List<TaskEntity> taskList = findUser.getTasks();
-        List<TaskEntity> parTasks = new ArrayList<>();
+        List<TaskEntity> taskListEmp = findUser.getTasks();
+        List<Task> taskListAut = (taskRepository.findByAuthorId(user.getId()));
+        Set parTasksSet = new HashSet<>();
 
-        for (TaskEntity tasks : taskList) {
+        //Ищет задачи, где пользователь - автор
+        for (Task tasks : taskListAut) {
+           TaskEntity task = taskEntityRepository.findById(tasks.getId());
+            if (task.getParentId() == null) {
+                parTasksSet.add(task);
+            }
+            else{
+                parTasksSet.add(taskEntityRepository.findById(task.getParentId()));
+            }
+        }
+
+        //Ищет задачи, где пользователь - исполнитель
+        for (TaskEntity tasks : taskListEmp) {
             if (tasks.getParentId() == null) {
-                parTasks.add(tasks);
+                parTasksSet.add(tasks);
 
             }
-            else {
-                parTasks.add(taskEntityRepository.findById(tasks.getParentId()));
+            else{
+                parTasksSet.add(taskEntityRepository.findById(tasks.getParentId()));
             }
 
         }
-        return parTasks;
+        return parTasksSet;
     }
 
 }
