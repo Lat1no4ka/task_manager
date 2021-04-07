@@ -46,6 +46,14 @@ export const DetailTask = (props) => {
   const [showDetail, setShowDetail] = useState(false);
   const [selectedSubTaskId, setSelectedSubTaskId] = useState(null);
   const [edit, setEdit] = useState(false);
+  const [toggle, setToggle] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [priority, setPriority] = useState([]);
+  const [status, setStatus] = useState([]);
+  const [usersFilter, setUsersFilter] = useState([]);
+  const [searchListUser, setSearchListUser] = useState(false);
+  const [listPriority, setListPriority] = useState(false);
+  const [listStatus, setListStatus] = useState(false);
   const [form, setForm] = useState({
     id: data.id,
     taskName: data.taskName,
@@ -58,22 +66,35 @@ export const DetailTask = (props) => {
     status: data.status,
     author: data.author,
   })
- 
+
   useEffect(() => {
     getSubTasks();
   }, [])
 
+  const getPriority = async () => {
+    const priority = await request("http://127.0.0.1:8080/getPriority", "GET");
+    setPriority(priority);
+  }
+
+  const getUsers = async () => {
+    const users = await request("http://127.0.0.1:8080/allUsers", "GET");
+    setUsers(users);
+  }
+  const getStatus = async () => {
+    const status = await request("http://127.0.0.1:8080/getStatus", "GET");
+    setStatus(status);
+  }
   const getSubTasks = async () => {
     const subTasks = await request("http://127.0.0.1:8080/getSubtasks", "POST", JSON.stringify({ id: data.id }))
     setSubTasks(subTasks);
   };
   const saveEdit = async () => {
-    let update = {...form};
+    let update = { ...form };
     update.priority = update.priority.id
     update.status = update.status.id
     update.author = update.author.id
     update.employee = update.employee.id
-    await request("http://127.0.0.1:8080/alterTask", "POST", JSON.stringify({...update}))
+    await request("http://127.0.0.1:8080/alterTask", "POST", JSON.stringify({ ...update }))
   }
 
   const SubTask = (props) => {
@@ -94,6 +115,19 @@ export const DetailTask = (props) => {
 
     )
   }
+
+  const searchListUserVisible = (searchText, visible) => {
+    setSearchListUser(visible);
+    if (searchText.length > 1) {
+      let filterUser = users.filter((user) => {
+        return user ? !user.userName.indexOf(searchText) : null;
+      })
+      setUsersFilter(filterUser);
+    } else {
+      setUsersFilter(users);
+    }
+  }
+
   if (!showDetail) {
     return (
       <Modal
@@ -114,7 +148,46 @@ export const DetailTask = (props) => {
             <Modal.Title>
               {
                 edit ?
-                  <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.status.statusName} onChange={(e) => setForm({ ...form, status: { statusName: e.target.value } })}></input>
+                  <div>
+                    <div className="d-flex">
+                      <input type="input" className="form-control priotity-style " id="prioDir" readOnly={true}
+                        value={form.status.statusName}
+                        onFocus={(e) => {
+                          if (status.length < 1) { getStatus(); }
+                        }}
+                        onClick={e => {
+                          setListStatus(!listStatus);
+                          setToggle(!toggle)
+                        }}
+                        onChange={(e) => {
+                          setForm({ ...form, status: { statusName: e.target.value } })
+                        }}
+                      >
+                      </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} />
+                    </div>
+                    {listStatus ?
+                      <div className="list-group list-group-pos">
+                        {status.map((item) => {
+                          return (
+                            <button
+                              type="button"
+                              className="list-group-item list-group-item-action"
+                              id={item.id}
+                              key={item.id}
+                              onClick={(e) => {
+                                setToggle(false)
+                                setForm({ ...form, status: { id: item.id, statusName: item.statusName } })
+                                setListStatus(false)
+                              }}
+                            >
+                              {item.statusName}
+                            </button>
+                          )
+                        })}
+                      </div>
+                      : ""
+                    }
+                  </div>
                   : data.status.statusName
               }
             </Modal.Title>
@@ -151,16 +224,83 @@ export const DetailTask = (props) => {
           <div>
             {
               edit ?
-                <div className="m-1 w-50">
-                  <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.employee.userName} onChange={(e) => setForm({ ...form, employee: { userName: e.target.value } })}></input>
+                <div className="m-1 col-6">
+                  <input type="input" className="form-control" id="expdate"
+                    value={form.employee.userName}
+                    onFocus={(e) => searchListUserVisible(e.target.value, true)}
+                    onChange={(e) => {
+                      if (users.length < 1) { getUsers(); }
+                      setForm({ ...form, employee: { userName: e.target.value } });
+                      searchListUserVisible(e.target.value, true);
+                    }}>
+                  </input>
+                  {searchListUser ?
+                    <div className="list-group list-group-pos col-12">
+                      {usersFilter.map((user) => {
+                        return (
+                          <button
+                            type="button"
+                            className="list-group-item list-group-item-action"
+                            id={user.id}
+                            key={user.id}
+                            onClick={(e) => {
+                              setForm({ ...form, employee: { id: user.id, userName: user.userName } });
+                              setSearchListUser(false)
+                            }}
+                          >
+                            {user.userName}
+                          </button>
+                        )
+                      })}
+                    </div>
+                    : ""
+                  }
                 </div>
                 : <p>Исполнитель: {data.employee.userName}</p>
             }
           </div>
           <div>
             {edit ?
-              <div className="m-1 w-50">
-                <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.priority.priorityName} onChange={(e) => setForm({ ...form, priority: { priorityName: e.target.value } })}></input>
+              <div className="m-1 col-6">
+                {/* <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.priority.priorityName} onChange={(e) => setForm({ ...form, priority: { priorityName: e.target.value } })}></input> */}
+                <div className="d-flex">
+                  <input type="input" className="form-control priotity-style" id="prioDir" readOnly={true}
+                    value={form.priority.priorityName}
+                    onFocus={(e) => {
+                      if (priority.length < 1) { getPriority(); }
+                    }}
+                    onClick={e => {
+                      setListPriority(!listPriority);
+                      setToggle(!toggle)
+                    }}
+                    onChange={(e) => {
+                      setForm({ ...form, priority: { priorityName: e.target.value } })
+                    }}
+                  >
+                  </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} />
+                </div>
+                {listPriority ?
+                  <div className="list-group list-group-pos col-12">
+                    {priority.map((item) => {
+                      return (
+                        <button
+                          type="button"
+                          className="list-group-item list-group-item-action"
+                          id={item.id}
+                          key={item.id}
+                          onClick={(e) => {
+                            setToggle(false)
+                            setForm({ ...form, priority: { id: item.id, priorityName: item.priorityName } })
+                            setListPriority(false)
+                          }}
+                        >
+                          {item.priorityName}
+                        </button>
+                      )
+                    })}
+                  </div>
+                  : ""
+                }
               </div>
               : <p>Приоритет: {data.priority.priorityName}</p>
             }

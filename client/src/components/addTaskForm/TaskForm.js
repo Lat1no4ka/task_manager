@@ -39,14 +39,14 @@ export const TaskForm = (props) => {
 
     const sendForm = async () => {
         try {
-            const parenTask = {...task.task};
+            const parenTask = { ...task.task };
             parenTask.priority = task.task.priority.id;
             parenTask.employee = task.task.employee.id;
             console.log(parenTask)
             const data = await request("http://127.0.0.1:8080/addTask", "POST", JSON.stringify({ ...parenTask }))
                 .then((id) => {
                     dispatch(taskAtions.setTask(form));
-                   
+
                     try {
                         task.subTask.forEach(subTask => {
                             subTask.parent = id;
@@ -124,7 +124,7 @@ export const TaskForm = (props) => {
 
         )
     }
-    
+
     return (
         <div className="taskForm">
             <div>
@@ -197,7 +197,8 @@ export const TaskForm = (props) => {
                                 cacheTaskForm(e, { ...task.task, priority: { id: "", priorityName: e.target.value } });
                             }}
                         >
-                        </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} /></div>
+                        </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} />
+                    </div>
                     {listPriority ?
                         <div className="list-group list-group-pos col-12">
                             {priority.map((item) => {
