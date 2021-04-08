@@ -87,11 +87,19 @@ public class AddTaskController {
         return link;
     }
 
-
-    @RequestMapping(value = {"/delete"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    //удаление задачи, ловит id задачи
+    @RequestMapping(value = {"/deleteTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public Task deleteTask(@RequestBody Task task) {
-        taskRepository.delete(task);
-        //дописать
+        Task removeTask = taskRepository.findById(task.getId());
+        List<UTconnector> removeLink = utRepository.findByTaskId(task.getId());
+        List<Task> removeSubtask = taskRepository.findByParentId(task.getId());
+        if (!removeSubtask.isEmpty()) {
+            for (Task tasks : removeSubtask) {
+                utRepository.deleteAll(utRepository.findByTaskId(tasks.getId()));
+            }
+        }
+        taskRepository.delete(removeTask);
+        utRepository.deleteAll(removeLink);
         return task;
     }
 
