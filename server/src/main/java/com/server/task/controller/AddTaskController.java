@@ -93,13 +93,16 @@ public class AddTaskController {
         Task removeTask = taskRepository.findById(task.getId());
         List<UTconnector> removeLink = utRepository.findByTaskId(task.getId());
         List<Task> removeSubtask = taskRepository.findByParentId(task.getId());
+        utRepository.deleteAll(removeLink);
+        taskRepository.delete(removeTask);
+
         if (!removeSubtask.isEmpty()) {
             for (Task tasks : removeSubtask) {
-                utRepository.deleteAll(utRepository.findByTaskId(tasks.getId()));
+                utRepository.deleteAll(utRepository.findByTaskId(tasks.getParent()));
+                taskRepository.delete(tasks);
             }
         }
-        taskRepository.delete(removeTask);
-        utRepository.deleteAll(removeLink);
+
         return task;
     }
 
