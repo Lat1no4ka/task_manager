@@ -87,9 +87,9 @@ public class AddTaskController {
         return link;
     }
 
-    //удаление задачи, ловит id задачи
+    //удаление задачи, подзадач и чистка UT. ловит id задачи
     @RequestMapping(value = {"/deleteTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Task deleteTask(@RequestBody Task task) {
+    public String deleteTask(@RequestBody Task task) {
         Task removeTask = taskRepository.findById(task.getId());
         List<UTconnector> removeLink = utRepository.findByTaskId(task.getId());
         List<Task> removeSubtask = taskRepository.findByParentId(task.getId());
@@ -98,12 +98,12 @@ public class AddTaskController {
 
         if (!removeSubtask.isEmpty()) {
             for (Task tasks : removeSubtask) {
-                utRepository.deleteAll(utRepository.findByTaskId(tasks.getParent()));
-                taskRepository.delete(tasks);
+                utRepository.deleteAll(utRepository.findByTaskId(tasks.getId()));
             }
+            taskRepository.deleteAll(removeSubtask);
         }
 
-        return task;
+        return "Removed";
     }
 
     //ловит id родительской задачи и кидает его подзадачи
