@@ -20,7 +20,7 @@
                 <constraints nullable="true"/>
             </column>
 
-            <column name="beg_date" type="VARCHAR(255)">
+            <column name="beg_date" type="DATE">
                 <constraints nullable="true"/>
             </column>
 

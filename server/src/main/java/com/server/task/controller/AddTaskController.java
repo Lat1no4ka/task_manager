@@ -1,5 +1,6 @@
 package com.server.task.controller;
 
+import com.server.task.model.dictionary.Status;
 import com.server.task.model.entity.TaskEntity;
 import com.server.task.model.entity.TaskAlterEntity;
 import com.server.task.model.User;
@@ -40,6 +41,7 @@ public class AddTaskController {
     //новый вариант создания задачи, сразу добавляет связь в таблицу UTconnector, возвращает id
     @RequestMapping(value = {"/addTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public Long addNewTask(@RequestBody Task task) {
+        task.setBegDate(new Date());
         taskRepository.save(task);
         UTconnector link = new UTconnector();
         link.setUserId(task.getEmployee());
@@ -73,8 +75,8 @@ public class AddTaskController {
         Task newtask = taskRepository.findById(task.getId());
         if (task.getTaskName()!=null){newtask.setTaskName(task.getTaskName());}
         if (task.getTaskDesc()!=null){newtask.setTaskDesc(task.getTaskDesc());}
-        if (task.getBegDate()!=null){newtask.setBegDate(task.getBegDate());}
-        if (task.getBegDate()!=null){newtask.setEndDate(task.getBegDate());}
+        //if (task.getBegDate()!=null){newtask.setBegDate(task.getBegDate());}
+        if (task.getEndDate()!=null){newtask.setEndDate(task.getEndDate());}
         if (task.getEmployee()!=null){
             link = utRepository.findByUserIdAndTaskId(newtask.getEmployee(), task.getId());
             link.setUserId(task.getEmployee());
@@ -103,7 +105,7 @@ public class AddTaskController {
             taskRepository.deleteAll(removeSubtask);
         }
 
-        return "Removed";
+        return "Задание удалено";
     }
 
     //ловит id родительской задачи и кидает его подзадачи
@@ -143,6 +145,13 @@ public class AddTaskController {
             }
         }
         return parTasksSet;
+    }
+
+    @RequestMapping(value={"/getDate"}, headers = {"Content-type=application/json"}, method= RequestMethod.GET)
+    public Date GetStatus()
+    {
+        Date sysdate = new Date();
+        return sysdate;
     }
 
 }
