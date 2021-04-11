@@ -31,7 +31,7 @@ public class FilesController {
         Files files = new Files();
         files.setFileName(file.getOriginalFilename());
         //--------------------------------!!!!---------------------------------
-        File convertFile = new File("C:\\Users\\Chameleon\\Desktop\\Storage\\"+file.getOriginalFilename()); //Сюда напишите путь до папки, куда нужно сохранить
+        File convertFile = new File("src\\main\\resources\\uploads\\"+file.getOriginalFilename()); //Сюда напишите путь до папки, куда нужно сохранить
         //--------------------------------!!!!---------------------------------
         convertFile.createNewFile();
         FileOutputStream fout = new FileOutputStream(convertFile);
