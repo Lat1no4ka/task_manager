@@ -27,7 +27,9 @@ public class FilesController {
     FilesRepository filesRepository;
 
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Files fileUpload(@RequestParam("file") MultipartFile file, @RequestParam("taskid") Long id) throws IOException {
+    public Files fileUpload(@RequestParam("file") MultipartFile file, @RequestParam("taskId") Long id) throws IOException {
+        Files files = new Files();
+        files.setFileName(file.getOriginalFilename());
         //--------------------------------!!!!---------------------------------
         File convertFile = new File("C:\\Users\\Chameleon\\Desktop\\Storage\\"+file.getOriginalFilename()); //Сюда напишите путь до папки, куда нужно сохранить
         //--------------------------------!!!!---------------------------------
@@ -35,9 +37,7 @@ public class FilesController {
         FileOutputStream fout = new FileOutputStream(convertFile);
         fout.write(file.getBytes());
         fout.close();
-        Files files = new Files();
         files.setFilePath(convertFile.toString());
-        files.setFileName(file.getOriginalFilename());
         files.setTaskId(id);
 
         filesRepository.save(files);

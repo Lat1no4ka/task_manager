@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -23,8 +24,9 @@ public class TaskAlterEntity implements Serializable {
     @Column(name = "task_desc")
     private String taskDesc;
 
-    @Column(name = "beg_date")
-    private String begDate;
+   /* @Column(name = "beg_date")
+    private Date begDate;
+    */
 
     @Column(name = "exp_date")
     private String endDate;
