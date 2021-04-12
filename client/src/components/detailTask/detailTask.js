@@ -41,21 +41,19 @@ export const DetailSubTaskCreate = (props) => {
 };
 
 export const DetailTask = (props) => {
-  const data = props.data;
+  const [data, setData] = useState(props.data);
   const { request } = useHttp();
   const [subTasks, setSubTasks] = useState([]);
   const [showDetail, setShowDetail] = useState(false);
   const [selectedSubTaskId, setSelectedSubTaskId] = useState(null);
   const [edit, setEdit] = useState(false);
   const [toggle, setToggle] = useState(false);
-  const [toggleStatus, setToggleStatus] = useState(false);
   const [users, setUsers] = useState([]);
   const [priority, setPriority] = useState([]);
-  const [status, setStatus] = useState([]);
   const [usersFilter, setUsersFilter] = useState([]);
   const [searchListUser, setSearchListUser] = useState(false);
   const [listPriority, setListPriority] = useState(false);
-  const [listStatus, setListStatus] = useState(false);
+  const [nextStatus, setNextStatus] = useState(null);
   const userId = useSelector((state) => state.auth.userId);
   const [form, setForm] = useState({
     id: data.id,
@@ -72,7 +70,8 @@ export const DetailTask = (props) => {
 
   useEffect(() => {
     getSubTasks();
-  }, [])
+    selectNextStatus();
+  }, [form.status])
 
 
   const getPriority = async () => {
@@ -84,10 +83,7 @@ export const DetailTask = (props) => {
     const users = await request("http://127.0.0.1:8080/allUsers", "GET");
     setUsers(users);
   }
-  const getStatus = async () => {
-    const status = await request("http://127.0.0.1:8080/getStatus", "GET");
-    setStatus(status);
-  }
+
   const getSubTasks = async () => {
     const subTasks = await request("http://127.0.0.1:8080/getSubtasks", "POST", JSON.stringify({ id: data.id }))
     setSubTasks(subTasks);
@@ -99,6 +95,7 @@ export const DetailTask = (props) => {
     update.author = update.author.id
     update.employee = update.employee.id
     await request("http://127.0.0.1:8080/alterTask", "POST", JSON.stringify({ ...update }))
+    setData({ ...form })
   }
 
   const SubTask = (props) => {
@@ -118,6 +115,49 @@ export const DetailTask = (props) => {
       </div>
 
     )
+  }
+
+  const selectNextStatus = async () => {
+    const status = await request("http://127.0.0.1:8080/getStatus", "GET");
+    let next = null;
+    switch (form.status.alias) {
+      case "new":
+        next = status.filter(item => {
+          return item.alias === 'work' || item.alias == "closed" ? item : null;
+        })
+        setNextStatus(next)
+        break
+      case "work":
+        next = status.filter(item => {
+          return item.alias === "check" || item.alias == 'closed' ? item : null;
+        })
+        setNextStatus(next)
+        break
+      case "check":
+        next = status.filter(item => {
+          return item.alias === "revision" || item.alias == 'accepted' ? item : null;
+        })
+        setNextStatus(next)
+        break
+      case "revision":
+        next = status.filter(item => {
+          return item.alias === "accepted" || item.alias == 'closed' ? item : null;
+        })
+        setNextStatus(next)
+        break
+      case "accepted":
+        next = status.filter(item => {
+          return item.alias === "work" || item.alias == 'closed' ? item : null;
+        })
+        setNextStatus(next)
+        break
+      default:
+        next = status.filter(item => {
+          return item.alias === 'work' || item.alias == "closed" ? item : null;
+        })
+        setNextStatus(next)
+        break
+    }
   }
 
   const searchListUserVisible = (searchText, visible) => {
@@ -151,53 +191,29 @@ export const DetailTask = (props) => {
             </Modal.Title>
             <Modal.Title className="col-6">
               {
-                edit ?
-                  <div>
-                    <div className="d-flex">
-                      <input type="input" className="form-control priotity-style pr-4" id="prioDir" readOnly={true}
-                        value={form.status.statusName}
-                        onFocus={(e) => {
-                          if (status.length < 1) { getStatus(); }
-                        }}
-                        onClick={e => {
-                          setListStatus(!listStatus);
-                          setToggleStatus(!toggleStatus)
-                        }}
-                        onChange={(e) => {
-                          setForm({ ...form, status: { statusName: e.target.value } })
-                        }}
+                edit ? "" :
+                  nextStatus ?
+                    <div>
+                      {console.log(nextStatus)}
+                      <button type="button" className="btn btn-secondary m-1"
+                        onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit() }}>
+                        {nextStatus[0]?.statusName}
+                      </button>
+                      <button type="button" className="btn btn-secondary m-1"
+                        onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit() }}
                       >
-                      </input><CaretDownFill className={toggleStatus ? "toggle-arrow" : "toggle-arrow-active"} />
+                        {nextStatus[1]?.statusName}
+                      </button>
                     </div>
-                    {listStatus ?
-                      <div className="list-group list-group-pos">
-                        {status.map((item) => {
-                          return (
-                            <button
-                              type="button"
-                              className="list-group-item list-group-item-action"
-                              id={item.id}
-                              key={item.id}
-                              onClick={(e) => {
-                                setToggleStatus(false)
-                                setForm({ ...form, status: { id: item.id, statusName: item.statusName } })
-                                setListStatus(false)
-                              }}
-                            >
-                              {item.statusName}
-                            </button>
-                          )
-                        })}
-                      </div>
-                      : ""
-                    }
-                  </div>
-                  : data.status.statusName
+                    : ""
               }
             </Modal.Title>
           </div>
         </Modal.Header>
         <Modal.Body className="d-flex flex-column">
+          <div>
+            {edit ? "" : <p>Статус: {form.status.statusName}</p>}
+          </div>
           <div>
             {
               edit ?
@@ -261,6 +277,11 @@ export const DetailTask = (props) => {
                   }
                 </div>
                 : <p>Исполнитель: {data.employee.userName}</p>
+            }
+          </div>
+          <div>
+            {
+              edit ? "" : <p>Автора: {data.author.userName}</p>
             }
           </div>
           <div>
