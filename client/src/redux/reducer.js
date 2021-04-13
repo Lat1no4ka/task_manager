@@ -7,3 +7,4 @@ export const reducer = combineReducers({
     auth: authReducer,
     task: taskReducer
 })
+

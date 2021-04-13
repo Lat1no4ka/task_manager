@@ -14,7 +14,8 @@ const initialState = {
         author: JSON.parse(localStorage.getItem("userData")) ? JSON.parse(localStorage.getItem("userData")).userId : null,
         parentId: null
     },
-    subTask: []
+    subTask: [],
+    subTaskFile: []
 }
 
 export const taskReducer = (state = initialState, action) => {
@@ -25,6 +26,8 @@ export const taskReducer = (state = initialState, action) => {
             return { ...state, ...action.task }
         case taskActionTypes.SET_SUB_TASK:
             return { ...state, ...action.subTask }
+        case taskActionTypes.SET_SUB_TASK_FILES:
+            return { ...state, ...action.subTaskFile}
         default:
             return state
     }

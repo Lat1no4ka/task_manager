@@ -63,6 +63,11 @@ export const SubTask = () => {
         }
     }
 
+    const setSubTaskFile = (e) => {
+        task.subTaskFile.push(e.target.files[0])
+        dispatch(taskAtions.setSubTaskFile(task.subTaskFile));
+    }
+
     return (
         <div className="subTaskForm">
             <div>
@@ -167,7 +172,10 @@ export const SubTask = () => {
                 </div>
                 <div className="form-group col-12">
                     <label htmlFor="file">Прикрепить документы</label>
-                    <input type="file" className="form-control-file" id="addFile" value={form.files} onChange={e => setForm({ ...form, files: e.target.value })}></input>
+                    <input type="file" className="form-control-file" id="addFile" onChange={e => {
+                        // setForm({ ...form, files: e.target.value })
+                        setSubTaskFile(e);
+                    }}></input>
                 </div>
                 <div className="form-group col-2">
                     <button type="button" className="btn btn-secondary" onClick={(e) => addSubTask(e)}>Добавить</button>

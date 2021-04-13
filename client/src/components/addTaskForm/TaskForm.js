@@ -35,15 +35,16 @@ export const TaskForm = (props) => {
 
     const [files, setFiles] = useState(null);
 
-    const sendFile = async (taskId) => {
+    console.log(task.subTaskFile)
+    const sendFile = async (taskId,propFiles) => {
 
         const formData = new FormData();
-        console.log(files)
-        formData.append('file', files)
+        formData.append('file', propFiles)
         formData.append('taskId', taskId)
         const headers = { 'Access-Control-Allow-Credentials': 'true' }
         await request("http://127.0.0.1:8080/uploadFile", "POST", formData, headers)
     }
+
     const VisibleSubTaskFrom = (e) => {
         e.preventDefault();
         dispatch(taskAtions.setVisible({ visible: true }));
@@ -55,7 +56,7 @@ export const TaskForm = (props) => {
         parenTask.employee = task.task.employee.id;
         const id = await request("http://127.0.0.1:8080/addTask", "POST", JSON.stringify({ ...parenTask }))
         if (files) {
-            sendFile(id)
+            sendFile(id,files)
         }
         dispatch(taskAtions.setTask(form));
         task.subTask.forEach(subTask => {
@@ -64,6 +65,11 @@ export const TaskForm = (props) => {
             subTask.employee = task.task.employee.id;
         });
         const subTask = await request("http://127.0.0.1:8080/addSubtask", "POST", JSON.stringify(task.subTask))
+        if(task.subTaskFile.length > 0){
+            subTask.forEach((item,index) => {
+                sendFile(item.id,task.subTaskFile[index])
+           })
+        }
         
     };
     const cacheTaskForm = (e, param) => {
@@ -238,10 +244,11 @@ export const TaskForm = (props) => {
                         })
                     }
                 </div>
+                {console.log(task.task.files)}
                 <div className="form-group col-6">
                     <label htmlFor="file">Прикрепить документы</label>
-                    <input type="file" className="form-control-file" id="file" name="file" value={task.task.files} onChange={e => {
-                        cacheTaskForm(e, { ...task.task, files: e.target.value })
+                    <input type="file" className="form-control-file" id="file"   onChange={e => {
+                        // cacheTaskForm(e, { ...task.task, files: e.target.files[0]})
                         setFiles(e.target.files[0]);
                     }}></input>
                 </div>

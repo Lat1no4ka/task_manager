@@ -63,7 +63,7 @@ export const DetailTask = (props) => {
     endDate: data.endDate,
     priority: data.priority,
     employee: data.employee,
-    files: "",
+    files: data.files,
     status: data.status,
     author: data.author,
   })
@@ -328,6 +328,17 @@ export const DetailTask = (props) => {
               </div>
               : <p>Приоритет: {data.priority.priorityName}</p>
             }
+            <div>
+              {console.log(data)}
+              {
+                edit ? "" :
+                  data.files ?
+                    data.files.map((file) => {
+                      return <a href={"http://localhost:8080/" + file.filePath} key={file.id} download>{file.fileName}</a>
+                    })
+                    : ""
+              }
+            </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
