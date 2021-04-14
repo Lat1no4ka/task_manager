@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import com.server.task.model.Task;
 import com.server.task.repo.FilesRepository;
 import com.server.task.model.Files;
-
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -50,7 +50,8 @@ public class FilesController {
 
         Files filepath = filesRepository.findById(files.getId());
         String filename = filepath.getFilePath();
-
+        String[] parts = filepath.getFileName().split(Pattern.quote("."));
+        String mediaType = ("application/" + parts[1]);
         File file = new File(filename);
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         HttpHeaders headers = new HttpHeaders();
@@ -60,7 +61,7 @@ public class FilesController {
         headers.add("Expires", "0");
         ResponseEntity<Object>
                 responseEntity = ResponseEntity.ok().headers(headers).contentLength(file.length()).contentType(
-                MediaType.parseMediaType("application/octet-stream")).body(resource);
+                MediaType.parseMediaType(mediaType)).body(resource);
 
         return responseEntity;
     }

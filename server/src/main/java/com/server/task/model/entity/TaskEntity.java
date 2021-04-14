@@ -26,10 +26,8 @@ public class TaskEntity implements Serializable {
     @Column(name = "task_desc")
     private String taskDesc;
 
-    /*
     @Column(name = "beg_date")
     private String begDate;
-    */
 
     @Column(name = "exp_date")
     private String endDate;
@@ -64,7 +62,7 @@ public class TaskEntity implements Serializable {
         this.id = id;
         this.taskName = taskName;
         this.taskDesc = taskDesc;
-        //this.begDate = begDate;
+        this.begDate = begDate;
         this.endDate = endDate;
         this.author = author;
         this.employee = employee;
@@ -139,7 +137,7 @@ public class TaskEntity implements Serializable {
         return taskDesc;
     }
 
-    //public String getBegDate() {return begDate;}
+    public String getBegDate() {return begDate;}
 
     public String getEndDate() {
         return endDate;
