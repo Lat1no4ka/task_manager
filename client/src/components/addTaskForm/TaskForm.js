@@ -35,8 +35,7 @@ export const TaskForm = (props) => {
 
     const [files, setFiles] = useState(null);
 
-    console.log(task.subTaskFile)
-    const sendFile = async (taskId,propFiles) => {
+    const sendFile = async (taskId, propFiles) => {
 
         const formData = new FormData();
         formData.append('file', propFiles)
@@ -56,7 +55,7 @@ export const TaskForm = (props) => {
         parenTask.employee = task.task.employee.id;
         const id = await request("http://127.0.0.1:8080/addTask", "POST", JSON.stringify({ ...parenTask }))
         if (files) {
-            sendFile(id,files)
+            sendFile(id, files)
         }
         dispatch(taskAtions.setTask(form));
         task.subTask.forEach(subTask => {
@@ -65,12 +64,12 @@ export const TaskForm = (props) => {
             subTask.employee = task.task.employee.id;
         });
         const subTask = await request("http://127.0.0.1:8080/addSubtask", "POST", JSON.stringify(task.subTask))
-        if(task.subTaskFile.length > 0){
-            subTask.forEach((item,index) => {
-                sendFile(item.id,task.subTaskFile[index])
-           })
+        if (task.subTaskFile.length > 0) {
+            subTask.forEach((item, index) => {
+                sendFile(item.id, task.subTaskFile[index])
+            })
         }
-        
+
     };
     const cacheTaskForm = (e, param) => {
         e.preventDefault();
@@ -244,13 +243,18 @@ export const TaskForm = (props) => {
                         })
                     }
                 </div>
-                {console.log(task.task.files)}
-                <div className="form-group col-6">
-                    <label htmlFor="file">Прикрепить документы</label>
-                    <input type="file" className="form-control-file" id="file"   onChange={e => {
-                        // cacheTaskForm(e, { ...task.task, files: e.target.files[0]})
-                        setFiles(e.target.files[0]);
-                    }}></input>
+                <div className="form-group col-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile"
+                            onChange={e => {
+                                // cacheTaskForm(e, { ...task.task, files: e.target.files[0]})
+                                console.log(e.target.value)
+                                setFiles(e.target.files[0]);
+                            }}
+                        >
+                        </input>
+                        <label class="custom-file-label" for="customFile">Выбирите файл</label>
+                    </div>
                 </div>
                 <div className="form-group col-12">
                     <button type="button" className="btn btn-secondary" onClick={e => saveTask(e)} >Создать задачу</button>

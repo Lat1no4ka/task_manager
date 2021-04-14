@@ -68,11 +68,33 @@ export const DetailTask = (props) => {
     author: data.author,
   })
 
+  const [ff, setFF] = useState(null)
+
   useEffect(() => {
     getSubTasks();
     selectNextStatus();
+    getFile();
+    if(ff){
+      DDFF()
+    }
   }, [form.status])
 
+  const getFile = async () => {
+    console.log(data.files[0])
+    const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    const response = await fetch("http://127.0.0.1:8080/downloadFile", { method: "POST", body: JSON.stringify(data.files[0]), headers });
+    setFF(response)
+  };
+
+  const DDFF = () => {
+    if (ff) {
+      var blob = new Blob([ff]);
+      var link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "file.txt";
+      link.click();
+    }
+  }
 
   const getPriority = async () => {
     const priority = await request("http://127.0.0.1:8080/getPriority", "GET");
@@ -194,7 +216,7 @@ export const DetailTask = (props) => {
                 edit ? "" :
                   nextStatus ?
                     <div>
-                      {console.log(nextStatus)}
+                      {/* {console.log(nextStatus)} */}
                       <button type="button" className="btn btn-secondary m-1"
                         onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit() }}>
                         {nextStatus[0]?.statusName}
@@ -329,7 +351,6 @@ export const DetailTask = (props) => {
               : <p>Приоритет: {data.priority.priorityName}</p>
             }
             <div>
-              {console.log(data)}
               {
                 edit ? "" :
                   data.files ?

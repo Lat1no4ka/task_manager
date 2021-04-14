@@ -60,7 +60,7 @@ public class FilesController {
         headers.add("Expires", "0");
         ResponseEntity<Object>
                 responseEntity = ResponseEntity.ok().headers(headers).contentLength(file.length()).contentType(
-                MediaType.parseMediaType("application/txt")).body(resource);
+                MediaType.parseMediaType("application/octet-stream")).body(resource);
 
         return responseEntity;
     }
