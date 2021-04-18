@@ -1,5 +1,6 @@
 package com.server.task.model.entity;
 
+import com.server.task.model.Files;
 import com.server.task.model.User;
 import com.server.task.model.dictionary.Priority;
 import com.server.task.model.dictionary.Status;
@@ -25,8 +26,10 @@ public class TaskEntity implements Serializable {
     @Column(name = "task_desc")
     private String taskDesc;
 
+    /*
     @Column(name = "beg_date")
     private String begDate;
+    */
 
     @Column(name = "exp_date")
     private String endDate;
@@ -41,7 +44,7 @@ public class TaskEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name ="task_priority_id")
-    private Priority priorityName;
+    private Priority priority;
 
     @ManyToOne
     @JoinColumn(name = "task_status_id")
@@ -53,11 +56,15 @@ public class TaskEntity implements Serializable {
     @Column(name = "par_task_id")
     private Long parentId;
 
+    @OneToMany
+    @JoinColumn(name = "task_id")
+    private List<Files> files = new ArrayList<>();
+
     public TaskEntity(Long id, String taskName, String begDate, String endDate, String taskDesc, UserEntity author, UserEntity employee, Long parentId) {
         this.id = id;
         this.taskName = taskName;
         this.taskDesc = taskDesc;
-        this.begDate = begDate;
+        //this.begDate = begDate;
         this.endDate = endDate;
         this.author = author;
         this.employee = employee;
@@ -75,19 +82,23 @@ public class TaskEntity implements Serializable {
         this.id = null;
         this.taskName = null;
         this.taskDesc = null;
-        this.begDate = null;
+        //this.begDate = null;
         this.endDate = null;
         this.author = null;
         this.employee = null;
         this.parentId = null;
     }
 
+    public List<Files> getFiles() {return files;}
+
+    public void setFiles(List<Files> files) { this.files = files; }
+
     public Priority getPriority() {
-        return priorityName;
+        return priority;
     }
 
-    public void setPriority(Priority priorityName) {
-        this.priorityName = priorityName;
+    public void setPriority(Priority priority) {
+        this.priority = priority;
     }
 
     public Status getStatus() {
@@ -106,7 +117,7 @@ public class TaskEntity implements Serializable {
 
     public void setTaskDesc(String taskDesc) { this.taskDesc = taskDesc; }
 
-    public void setBegDate(String begDate) { this.begDate = begDate; }
+   // public void setBegDate(String begDate) { this.begDate = begDate; }
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
@@ -115,7 +126,6 @@ public class TaskEntity implements Serializable {
     public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
-
 
     public Long getId() {
         return id;
@@ -129,9 +139,7 @@ public class TaskEntity implements Serializable {
         return taskDesc;
     }
 
-    public String getBegDate() {
-        return begDate;
-    }
+    //public String getBegDate() {return begDate;}
 
     public String getEndDate() {
         return endDate;

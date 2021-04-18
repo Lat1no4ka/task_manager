@@ -15,14 +15,26 @@ public class Status implements Serializable {
     @Column(name = "status_name", unique = true, nullable = false)
     private String statusName;
 
+    @Column(name = "alias", unique = true, nullable = false)
+    private String alias;
+
     public Status() {
         this.id = null;
         this.statusName = null;
+        this.alias = null;
     }
 
     public Status(Long id, String statusName) {
         this.id = id;
         this.statusName = statusName;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public void setId(Long id) {

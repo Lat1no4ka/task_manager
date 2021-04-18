@@ -8,6 +8,7 @@ export const SubTask = () => {
     const dispatch = useDispatch();
     const { request } = useHttp();
     const task = useSelector((state) => state.task);
+    const userId = useSelector((state) => state.auth.userId);
     const [toggle, setToggle] = useState(false);
     const [users, setUsers] = useState([]);
     const [priority, setPriority] = useState([]);
@@ -24,7 +25,7 @@ export const SubTask = () => {
             employee: { id: "", userName: "" },
             files: "",
             status: 1,
-            author: 1,
+            author: userId,
             parentId: null
         }
     );
@@ -60,6 +61,11 @@ export const SubTask = () => {
         } else {
             setUsersFilter(users);
         }
+    }
+
+    const setSubTaskFile = (e) => {
+        task.subTaskFile.push(e.target.files[0])
+        dispatch(taskAtions.setSubTaskFile(task.subTaskFile));
     }
 
     return (
@@ -166,7 +172,10 @@ export const SubTask = () => {
                 </div>
                 <div className="form-group col-12">
                     <label htmlFor="file">Прикрепить документы</label>
-                    <input type="file" className="form-control-file" id="addFile" value={form.files} onChange={e => setForm({ ...form, files: e.target.value })}></input>
+                    <input type="file" className="form-control-file" id="addFile" onChange={e => {
+                        // setForm({ ...form, files: e.target.value })
+                        setSubTaskFile(e);
+                    }}></input>
                 </div>
                 <div className="form-group col-2">
                     <button type="button" className="btn btn-secondary" onClick={(e) => addSubTask(e)}>Добавить</button>

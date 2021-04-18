@@ -5,10 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { taskAtions } from "../../redux/task/action";
 import { DetailSubTaskCreate } from "../detailTask/detailTask"
 import "./form.scss";
+import { Form } from "react-bootstrap";
 
 export const TaskForm = (props) => {
     const { request } = useHttp();
     const task = useSelector((state) => state.task);
+    const userId = useSelector((state) => state.auth.userId);
     const [showDetail, setShowDetail] = useState(false)
     const [selectedSubTaskId, setSelectedSubTaskId] = useState(false)
     const [toggle, setToggle] = useState(false);
@@ -27,8 +29,19 @@ export const TaskForm = (props) => {
         employee: { id: "", userName: "" },
         files: "",
         status: 1,
-        author: 1,
+        author: userId,
         parentId: null
+    }
+
+    const [files, setFiles] = useState(null);
+
+    const sendFile = async (taskId, propFiles) => {
+
+        const formData = new FormData();
+        formData.append('file', propFiles)
+        formData.append('taskId', taskId)
+        const headers = { 'Access-Control-Allow-Credentials': 'true' }
+        await request("http://127.0.0.1:8080/uploadFile", "POST", formData, headers)
     }
 
     const VisibleSubTaskFrom = (e) => {
@@ -37,29 +50,26 @@ export const TaskForm = (props) => {
     }
 
     const sendForm = async () => {
-        try {
-            const parenTask = {...task.task};
-            parenTask.priority = task.task.priority.id;
-            parenTask.employee = task.task.employee.id;
-            console.log(parenTask)
-            const data = await request("http://127.0.0.1:8080/addTask", "POST", JSON.stringify({ ...parenTask }))
-                .then((id) => {
-                    dispatch(taskAtions.setTask(form));
-                   
-                    try {
-                        task.subTask.forEach(subTask => {
-                            subTask.parent = id;
-                            subTask.priority = task.task.priority.id;
-                            subTask.employee = task.task.employee.id;
-                        });
-                        request("http://127.0.0.1:8080/addSubtask", "POST", JSON.stringify(task.subTask))
-                    } catch (error) {
-                        console.log(error);
-                    }
-                });
-        } catch (error) {
-            console.log(error);
+        const parenTask = { ...task.task };
+        parenTask.priority = task.task.priority.id;
+        parenTask.employee = task.task.employee.id;
+        const id = await request("http://127.0.0.1:8080/addTask", "POST", JSON.stringify({ ...parenTask }))
+        if (files) {
+            sendFile(id, files)
         }
+        dispatch(taskAtions.setTask(form));
+        task.subTask.forEach(subTask => {
+            subTask.parent = id;
+            subTask.priority = task.task.priority.id;
+            subTask.employee = task.task.employee.id;
+        });
+        const subTask = await request("http://127.0.0.1:8080/addSubtask", "POST", JSON.stringify(task.subTask))
+        if (task.subTaskFile.length > 0) {
+            subTask.forEach((item, index) => {
+                sendFile(item.id, task.subTaskFile[index])
+            })
+        }
+
     };
     const cacheTaskForm = (e, param) => {
         e.preventDefault();
@@ -123,6 +133,7 @@ export const TaskForm = (props) => {
 
         )
     }
+
     return (
         <div className="taskForm">
             <div>
@@ -195,7 +206,8 @@ export const TaskForm = (props) => {
                                 cacheTaskForm(e, { ...task.task, priority: { id: "", priorityName: e.target.value } });
                             }}
                         >
-                        </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} /></div>
+                        </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} />
+                    </div>
                     {listPriority ?
                         <div className="list-group list-group-pos col-12">
                             {priority.map((item) => {
@@ -231,9 +243,18 @@ export const TaskForm = (props) => {
                         })
                     }
                 </div>
-                <div className="form-group col-6">
-                    <label htmlFor="file">Прикрепить документы</label>
-                    <input type="file" className="form-control-file" id="addFile" value={task.task.files} onChange={e => cacheTaskForm(e, { ...task.task, files: e.target.value })}></input>
+                <div className="form-group col-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile"
+                            onChange={e => {
+                                // cacheTaskForm(e, { ...task.task, files: e.target.files[0]})
+                                console.log(e.target.value)
+                                setFiles(e.target.files[0]);
+                            }}
+                        >
+                        </input>
+                        <label class="custom-file-label" for="customFile">Выбирите файл</label>
+                    </div>
                 </div>
                 <div className="form-group col-12">
                     <button type="button" className="btn btn-secondary" onClick={e => saveTask(e)} >Создать задачу</button>

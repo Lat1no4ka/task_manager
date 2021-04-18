@@ -23,6 +23,4 @@ public class StatusDirController {
         return statusDirRepository.findAll();
     }
 
-
-
 }

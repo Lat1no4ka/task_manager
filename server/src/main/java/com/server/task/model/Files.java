@@ -9,17 +9,22 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
-@Table(name = "utconnector")
-public class UTconnector implements Serializable {
+@Table(name = "files")
+public class Files implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
-
     @Column(name = "task_id")
     private Long taskId;
+
+    @Column(name = "file_path")
+    private String filePath;
+
+    @Column(name = "file_name")
+    private String fileName;
+
+
 }

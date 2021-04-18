@@ -24,7 +24,6 @@ public class UserController {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
-
     //вывод всех пользователей
     @RequestMapping(value={"/allUsers"}, method=RequestMethod.GET, headers = {"Content-type=application/json"})
     public List<User> ListAllUsers()
@@ -76,5 +75,6 @@ public class UserController {
         userAlterEntityRepository.save(newusr);
         return "Информация обновлена";
     }
+
 
 }

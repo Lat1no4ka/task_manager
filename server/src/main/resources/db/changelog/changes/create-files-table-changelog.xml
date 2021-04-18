@@ -5,24 +5,28 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-    <changeSet author="admin" id="7">
-        <createTable tableName="statusdir">
+    <changeSet author="admin" id="15">
+        <createTable tableName="files">
 
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
             </column>
 
-            <column name="status_name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+            <column name="task_id" type="INT">
+                <constraints nullable="true"/>
             </column>
 
-            <column name="alias" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+            <column name="file_path" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="file_name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
             </column>
 
         </createTable>
         <rollback>
-            <dropTable tableName="statusdir"/>
+            <dropTable tableName="files"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>

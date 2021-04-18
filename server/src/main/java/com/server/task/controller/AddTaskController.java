@@ -1,7 +1,10 @@
 package com.server.task.controller;
 
+import com.server.task.model.dictionary.Status;
 import com.server.task.model.entity.TaskEntity;
+import com.server.task.model.entity.TaskAlterEntity;
 import com.server.task.model.User;
+import com.server.task.model.entity.UserEntity;
 import com.server.task.repo.TaskRepository;
 import com.server.task.repo.TaskEntityRepository;
 import com.server.task.repo.UTconnectorRepository;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import com.server.task.model.Task;
 import com.server.task.model.UTconnector;
 
+import javax.persistence.Column;
 import java.util.*;
 
 @CrossOrigin("*")
@@ -37,10 +41,11 @@ public class AddTaskController {
     //новый вариант создания задачи, сразу добавляет связь в таблицу UTconnector, возвращает id
     @RequestMapping(value = {"/addTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public Long addNewTask(@RequestBody Task task) {
+        task.setBegDate(new Date());
         taskRepository.save(task);
         UTconnector link = new UTconnector();
-        link.setCUserId(task.getEmployee());
-        link.setCTaskId(task.getId());
+        link.setUserId(task.getEmployee());
+        link.setTaskId(task.getId());
         utRepository.save(link);
         Task usrTask = taskRepository.findFirstByAuthorIdOrderByIdDesc(task.getAuthor());
         return usrTask.getId();
@@ -55,83 +60,98 @@ public class AddTaskController {
         for (int i = 0; i < tasks.size(); i++) {
             Task subtsk = tasks.get(i);
             UTconnector link = new UTconnector();
-            link.setCUserId(subtsk.getEmployee());
-            link.setCTaskId(subtsk.getId());
+            link.setUserId(subtsk.getEmployee());
+            link.setTaskId(subtsk.getId());
             subLinkList.add(link);
         }
         utRepository.saveAll(subLinkList);
-        return subLinkList;
+        return tasks;
     }
 
     //Изменение задач (необходимо добавить в JSON id изменяемой задачи)
     @RequestMapping(value = {"/alterTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Task alterTask(@RequestBody Task newTask) {
-        //
-        List<UTconnector> conList = utRepository.findBycTaskId(newTask.getId());
-        utRepository.deleteAll(conList);
-        //
-        taskRepository.save(newTask);
-        //Task oldTask = taskRepository.findById(newTask.getId());
-        //
+    public UTconnector alterTask(@RequestBody TaskAlterEntity task) {
         UTconnector link = new UTconnector();
-        link.setCUserId(newTask.getEmployee());
-        link.setCTaskId(newTask.getId());
-        utRepository.save(link);
-        return newTask;
+        Task newtask = taskRepository.findById(task.getId());
+        if (task.getTaskName()!=null){newtask.setTaskName(task.getTaskName());}
+        if (task.getTaskDesc()!=null){newtask.setTaskDesc(task.getTaskDesc());}
+        //if (task.getBegDate()!=null){newtask.setBegDate(task.getBegDate());}
+        if (task.getEndDate()!=null){newtask.setEndDate(task.getEndDate());}
+        if (task.getEmployee()!=null){
+            link = utRepository.findByUserIdAndTaskId(newtask.getEmployee(), task.getId());
+            link.setUserId(task.getEmployee());
+            utRepository.save(link);
+            newtask.setEmployee(task.getEmployee());
+        }
+        if (task.getPriority()!=null){newtask.setPriority(task.getPriority());}
+        if (task.getStatus()!=null){newtask.setStatus(task.getStatus());}
+        taskRepository.save(newtask);
+        return link;
     }
 
+    //удаление задачи, подзадач и чистка UT. ловит id задачи
+    @RequestMapping(value = {"/deleteTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public String deleteTask(@RequestBody Task task) {
+        Task removeTask = taskRepository.findById(task.getId());
+        List<UTconnector> removeLink = utRepository.findByTaskId(task.getId());
+        List<Task> removeSubtask = taskRepository.findByParentId(task.getId());
+        utRepository.deleteAll(removeLink);
+        taskRepository.delete(removeTask);
 
-    @RequestMapping(value = {"/delete"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Task deleteTask(@RequestBody Task task) {
-        taskRepository.delete(task);
-        return task;
+        if (!removeSubtask.isEmpty()) {
+            for (Task tasks : removeSubtask) {
+                utRepository.deleteAll(utRepository.findByTaskId(tasks.getId()));
+            }
+            taskRepository.deleteAll(removeSubtask);
+        }
+
+        return "Задание удалено";
     }
-
-    //TODO обновить фронд под новые функции в UserController (2 нижних уходят)
-
-    /* Надеюсь фронт уже работает по новым функциям в UserController, эти нужно будет удалить
-    @RequestMapping(value={"/listTask"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<Task> ListTask(@RequestBody Task task)
-    {
-        Long empl = task.getEmpid();
-        List<Task> emplist = taskRepository.findByempid(empl);
-        return emplist;
-    }
-
-    @RequestMapping(value={"/listTaskId"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<Task> ListTaskId(@RequestBody Task task)
-    {
-        Long idl = task.getId();
-        List<Task> idlist = taskRepository.findById(idl);
-        return idlist;
-    }
-    */
-
 
     //ловит id родительской задачи и кидает его подзадачи
     @RequestMapping(value = {"/getSubtasks"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<Task> ListSubtask(@RequestBody Task task) {
-        Long parid = task.getId();
-        List<Task> subtlist = taskRepository.findByParentId(parid);
-        return subtlist;
+    public List<TaskEntity> ListSubtask(@RequestBody TaskEntity task) {
+        Long parentId = task.getId();
+        List<TaskEntity> subTaskList = taskEntityRepository.findByParentId(parentId);
+        return subTaskList;
     }
 
     //выводит set родительских задач по id пользователя
     @RequestMapping(value = {"/getTasks"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<TaskEntity> ListUsersTasks(@RequestBody User user) {
+    public Set<TaskEntity> ListUsersTasks(@RequestBody UserEntity user) {
         User findUser = userRepository.findById(user.getId());
-        List<TaskEntity> taskList = findUser.getTasks();
-        List<TaskEntity> parTasks = new ArrayList<>();
+        List<TaskEntity> taskListEmp = findUser.getTasks();
+        List<Task> taskListAut = (taskRepository.findByAuthorId(user.getId()));
+        Set parTasksSet = new HashSet<>();
 
-        for (TaskEntity tasks : taskList) {
-            if (tasks.getParentId() == null) {
-                parTasks.add(tasks);
+        //Ищет задачи, где пользователь - автор
+        for (Task tasks : taskListAut) {
+           TaskEntity task = taskEntityRepository.findById(tasks.getId());
+            if (task.getParentId() == null) {
+                parTasksSet.add(task);
             }
-            else {
-                parTasks.add(taskEntityRepository.findById(tasks.getParentId()));
+            else{
+                parTasksSet.add(taskEntityRepository.findById(task.getParentId()));
             }
         }
-        return parTasks;
+
+        //Ищет задачи, где пользователь - исполнитель
+        for (TaskEntity tasks : taskListEmp) {
+            if (tasks.getParentId() == null) {
+                parTasksSet.add(tasks);
+            }
+            else{
+                parTasksSet.add(taskEntityRepository.findById(tasks.getParentId()));
+            }
+        }
+        return parTasksSet;
+    }
+
+    @RequestMapping(value={"/getDate"}, headers = {"Content-type=application/json"}, method= RequestMethod.GET)
+    public Date GetStatus()
+    {
+        Date sysdate = new Date();
+        return sysdate;
     }
 
 }

@@ -3,6 +3,7 @@ package com.server.task.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -22,7 +23,7 @@ public class Task implements Serializable {
     private String taskDesc;
 
     @Column(name = "beg_date")
-    private String begDate;
+    private Date begDate;
 
     @Column(name = "exp_date")
     private String endDate;
@@ -34,10 +35,10 @@ public class Task implements Serializable {
     private Long employeeId;
 
     @Column(name ="task_priority_id")
-    private int priorityId;
+    private Long priorityId;
 
     @Column(name = "task_status_id")
-    private int statusId;
+    private Long statusId;
 
     @ManyToMany(mappedBy = "tasks")
     private List<User> users = new ArrayList<>();
@@ -45,7 +46,7 @@ public class Task implements Serializable {
     @Column(name = "par_task_id")
     private Long parentId;
 
-    public Task(Long id, String taskName,String begDate, String endDate, String taskDesc, Long authorId, Long employeeId, Long parentId) {
+    public Task(Long id, String taskName,Date begDate, String endDate, String taskDesc, Long authorId, Long employeeId, Long parentId) {
         this.id = id;
         this.taskName = taskName;
         this.taskDesc = taskDesc;
@@ -74,19 +75,19 @@ public class Task implements Serializable {
         this.parentId = null;
     }
 
-    public int getPriority() {
+    public Long getPriority() {
         return priorityId;
     }
 
-    public void setPriority(int priorityId) {
+    public void setPriority(Long priorityId) {
         this.priorityId = priorityId;
     }
 
-    public int getStatus() {
+    public Long getStatus() {
         return statusId;
     }
 
-    public void setStatus(int statusId) {
+    public void setStatus(Long statusId) {
         this.statusId = statusId;
     }
 
@@ -98,7 +99,7 @@ public class Task implements Serializable {
 
     public void setTaskDesc(String taskDesc) { this.taskDesc = taskDesc; }
 
-    public void setBegDate(String begDate) { this.begDate = begDate; }
+    public void setBegDate(Date begDate) { this.begDate = begDate; }
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
@@ -129,7 +130,7 @@ public class Task implements Serializable {
         return taskDesc;
     }
 
-    public String getBegDate() {
+    public Date getBegDate() {
         return begDate;
     }
 

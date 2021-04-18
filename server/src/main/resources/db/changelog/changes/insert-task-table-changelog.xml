@@ -15,8 +15,6 @@
 
             <column name="task_desc" value="Do the greatest backflip ever"/>
 
-            <column name="beg_date" value="01.01.2021"/>
-
             <column name="exp_date" value="30.01.2021"/>
 
             <column name="head_id" value="3"/>
@@ -37,8 +35,6 @@
 
             <column name="task_desc" value="tset"/>
 
-            <column name="beg_date" value="01.01.2021"/>
-
             <column name="exp_date" value="30.01.2021"/>
 
             <column name="head_id" value="1"/>
@@ -58,8 +54,6 @@
             <column name="task_name" value="Test"/>
 
             <column name="task_desc" value="Bruh"/>
-
-            <column name="beg_date" value="01.01.2021"/>
 
             <column name="exp_date" value="30.01.2021"/>
 

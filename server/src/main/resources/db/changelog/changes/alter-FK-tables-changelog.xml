@@ -37,5 +37,11 @@
                                   referencedColumnNames="id"
                                   referencedTableName="tasks"/>
 
+        <addForeignKeyConstraint  baseColumnNames="task_id"
+                                  baseTableName="files"
+                                  constraintName="fk_files_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="tasks"/>
+
     </changeSet>
 </databaseChangeLog>
