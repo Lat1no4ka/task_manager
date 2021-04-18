@@ -5,10 +5,9 @@ import { useHttp } from "../../hooks/http.hook";
 import ModalCreateUser from "./modal-create-user"
 import ModalUpdateUser from "./modal-update-user";
 
+const ProfileInfo = () => {
 
- const ProfileInfo = () => {
-
-    const { loading, error, request } = useHttp();
+     const { loading, error, request } = useHttp();
 
      const [userNameinf, setUserName] = useState("");
      const [firstNameinf, setFirstName] = useState("");
@@ -31,9 +30,10 @@ import ModalUpdateUser from "./modal-update-user";
 
             ]
 
-            console.log(body)
+            
             const data = await request("http://127.0.0.1:8080/sendUsersId", "POST", JSON.stringify(body));
             const userInfo = data[0];
+            
             setUserInfo(userInfo);
             setEmail(userInfo.email);
             setFirstName(userInfo.firstName);
