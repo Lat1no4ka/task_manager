@@ -55,6 +55,7 @@ export const DetailTask = (props) => {
   const [listPriority, setListPriority] = useState(false);
   const [nextStatus, setNextStatus] = useState(null);
   const userId = useSelector((state) => state.auth.userId);
+  const [file, setFile] = useState(null)
   const [form, setForm] = useState({
     id: data.id,
     taskName: data.taskName,
@@ -68,32 +69,30 @@ export const DetailTask = (props) => {
     author: data.author,
   })
 
-  const [ff, setFF] = useState(null)
-
   useEffect(() => {
     getSubTasks();
     selectNextStatus();
     getFile();
-    if(ff){
-      DDFF()
-    }
   }, [form.status])
 
   const getFile = async () => {
-    console.log(data.files[0])
     const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-    const response = await fetch("http://127.0.0.1:8080/downloadFile", { method: "POST", body: JSON.stringify(data.files[0]), headers });
-    setFF(response)
+    const response = await fetch("http://127.0.0.1:8080/downloadFile", { method: "POST", body: JSON.stringify(data.files[0]), headers })
+      .then(res => res.blob())
+      .then(blob => {
+        setFile(blob)
+      })
+    
   };
 
-  const DDFF = () => {
-    if (ff) {
-      var blob = new Blob([ff]);
-      var link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = "file.txt";
-      link.click();
-    }
+  const downloadFile = (fileName) => {
+    const url = window.URL.createObjectURL(new Blob([file]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
   }
 
   const getPriority = async () => {
@@ -355,7 +354,7 @@ export const DetailTask = (props) => {
                 edit ? "" :
                   data.files ?
                     data.files.map((file) => {
-                      return <a href={"http://localhost:8080/" + file.filePath} key={file.id} download>{file.fileName}</a>
+                      return <a href="#" key={file.id} onClick={e => downloadFile(file.fileName)}>{file.fileName}</a>
                     })
                     : ""
               }
