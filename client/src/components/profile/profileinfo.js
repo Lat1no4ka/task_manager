@@ -3,18 +3,19 @@ import "./profileinf.scss";
 import { useHttp } from "../../hooks/http.hook";
 
 import ModalCreateUser from "./modal-create-user"
+import ModalUpdateUser from "./modal-update-user";
 
 
-const ProfileInfo = () => {
+ const ProfileInfo = () => {
 
     const { loading, error, request } = useHttp();
 
-    const [userNameinf, setUserName] = useState("");
-    const [firstNameinf, setFirstName] = useState("");
-    const [lastnameinf, setLastName] = useState("");
-    const [emailinf, setEmail] = useState("");
-    const [userInfo, setUserInfo] = useState(0);
-    const [roleinf, setRole] = useState("");
+     const [userNameinf, setUserName] = useState("");
+     const [firstNameinf, setFirstName] = useState("");
+     const [lastnameinf, setLastName] = useState("");
+     const [emailinf, setEmail] = useState("");
+     const [userInfo, setUserInfo] = useState(0);
+     const [roleinf, setRole] = useState("");
 
     useEffect(() => {
         getInfo();
@@ -72,7 +73,10 @@ const ProfileInfo = () => {
                             <ModalCreateUser />
 
                         </div>
+                        <div className="form-group">
+                            <ModalUpdateUser/>
 
+                        </div>
                     </div>
 
                 </div>
@@ -101,7 +105,10 @@ const ProfileInfo = () => {
                         <div>
                             <p>Роль: {roleinf}</p>
                         </div>
+                        <div className="form-group">
+                            <ModalUpdateUser/>
 
+                        </div>
 
                     </div>
 
