@@ -33,15 +33,20 @@ export const TaskForm = (props) => {
         parentId: null
     }
 
-    const [files, setFiles] = useState(null);
+    const [files, setFiles] = useState([]);
 
     const sendFile = async (taskId, propFiles) => {
-
         const formData = new FormData();
-        formData.append('file', propFiles)
+        formData.append('file', {...propFiles})
         formData.append('taskId', taskId)
         const headers = { 'Access-Control-Allow-Credentials': 'true' }
-        await request("http://127.0.0.1:8080/uploadFile", "POST", formData, headers)
+        await request("http://127.0.0.1:8080/uploadFiles", "POST", formData, headers)
+    }
+
+    const addFiles = (e) => {
+        files.push(e.target.files[0]);
+        setFiles(files);
+        console.log(files)
     }
 
     const VisibleSubTaskFrom = (e) => {
@@ -54,7 +59,7 @@ export const TaskForm = (props) => {
         parenTask.priority = task.task.priority.id;
         parenTask.employee = task.task.employee.id;
         const id = await request("http://127.0.0.1:8080/addTask", "POST", JSON.stringify({ ...parenTask }))
-        if (files) {
+        if (files.length > 0) {
             sendFile(id, files)
         }
         dispatch(taskAtions.setTask(form));
@@ -243,13 +248,12 @@ export const TaskForm = (props) => {
                         })
                     }
                 </div>
-                <div className="form-group col-3">
+                <div className="form-group col-4">
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" id="customFile"
                             onChange={e => {
                                 // cacheTaskForm(e, { ...task.task, files: e.target.files[0]})
-                                console.log(e.target.value)
-                                setFiles(e.target.files[0]);
+                                addFiles(e);
                             }}
                         >
                         </input>
