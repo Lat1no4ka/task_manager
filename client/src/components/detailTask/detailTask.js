@@ -72,20 +72,20 @@ export const DetailTask = (props) => {
   useEffect(() => {
     getSubTasks();
     selectNextStatus();
-    getFile();
-  }, [form.status])
+  }, [form.status,file])
 
-  const getFile = async () => {
+  const getFile = async (index,fileName) => {
+
     const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-    const response = await fetch("http://127.0.0.1:8080/downloadFile", { method: "POST", body: JSON.stringify(data.files[0]), headers })
+    const response = await fetch("http://127.0.0.1:8080/downloadFile", { method: "POST", body: JSON.stringify(data.files[index]), headers })
       .then(res => res.blob())
       .then(blob => {
-        setFile(blob)
+        downloadFile(blob,fileName)
       })
-    
+
   };
 
-  const downloadFile = (fileName) => {
+  const downloadFile = (file,fileName) => {
     const url = window.URL.createObjectURL(new Blob([file]));
     const link = document.createElement('a');
     link.href = url;
@@ -353,8 +353,8 @@ export const DetailTask = (props) => {
               {
                 edit ? "" :
                   data.files ?
-                    data.files.map((file) => {
-                      return <a href="#" key={file.id} onClick={e => downloadFile(file.fileName)}>{file.fileName}</a>
+                    data.files.map((file, index) => {
+                      return <a href="#" key={file.id} onClick={e => { getFile(index,file.fileName) }}>{file.fileName}</a>
                     })
                     : ""
               }
