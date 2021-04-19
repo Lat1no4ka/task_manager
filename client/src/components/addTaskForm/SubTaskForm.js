@@ -23,15 +23,28 @@ export const SubTask = () => {
             endDate: "",
             priority: { id: "", priorityName: "" },
             employee: { id: "", userName: "" },
-            files: "",
+            files: [],
             status: 1,
             author: userId,
             parentId: null
         }
     );
 
+    const [files, setFiles] = useState([]);
+
+    const sendFile = async (taskId, propFiles) => {
+        const formData = new FormData();
+        propFiles.forEach(file => {
+            formData.append('file', file)
+        });
+        formData.append('taskId', taskId)
+        const headers = { 'Access-Control-Allow-Credentials': 'true' }
+        await request("http://127.0.0.1:8080/uploadFiles", "POST", formData, headers)
+    }
+
     const addSubTask = (e) => {
         e.preventDefault();
+        setSubTaskFile();
         task.subTask.push(form)
         dispatch(taskAtions.setSubTask(task.subTask));
         dispatch(taskAtions.setVisible(false));
@@ -63,9 +76,14 @@ export const SubTask = () => {
         }
     }
 
-    const setSubTaskFile = (e) => {
-        task.subTaskFile.push(e.target.files[0])
+    const setSubTaskFile = () => {
+        task.subTaskFile.push(form.files)
         dispatch(taskAtions.setSubTaskFile(task.subTaskFile));
+    }
+
+    const prepareSubTaskFiles = (e) => {
+        form.files.push(...e.target.files)
+        return form.files
     }
 
     return (
@@ -170,12 +188,21 @@ export const SubTask = () => {
                         : ""
                     }
                 </div>
-                <div className="form-group col-12">
-                    <label htmlFor="file">Прикрепить документы</label>
-                    <input type="file" className="form-control-file" id="addFile" onChange={e => {
-                        // setForm({ ...form, files: e.target.value })
-                        setSubTaskFile(e);
-                    }}></input>
+                <div className="form-group col-5">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile" multiple={true}
+                            onChange={e => {
+                                setForm({ ...form, files: prepareSubTaskFiles(e) })
+                            }}
+                        >
+                        </input>
+                        <label class="custom-file-label" for="customFile">Выбирите файл</label>
+                    </div>
+                    <div>
+                        {form.files.map((file, index) => {
+                            return <p className="m-2" key={index}>{file.name}</p>
+                        })}
+                    </div>
                 </div>
                 <div className="form-group col-2">
                     <button type="button" className="btn btn-secondary" onClick={(e) => addSubTask(e)}>Добавить</button>
