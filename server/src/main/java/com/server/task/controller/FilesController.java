@@ -76,7 +76,7 @@ public class FilesController {
     }
 
 
-
+    //Скачивание файла - ловит id, возвращает файл
     @RequestMapping(value = "/downloadFile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public ResponseEntity<Object> downloadFile(@RequestBody Files files) throws IOException  {
 
@@ -96,6 +96,19 @@ public class FilesController {
                 MediaType.parseMediaType(mediaType)).body(resource);
 
         return responseEntity;
+    }
+
+    //Удаление файла - ловит id, удаляет файл из БД и сервера
+    @RequestMapping(value = "/deleteFile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public File deleteFile(@RequestBody Files files) throws IOException  {
+
+        Files dbFile = filesRepository.findById(files.getId());
+        File storageFile = new File(dbFile.getFilePath());
+        filesRepository.delete(dbFile);
+        storageFile.delete();
+
+        return storageFile;
+
     }
 
 
