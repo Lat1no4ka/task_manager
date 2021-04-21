@@ -10,7 +10,9 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 import com.server.task.model.Task;
+import com.server.task.model.entity.FilesEntity;
 import com.server.task.repo.FilesRepository;
+import com.server.task.repo.FilesEntityRepository;
 import com.server.task.model.Files;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -28,26 +30,32 @@ public class FilesController {
 
     @Autowired
     FilesRepository filesRepository;
+    @Autowired
+    FilesEntityRepository filesEntityRepository;
 
-    //одиночная загрузка - на всякий случай оставляю
-    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Files fileUpload(@RequestParam("file") MultipartFile file, @RequestParam("taskId") Long id) throws IOException {
-        Files files = new Files();
-        files.setFileName(file.getOriginalFilename());
-        String hashFilename = (UUID.randomUUID()).toString();
-        //--------------------------------!!!!---------------------------------
-        File convertFile = new File("src\\main\\resources\\uploads\\"+hashFilename); //Сюда напишите путь до папки, куда нужно сохранить
-        //--------------------------------!!!!---------------------------------
-        convertFile.createNewFile();
-        FileOutputStream fout = new FileOutputStream(convertFile);
-        fout.write(file.getBytes());
-        fout.close();
-        files.setFilePath(convertFile.toString());
-        files.setTaskId(id);
+    //загрузка картинки пользователя с проверкой на изображение
+    @RequestMapping(value = "/uploadProfilePic", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String pictureUpload(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long id) throws IOException {
 
-        filesRepository.save(files);
-
-        return files;
+        String[] parts = file.getOriginalFilename().split(Pattern.quote("."));
+        String mediaType = (parts[1]);
+        if (mediaType.equals("jpg") || mediaType.equals("jpeg") || mediaType.equals("png")) {
+            FilesEntity files = new FilesEntity();
+            files.setFileName(file.getOriginalFilename());
+            String hashFilename = (UUID.randomUUID()).toString();
+            File convertFile = new File("src\\main\\resources\\uploads\\profile\\" + hashFilename);
+            convertFile.createNewFile();
+            FileOutputStream fout = new FileOutputStream(convertFile);
+            fout.write(file.getBytes());
+            fout.close();
+            files.setFilePath(convertFile.toString());
+            files.setUserId(id);
+            filesEntityRepository.save(files);
+            return "Изображение успешно добавлено";
+        }
+        else{
+            return "Неверный формат изображения";
+        }
     }
 
 
@@ -60,7 +68,7 @@ public class FilesController {
             Files file = new Files();
             file.setFileName(mPFile.getOriginalFilename());
             String hashFilename = (UUID.randomUUID()).toString();
-            File convertFile = new File("src\\main\\resources\\uploads\\" + hashFilename);
+            File convertFile = new File("src\\main\\resources\\uploads\\documents\\" + hashFilename);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(mPFile.getBytes());

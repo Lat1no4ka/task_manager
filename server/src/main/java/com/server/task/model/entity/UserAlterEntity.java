@@ -1,5 +1,7 @@
 package com.server.task.model.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -27,51 +29,7 @@ public class UserAlterEntity implements Serializable {
     @Column(name = "email")
     private String email;
 
-    public UserAlterEntity() {
-        this.userName = null;
-        this.password = null;
-        this.firstName = null;
-        this.lastName = null;
-        this.email = null;
-    }
-
-    public UserAlterEntity(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
-        this.firstName = null;
-        this.lastName = null;
-        this.email = null;
-    }
-
-    public UserAlterEntity(Long id, String userName, String password, String firstName, String lastName, String email) {
-        this.id = id;
-        this.userName = userName;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    private String newPassword;
 
     public Long getId() {
         return id;
@@ -97,6 +55,36 @@ public class UserAlterEntity implements Serializable {
         return email;
     }
 
+    public String getNewPassword() {
+        return newPassword;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
 }
+

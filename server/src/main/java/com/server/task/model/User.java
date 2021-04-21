@@ -36,6 +36,8 @@ public class User implements Serializable {
     @JoinColumn(name = "role_id")
     private Role role;
 
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "utconnector",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -67,6 +69,7 @@ public class User implements Serializable {
         this.lastName = lastName;
         this.email = email;
     }
+
 
     public Role getRole() {
         return role;
