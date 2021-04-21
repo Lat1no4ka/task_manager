@@ -9,7 +9,7 @@ const initialState = {
         endDate: "",
         priority: { id: "", priorityName: "" },
         employee: { id: "", userName: "" },
-        files: "",
+        files: [],
         status: 1,
         author: JSON.parse(localStorage.getItem("userData")) ? JSON.parse(localStorage.getItem("userData")).userId : null,
         parentId: null

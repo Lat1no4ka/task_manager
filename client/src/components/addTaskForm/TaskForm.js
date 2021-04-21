@@ -27,22 +27,23 @@ export const TaskForm = (props) => {
         endDate: "",
         priority: { id: "", priorityName: "" },
         employee: { id: "", userName: "" },
-        files: "",
+        files: [],
         status: 1,
         author: userId,
         parentId: null
     }
 
-    const [files, setFiles] = useState(null);
 
     const sendFile = async (taskId, propFiles) => {
-
         const formData = new FormData();
-        formData.append('file', propFiles)
+        propFiles.forEach(file => {
+            formData.append('file', file)
+        });
         formData.append('taskId', taskId)
         const headers = { 'Access-Control-Allow-Credentials': 'true' }
-        await request("http://127.0.0.1:8080/uploadFile", "POST", formData, headers)
+        await request("http://127.0.0.1:8080/uploadFiles", "POST", formData, headers)
     }
+
 
     const VisibleSubTaskFrom = (e) => {
         e.preventDefault();
@@ -54,8 +55,8 @@ export const TaskForm = (props) => {
         parenTask.priority = task.task.priority.id;
         parenTask.employee = task.task.employee.id;
         const id = await request("http://127.0.0.1:8080/addTask", "POST", JSON.stringify({ ...parenTask }))
-        if (files) {
-            sendFile(id, files)
+        if (task.task.files.length > 0) {
+            sendFile(id, task.task.files)
         }
         dispatch(taskAtions.setTask(form));
         task.subTask.forEach(subTask => {
@@ -65,6 +66,7 @@ export const TaskForm = (props) => {
         });
         const subTask = await request("http://127.0.0.1:8080/addSubtask", "POST", JSON.stringify(task.subTask))
         if (task.subTaskFile.length > 0) {
+            console.log(task.subTaskFile)
             subTask.forEach((item, index) => {
                 sendFile(item.id, task.subTaskFile[index])
             })
@@ -74,6 +76,11 @@ export const TaskForm = (props) => {
     const cacheTaskForm = (e, param) => {
         e.preventDefault();
         dispatch(taskAtions.setTask(param))
+    }
+
+    const prepareTaskFiles = (e) => {
+        task.task.files.push(...e.target.files)
+        return task.task.files
     }
 
     const saveTask = (e) => {
@@ -243,17 +250,20 @@ export const TaskForm = (props) => {
                         })
                     }
                 </div>
-                <div className="form-group col-3">
+                <div className="form-group col-4">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFile"
+                        <input type="file" class="custom-file-input" id="customFile" multiple={true}
                             onChange={e => {
-                                // cacheTaskForm(e, { ...task.task, files: e.target.files[0]})
-                                console.log(e.target.value)
-                                setFiles(e.target.files[0]);
+                                cacheTaskForm(e, { ...task.task, files: prepareTaskFiles(e) })
                             }}
                         >
                         </input>
                         <label class="custom-file-label" for="customFile">Выбирите файл</label>
+                    </div>
+                    <div>
+                        {task.task.files.map((file, index) => {
+                            return <p className="m-2" key={index}>{file.name}</p>
+                        })}
                     </div>
                 </div>
                 <div className="form-group col-12">
