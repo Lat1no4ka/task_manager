@@ -22,6 +22,8 @@ const ModalUpdateUser = () => {
      const [userInfo, setUserInfo] = useState(0);
      const [roleinf, setRole] = useState("");
 
+     const [userPassword, setUserPassword] = useState("")
+
 
      const [form, setForm] = useState({
       id: null,
@@ -71,11 +73,14 @@ const ModalUpdateUser = () => {
         console.log(error);
     }
     
+    refreshPage();
   
     handleClose();
 };
 
-
+function refreshPage(){ 
+  window.location.reload(); 
+}
 
   return (
     <>
@@ -95,20 +100,23 @@ const ModalUpdateUser = () => {
           <form className="d-flex row">
             <div className="form-group col-6">
               <label>Никнейм</label>
-              <input type="value" className="form-control" id="userName" defaultValue = {userNameinf} onChange={(e) => setForm({ ...form, userName: e.target.value })}></input>            </div>
+              <input type="value" className="form-control" id="userName" placeholder="" defaultValue = {userNameinf} onChange={(e) => setForm({ ...form, userName: e.target.value })}></input>            </div>
             <div className="form-group col-6">
               <label>Email</label>
-              <input type="value" className="form-control" id="email" defaultValue = {emailinf} onChange={(e) => setForm({ ...form, email: e.target.value })}></input>            </div>
+              <input type="value" className="form-control" id="email" placeholder="" defaultValue = {emailinf} onChange={(e) => setForm({ ...form, email: e.target.value })}></input>            </div>
             <div className="form-group col-6">
               <label>Фамилия</label>
-              <input type="value" className="form-control" id="lastName" defaultValue = {lastnameinf} onChange={(e) => setForm({ ...form, lastName: e.target.value })}></input>            </div>
-            {/* <div className="form-group col-6">
-              <label>Пароль</label>
-              <input type="value" className="form-control" id="password" defaultValue = {} onChange={console.log("input")}></input>            </div> */}
-            <div className="form-group col-6">
+              <input type="value" className="form-control" id="lastName" placeholder="" defaultValue = {lastnameinf} onChange={(e) => setForm({ ...form, lastName: e.target.value })}></input>            </div>
+           {/* <div className="form-group col-6">
+              <label>Старый пароль</label>
+              <input type="value" className="form-control" id="password"  onChange={console.log("input")}></input>            </div> */}
+              <div className="form-group col-6">
               <label>Имя</label>
-              <input type="value" className="form-control" id="firstName" defaultValue = {firstNameinf} onChange={(e) => setForm({ ...form, firstName: e.target.value })}></input>            </div>
-              
+              <input type="value" className="form-control" id="firstName" placeholder="" defaultValue = {firstNameinf} onChange={(e) => setForm({ ...form, firstName: e.target.value })}></input>            </div>
+              {/* <div className="form-group col-6">
+              <label>Новый пароль</label>
+              <input type="value" className="form-control" id="password"  onChange={console.log("input")}></input>            </div> */}
+            
           </form>
 
         </Modal.Body>
