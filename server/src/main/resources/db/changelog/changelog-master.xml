@@ -8,7 +8,6 @@
     <include file="/db/changelog/changes/create-user-table-changelog-1.xml"/>
     <include file="/db/changelog/changes/insert-user-table-changelog-2.xml"/>
     <include file="/db/changelog/changes/create-task-table-changelog.xml"/>
-    <include file="/db/changelog/changes/insert-task-table-changelog.xml"/>
 
     <include file="/db/changelog/changes/create-files-table-changelog.xml"/>
 
@@ -17,7 +16,6 @@
     <include file="/db/changelog/changes/create-StatusDir-table-changelog.xml"/>
 
     <include file="/db/changelog/changes/create-UTconnector-table-changelog.xml"/>
-    <include file="/db/changelog/changes/insert-UTconnector-table-changelog.xml"/>
 
 
     <include file="/db/changelog/changes/insert-RoleDir-table-changelog.xml"/>

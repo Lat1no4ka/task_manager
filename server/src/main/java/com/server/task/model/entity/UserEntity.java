@@ -2,6 +2,8 @@ package com.server.task.model.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -22,6 +24,10 @@ public class UserEntity implements Serializable {
 
     @Column(name = "email")
     private String email;
+
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private List<FilesEntity> picture = new ArrayList<>();
 
     public UserEntity() {
         this.userName = null;
@@ -44,6 +50,10 @@ public class UserEntity implements Serializable {
         this.lastName = lastName;
         this.email = email;
     }
+
+    public List<FilesEntity> getPicture() {return picture;}
+
+    public void setPicture(List<FilesEntity> picture) { this.picture = picture; }
 
     public void setUserName(String userName) {
         this.userName = userName;
