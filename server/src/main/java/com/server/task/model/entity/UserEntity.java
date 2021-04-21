@@ -1,5 +1,7 @@
 package com.server.task.model.entity;
 
+import com.server.task.model.dictionary.Role;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,6 +31,10 @@ public class UserEntity implements Serializable {
     @JoinColumn(name = "user_id")
     private List<FilesEntity> picture = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
     public UserEntity() {
         this.userName = null;
         this.firstName = null;
@@ -49,6 +55,14 @@ public class UserEntity implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public List<FilesEntity> getPicture() {return picture;}
