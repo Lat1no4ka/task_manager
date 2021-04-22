@@ -31,7 +31,7 @@ const ProfileInfo = () => {
             ]
 
             
-            const data = await request("http://127.0.0.1:8080/sendUsersId", "POST", JSON.stringify(body));
+            const data = await request("http://127.0.0.1:8080/listUsers", "POST", JSON.stringify(body));
             const userInfo = data[0];
             
             setUserInfo(userInfo);
@@ -67,7 +67,7 @@ const ProfileInfo = () => {
                             <p>Почтовый адрес: {emailinf}</p>
                         </div>
                         <div>
-                            <p>Роль: {roleinf}</p>
+                            <p>Роль: Администратор</p>
                         </div>
                         <div className="form-group">
                             <ModalCreateUser />
@@ -103,7 +103,7 @@ const ProfileInfo = () => {
                             <p>Почтовый адрес: {emailinf}</p>
                         </div>
                         <div>
-                            <p>Роль: {roleinf}</p>
+                            <p>Роль: Пользователь</p>
                         </div>
                         <div className="form-group">
                             <ModalUpdateUser/>
