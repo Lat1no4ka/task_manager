@@ -297,12 +297,12 @@ export const DetailTask = (props) => {
                     : ""
                   }
                 </div>
-                : <p>Исполнитель: {data.employee.userName}</p>
+                : <p>Исполнитель: {data.employee.firstName + " " + data.employee.lastName}</p>
             }
           </div>
           <div>
             {
-              edit ? "" : <p>Автора: {data.author.userName}</p>
+              edit ? "" : <p>Автор: {data.author.firstName + " " + data.author.lastName}</p>
             }
           </div>
           <div>
@@ -354,7 +354,7 @@ export const DetailTask = (props) => {
                 edit ? "" :
                   data.files ?
                     data.files.map((file, index) => {
-                      return <a href="#" key={file.id} onClick={e => { getFile(index,file.fileName) }}>{file.fileName}</a>
+                      return <a href="#" key={file.id} onClick={e => { getFile(index,file.fileName) }}>{file.fileName} </a>
                     })
                     : ""
               }

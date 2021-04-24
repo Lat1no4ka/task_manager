@@ -3,7 +3,9 @@ package com.server.task.controller;
 
 import com.server.task.model.User;
 import com.server.task.model.entity.UserAlterEntity;
+import com.server.task.model.entity.UserEntity;
 import com.server.task.repo.UserRepository;
+import com.server.task.repo.UserEntityRepository;
 import com.server.task.repo.UserAlterEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,8 @@ public class UserController {
     UserAlterEntityRepository userAlterEntityRepository;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    UserEntityRepository userEntityRepository;
 
     //вывод всех пользователей
     @RequestMapping(value={"/allUsers"}, method=RequestMethod.GET, headers = {"Content-type=application/json"})
@@ -36,17 +40,17 @@ public class UserController {
     }
 
     //Ловит лист id, выводит список юзеров
-    @RequestMapping(value={"/sendUsersId"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<User> ListUsersById(@RequestBody List<User> user)
+    @RequestMapping(value={"/listUsers"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public List<UserEntity> ListUsersById(@RequestBody List<User> user)
     {
-        List<User> usrList = new ArrayList<>();
+        List<UserEntity> usrList = new ArrayList<>();
 
         for (int i=0; i<user.size(); i++)
         {
             User usr = user.get(i);
             Long idu = usr.getId();
-            User ousr = userRepository.findById(idu);
-            ousr.setPassword("");
+            UserEntity ousr = userEntityRepository.findById(idu);
+            //ousr.setPassword(""); - кто это нахуй сделал???
             usrList.add(ousr);
         }
 
@@ -57,7 +61,7 @@ public class UserController {
     @RequestMapping(value={"/alterUser"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
     public String ListUsersById(@RequestBody UserAlterEntity user)
     {
-        UserAlterEntity newusr = userAlterEntityRepository.findById(user.getId());
+        User newusr = userRepository.findById(user.getId());
 
         if (user.getUserName()!=null) {
             String name = user.getUserName();
@@ -70,9 +74,18 @@ public class UserController {
         if (user.getFirstName()!=null){newusr.setFirstName(user.getFirstName());}
         if (user.getLastName()!=null){newusr.setLastName(user.getLastName());}
 
-        if (user.getPassword()!=null){newusr.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));}
+        //проверка старого пароля на соответствие, запись нового пароля
+        if (user.getPassword()!=null && user.getNewPassword()!=null){
+                if(bCryptPasswordEncoder.matches(user.getPassword(), newusr.getPassword())){
+                    newusr.setPassword(bCryptPasswordEncoder.encode(user.getNewPassword()));
+                }
+                else{return user.getPassword() + " ___ " + " ___ " + newusr.getPassword();}
+        }
 
-        userAlterEntityRepository.save(newusr);
+        //Старое изменение - просто заменяет пароль  "Неверно введен старый пароль"
+        //if (user.getPassword()!=null){newusr.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));}
+
+        userRepository.save(newusr);
         return "Информация обновлена";
     }
 

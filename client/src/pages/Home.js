@@ -1,6 +1,5 @@
 import TaskBoard from "../components/TaskBoard/TaskBoard";
-
-const Home = () => {
+ const Home = () => {
   return <TaskBoard />;
 };
 
