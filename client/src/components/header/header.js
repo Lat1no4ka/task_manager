@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import {
+  HouseDoor,
   CalendarWeek,
   PersonSquare,
   CardChecklist,
@@ -10,15 +11,14 @@ import {
   DoorOpen,
   PlusCircle,
 } from "react-bootstrap-icons";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/auth.hook";
 
 const Header = () => {
   const history = useHistory();
-  const auth = useContext(AuthContext);
-
+  const {logout} = useAuth();
   const logoutHandler = (e) => {
     e.preventDefault();
-    auth.logout();
+    logout();
     history.push("/");
   };
 
@@ -27,6 +27,9 @@ const Header = () => {
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className=" m-auto w-50 justify-content-around">
+          <Nav.Link href=" home">
+          <HouseDoor size={28} />
+          </Nav.Link>
           <Nav.Link href=" calendar">
             <CalendarWeek size={28} />
           </Nav.Link>
@@ -45,8 +48,8 @@ const Header = () => {
           <Nav.Link href="addTask">
             <PlusCircle size={28} />
           </Nav.Link>
-          <Nav.Link href=" logout">
-            <DoorOpen size={28} onClick={(e) => logoutHandler(e)} />
+          <Nav.Link href="">
+            <DoorOpen size={28} onClick={(e) => {logoutHandler(e)}} />
           </Nav.Link>
         </Nav>
       </Navbar.Collapse>

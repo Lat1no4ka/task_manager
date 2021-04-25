@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="admin" id="11">
+
+        <addForeignKeyConstraint  baseColumnNames="task_status_id"
+                                  baseTableName="tasks"
+                                  constraintName="fk_status_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="statusdir"/>
+
+        <addForeignKeyConstraint  baseColumnNames="task_priority_id"
+                                  baseTableName="tasks"
+                                  constraintName="fk_priority_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="priodir"/>
+
+        <addForeignKeyConstraint  baseColumnNames="role_id"
+                                  baseTableName="users"
+                                  constraintName="fk_role_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="roledir"/>
+
+        <addForeignKeyConstraint  baseColumnNames="user_id"
+                                  baseTableName="utconnector"
+                                  constraintName="fk_userconnector_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="users"/>
+
+        <addForeignKeyConstraint  baseColumnNames="task_id"
+                                  baseTableName="utconnector"
+                                  constraintName="fk_taskconnector_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="tasks"/>
+
+        <addForeignKeyConstraint  baseColumnNames="task_id"
+                                  baseTableName="files"
+                                  constraintName="fk_files_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="tasks"/>
+
+        <addForeignKeyConstraint  baseColumnNames="user_id"
+                                  baseTableName="files"
+                                  constraintName="fk_user_files_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="users"/>
+
+    </changeSet>
+</databaseChangeLog>

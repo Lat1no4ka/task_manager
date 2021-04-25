@@ -4,22 +4,21 @@ import Sidebar from "../sidebar/sidebar";
 import { DetailTask } from "../detailTask/detailTask";
 import { useHttp } from "../../hooks/http.hook";
 import { ClockHistory, Sliders } from "react-bootstrap-icons";
+import { useSelector } from "react-redux"
 import "./home.scss";
 
 const TaskBoard = () => {
-  const [data, setData] = useState(null);
-  const [detail, setDetail] = useState(null);
-  const { loading, error, request } = useHttp();
+  const { request } = useHttp();
+  const [tasks, setTasks] = useState([]);
   const [active, setActive] = useState(false);
-  const [taskActive, setTaskActive] = useState(false);
+  const [taskNum, setTaskNum] = useState(null);
+  const [showDetail, setShowDetail] = useState(false);
   const [block, setBlock] = useState("");
+  const id = useSelector(auth => auth.auth.userId)
+
   const getTask = async () => {
-    try {
-      const data = await request("/json/tasks.json", "GET"); // без тела запроса т к он не хочет отдавать json
-      setData(data);
-    } catch (error) {
-      console.log(error);
-    }
+    const tasks = await request("http://127.0.0.1:8080/getTasks", "POST", JSON.stringify({ id }))
+    setTasks(tasks);
   };
 
   const iconClick = (param) => {
@@ -31,14 +30,13 @@ const TaskBoard = () => {
       setBlock(param);
     }
   };
+
   useEffect(() => {
     getTask();
   }, []);
 
-  const detailTaskHandler = (item) => {
-    setTaskActive(!taskActive);
-    setDetail(item);
-  };
+
+
   return (
     <div className="d-flex">
       <div className="container col-9">
@@ -50,22 +48,24 @@ const TaskBoard = () => {
             <Sliders size={28} className="icon" />
           </div>
         </div>
-        {taskActive && (
-          <div className="d-flex justify-content-center">
-            <DetailTask data={detail} />
-          </div>
-        )}
-        <div className="d-flex justify-content-between flex-wrap">
-          {data &&
-            data.map((item) => {
+        <div className="d-flex justify-content-start flex-wrap">
+          {
+
+            tasks.map((item, index) => {
               return (
-                <div className="col-4" onClick={() => detailTaskHandler(item)}>
-                  <TaskItem key={item.id} props={item} actvie={taskActive} />
+                <div key={item.id} className="col-4" onClick={(e) => { setTaskNum(index); setShowDetail(true) }}>
+                  <TaskItem props={item} />
                 </div>
               );
-            })}
+            })
+          }
         </div>
       </div>
+      {showDetail ?
+        <DetailTask
+          data={tasks[taskNum]}
+          show={showDetail} onHide={() => setShowDetail(false)}
+        /> : ""}
       <Sidebar display={active} block={block} />
     </div>
   );

@@ -1,7 +1,12 @@
 package com.server.task.model;
 
+import com.server.task.model.dictionary.Role;
+import com.server.task.model.entity.TaskEntity;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -26,6 +31,19 @@ public class User implements Serializable {
 
     @Column(name = "email")
     private String email;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "utconnector",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id")
+    )
+    List<TaskEntity> tasks = new ArrayList<>();
 
     public User() {
         this.userName = null;
@@ -53,6 +71,20 @@ public class User implements Serializable {
     }
 
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public List<TaskEntity> getTasks() {return tasks;}
+
+    public void setTasks(List<TaskEntity> tasks) {
+        this.tasks = tasks;
+    }
+
     public void setUserName(String userName) {
         this.userName = userName;
     }
@@ -72,6 +104,7 @@ public class User implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
 
     public Long getId() {
         return id;
@@ -96,6 +129,7 @@ public class User implements Serializable {
     public String getEmail() {
         return email;
     }
+
 
 
 }

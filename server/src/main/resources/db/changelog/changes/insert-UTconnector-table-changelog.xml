@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="admin" id="13">
+
+        <insert tableName="utconnector">
+
+            <column name="id" valueNumeric="1"/>
+            
+            <column name="user_id" value="2"/>
+
+            <column name="task_id" value="1"/>
+
+        </insert>
+        <insert tableName="utconnector">
+
+            <column name="id" valueNumeric="2"/>
+
+            <column name="user_id" value="2"/>
+
+            <column name="task_id" value="2"/>
+
+        </insert>
+        <insert tableName="utconnector">
+
+            <column name="id" valueNumeric="3"/>
+
+            <column name="user_id" value="2"/>
+
+            <column name="task_id" value="3"/>
+
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -10,3 +10,89 @@
   border-radius: 10px;
   margin: auto;
 }
+
+.taskForm {
+  background-color: white;
+  display: block;
+  max-width: 900px;
+  margin: 50px auto 50px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.37);
+  padding: 40px;
+  textarea {
+    resize: none;
+  }
+}
+
+.subTaskForm {
+  background-color: white;
+  display: block;
+  max-width: 700px;
+  margin: 50px auto 50px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.37);
+  padding: 40px;
+  textarea {
+    resize: none;
+  }
+}
+
+.subTaskHide {
+  display: none;
+}
+
+input:read-only {
+  background-color: white !important;
+}
+
+.toggle-arrow {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+}
+.toggle-arrow-active {
+  transform: rotate(180deg);
+  position: absolute;
+  right: 20px;
+  top: 10px;
+}
+
+.list-group-pos {
+  font-size: 16px;
+  position: absolute !important;
+  z-index: 2;
+  padding-right: 50px !important;
+}
+
+.subtask-info {
+  border: 1px solid rgba(141, 141, 141, 0.822);
+  background-color: rgba(190, 190, 190, 0.5);
+  border-radius: 15px;
+  padding: 0px 5px !important;
+  overflow: hidden;
+  justify-content: space-between;
+
+  button {
+    vertical-align: text-bottom;
+    background: none;
+    border: none;
+    white-space: nowrap;
+    max-width: 150px;
+    overflow: hidden;
+    span {
+      text-overflow: ellipsis;
+      width: 150px;
+      overflow: hidden;
+      white-space: nowrap;
+      display: block;
+    }
+  }
+}
+
+.detail-task-window {
+  position: absolute;
+  top: 0;
+  display: block;
+  margin-top: 150px;
+  width: 800px;
+}

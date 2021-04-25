@@ -1,9 +1,9 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-
-
+import AddTask from "./pages/AddTask";
 import AuthPage from "./pages/AuthPage";
 import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 
 const UseRoutes = (isAuthenticated) => {
   if (isAuthenticated) {
@@ -11,6 +11,12 @@ const UseRoutes = (isAuthenticated) => {
       <Switch>
         <Route path="/home">
          <Home/>
+        </Route>
+        <Route path="/profile">
+        <Profile/>
+        </Route>
+        <Route path="/AddTask">
+         <AddTask/>
         </Route>
         <Redirect to="/home" />
       </Switch>

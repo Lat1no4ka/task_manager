@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="maximka" id="3">
+        <createTable tableName="tasks">
+
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="task_name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="task_desc" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="beg_date" type="DATE">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="exp_date" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="head_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="emp_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="task_priority_id" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="task_status_id" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="par_task_id" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+        </createTable>
+        <rollback>
+            <dropTable tableName="tasks"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
