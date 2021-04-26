@@ -258,7 +258,12 @@ export const TaskForm = (props) => {
                             }}
                         >
                         </input>
-                        <label class="custom-file-label" for="customFile">Выбирите файл</label>
+                        <label class="custom-file-label" for="customFile">Выберите файл</label>
+                    </div>
+                    <div>
+                        {task.task.files.map((file, index) => {
+                            return <p className="m-2" key={index}>{file.name}</p>
+                        })}
                     </div>
                     <div>
                         {task.task.files.map((file, index) => {

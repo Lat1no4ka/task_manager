@@ -6,12 +6,13 @@ import com.server.task.model.entity.TaskAlterEntity;
 import com.server.task.model.User;
 import com.server.task.model.entity.UserEntity;
 import com.server.task.repo.TaskRepository;
+import com.server.task.repo.FilesRepository;
 import com.server.task.repo.TaskEntityRepository;
 import com.server.task.repo.UTconnectorRepository;
 import com.server.task.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import com.server.task.model.Files;
 import com.server.task.model.Task;
 import com.server.task.model.UTconnector;
 
@@ -31,6 +32,9 @@ public class AddTaskController {
     UserRepository userRepository;
     @Autowired
     TaskEntityRepository taskEntityRepository;
+    @Autowired
+    FilesRepository filesRepository;
+
 
     @RequestMapping(value = {"/addTaskOld"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public Task addNewTaskPiece(@RequestBody Task task) {
@@ -41,7 +45,10 @@ public class AddTaskController {
     //новый вариант создания задачи, сразу добавляет связь в таблицу UTconnector, возвращает id
     @RequestMapping(value = {"/addTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public Long addNewTask(@RequestBody Task task) {
-        task.setBegDate(new Date());
+
+        if (task.getBegDate()==null) {
+            task.setBegDate(new Date());
+        }
         taskRepository.save(task);
         UTconnector link = new UTconnector();
         link.setUserId(task.getEmployee());
@@ -95,15 +102,19 @@ public class AddTaskController {
         Task removeTask = taskRepository.findById(task.getId());
         List<UTconnector> removeLink = utRepository.findByTaskId(task.getId());
         List<Task> removeSubtask = taskRepository.findByParentId(task.getId());
+        List<Files> removeFiles = filesRepository.findByTaskId(task.getId());
         utRepository.deleteAll(removeLink);
+        filesRepository.deleteAll(removeFiles);
         taskRepository.delete(removeTask);
-
         if (!removeSubtask.isEmpty()) {
             for (Task tasks : removeSubtask) {
                 utRepository.deleteAll(utRepository.findByTaskId(tasks.getId()));
+                List<Files> removeSubFiles = filesRepository.findByTaskId(tasks.getId());
+                filesRepository.deleteAll(removeSubFiles);
             }
             taskRepository.deleteAll(removeSubtask);
         }
+
 
         return "Задание удалено";
     }

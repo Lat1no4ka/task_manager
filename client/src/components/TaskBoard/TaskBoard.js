@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TaskItem from "../items/taskitem";
-import Sidebar from "../sidebar/sidebar";
+import SideBar from "../sidebar/sidebar";
 import { DetailTask } from "../detailTask/detailTask";
 import { useHttp } from "../../hooks/http.hook";
 import { ClockHistory, Sliders } from "react-bootstrap-icons";
@@ -66,7 +66,7 @@ const TaskBoard = () => {
           data={tasks[taskNum]}
           show={showDetail} onHide={() => setShowDetail(false)}
         /> : ""}
-      <Sidebar display={active} block={block} />
+      <SideBar display={active} block={block} />
     </div>
   );
 };

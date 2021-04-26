@@ -50,7 +50,7 @@ const ModalUpdateUser = () => {
           ]
 
          
-          const data = await request("http://127.0.0.1:8080/sendUsersId", "POST", JSON.stringify(body));
+          const data = await request("http://127.0.0.1:8080/listUsers", "POST", JSON.stringify(body));
           const userInfo = data[0];
           setUserInfo(userInfo);
           console.log(userInfo);

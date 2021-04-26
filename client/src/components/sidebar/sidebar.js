@@ -3,7 +3,7 @@ import { Form, ListGroup } from "react-bootstrap";
 
 import "./sidebar.scss";
 
-class Sidebar extends React.Component {
+class SideBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -57,4 +57,4 @@ class Sidebar extends React.Component {
   }
 }
 
-export default Sidebar;
+export default SideBar;
