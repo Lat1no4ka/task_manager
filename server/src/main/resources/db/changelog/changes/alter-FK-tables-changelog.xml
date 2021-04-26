@@ -49,5 +49,17 @@
                                   referencedColumnNames="id"
                                   referencedTableName="users"/>
 
+        <addForeignKeyConstraint  baseColumnNames="chatroom_id"
+                                  baseTableName="messages"
+                                  constraintName="fk_messages_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="chatroom"/>
+
+        <addForeignKeyConstraint  baseColumnNames="task_id"
+                                  baseTableName="chatroom"
+                                  constraintName="fk_chatroom_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="tasks"/>
+
     </changeSet>
 </databaseChangeLog>

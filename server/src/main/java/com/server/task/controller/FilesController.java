@@ -83,13 +83,6 @@ public class FilesController {
         return fileList;
     }
 
-    //Получение картинки пользователя по id
-    @RequestMapping(value = "/getProfilePic", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public String downloadFile(@RequestBody FilesEntity files) throws IOException  {
-        FilesEntity link = filesEntityRepository.findByUserId(files.getUserId());
-        return link.getFilePath();
-    }
-
 
     //Скачивание файла - ловит id, возвращает файл
     @RequestMapping(value = "/downloadFile", method = RequestMethod.POST, headers = {"Content-type=application/json"})

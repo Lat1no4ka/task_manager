@@ -5,7 +5,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
-public class ChatMessage {
+public class
+ChatMessage {
     private MessageType type;
     private String content;
     private String sender;
