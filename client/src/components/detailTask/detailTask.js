@@ -366,7 +366,7 @@ export const DetailTask = (props) => {
           <div className="col-12 d-block">
             {openChat ?
               <div>
-                <Chat setOpenChat={setOpenChat} />
+                <Chat setOpenChat={setOpenChat} user_id={userId}/>
               </div>
               :
               <button type="button" className="btn" onClick={e => setOpenChat(true)}>

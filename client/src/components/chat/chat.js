@@ -29,8 +29,8 @@ export const Chat = (props) => {
         }
     }
     const onConnected = () => {
-        stompClient.subscribe('/user/' + "123" + '/reply', onMessageReceived);
-        stompClient.send('/app/addPrivateUser', {}, JSON.stringify({ sender: "123", type: 'JOIN' }))
+        stompClient.subscribe(`/user/${props.user_id == 1 ? 1 : 2}/reply`, onMessageReceived);
+        stompClient.send('/app/addPrivateUser', {}, JSON.stringify({ sender: props.user_id == 1 ? 2 : 1, type: 'JOIN' }))
     }
 
     const onError = (err) => {
@@ -39,8 +39,8 @@ export const Chat = (props) => {
     const sendMessage = (type, value) => {
         if (stompClient) {
             var chatMessage = {
-                sender: "1",
-                receiver: "1",
+                sender: props.user_id == 1 ? 1 : 2,
+                receiver: props.user_id == 1 ? 2 : 1,
                 content: value,
                 type: type
 

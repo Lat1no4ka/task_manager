@@ -36,8 +36,8 @@ public class ChatController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/sendPrivateMessage")
-    @SendTo("/queue/reply")
-    public  ChatMessage sendPrivateMessage(@Payload ChatMessage chatMessage) {
+    //@SendTo("/user/reply")
+    public ChatMessage sendPrivateMessage(@Payload ChatMessage chatMessage) {
         simpMessagingTemplate.convertAndSendToUser(
                 chatMessage.getReceiver().trim(), "/reply", chatMessage);
         return chatMessage;
