@@ -4,8 +4,8 @@ import { Modal } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { DetailTask as DetailSubTask } from "./detailTask"
-import { CaretDownFill, XCircleFill } from 'react-bootstrap-icons';
-
+import { CaretDownFill, ChatDots } from 'react-bootstrap-icons';
+import { Chat } from '../chat/chat'
 export const DetailSubTaskCreate = (props) => {
   const data = props.data;
   return (
@@ -56,6 +56,7 @@ export const DetailTask = (props) => {
   const [nextStatus, setNextStatus] = useState(null);
   const userId = useSelector((state) => state.auth.userId);
   const [file, setFile] = useState(null)
+  const [openChat, setOpenChat] = useState(false)
   const [form, setForm] = useState({
     id: data.id,
     taskName: data.taskName,
@@ -72,20 +73,20 @@ export const DetailTask = (props) => {
   useEffect(() => {
     getSubTasks();
     selectNextStatus();
-  }, [form.status,file])
+  }, [form.status, file])
 
-  const getFile = async (index,fileName) => {
+  const getFile = async (index, fileName) => {
 
     const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     const response = await fetch("http://127.0.0.1:8080/downloadFile", { method: "POST", body: JSON.stringify(data.files[index]), headers })
       .then(res => res.blob())
       .then(blob => {
-        downloadFile(blob,fileName)
+        downloadFile(blob, fileName)
       })
 
   };
 
-  const downloadFile = (file,fileName) => {
+  const downloadFile = (file, fileName) => {
     const url = window.URL.createObjectURL(new Blob([file]));
     const link = document.createElement('a');
     link.href = url;
@@ -231,65 +232,116 @@ export const DetailTask = (props) => {
             </Modal.Title>
           </div>
         </Modal.Header>
-        <Modal.Body className="d-flex flex-column">
-          <div>
-            {edit ? "" : <p>Статус: {form.status.statusName}</p>}
-          </div>
-          <div>
-            {
-              edit ?
+        <Modal.Body className="d-flex flex-row ">
+          <div className="d-flex flex-column col-6">
+            <div>
+              {edit ? "" : <p>Статус: {form.status.statusName}</p>}
+            </div>
+            <div>
+              {
+                edit ?
+                  <div className="m-1 col-6">
+                    <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.taskDesc} onChange={(e) => setForm({ ...form, taskDesc: e.target.value })}></input>
+                  </div>
+                  : <h4>Описание: {data.taskDesc}</h4>
+              }
+            </div>
+            <div>
+              {
+                edit ?
+                  <div className="m-1 col-6">
+                    <input type="date" className="form-control" id="nameOfTask" placeholder="" value={form.begDate} onChange={(e) => setForm({ ...form, begDate: e.target.value })}></input>
+                  </div>
+                  : <p>Дата начала: {data.begDate}</p>
+              }
+            </div>
+            <div>
+              {
+                edit ?
+                  <div className="m-1 col-6">
+                    <input type="date" className="form-control" id="nameOfTask" placeholder="" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })}></input>
+                  </div>
+                  : <p>Дата окончания: {data.endDate}</p>
+              }
+            </div>
+            <div>
+              {
+                edit ?
+                  <div className="m-1 col-6">
+                    <input type="input" className="form-control" id="expdate"
+                      value={form.employee.userName}
+                      onFocus={(e) => searchListUserVisible(e.target.value, true)}
+                      onChange={(e) => {
+                        if (users.length < 1) { getUsers(); }
+                        setForm({ ...form, employee: { userName: e.target.value } });
+                        searchListUserVisible(e.target.value, true);
+                      }}>
+                    </input>
+                    {searchListUser ?
+                      <div className="list-group list-group-pos col-12">
+                        {usersFilter.map((user) => {
+                          return (
+                            <button
+                              type="button"
+                              className="list-group-item list-group-item-action"
+                              id={user.id}
+                              key={user.id}
+                              onClick={(e) => {
+                                setForm({ ...form, employee: { id: user.id, userName: user.userName } });
+                                setSearchListUser(false)
+                              }}
+                            >
+                              {user.userName}
+                            </button>
+                          )
+                        })}
+                      </div>
+                      : ""
+                    }
+                  </div>
+                  : <p>Исполнитель: {data.employee.firstName + " " + data.employee.lastName}</p>
+              }
+            </div>
+            <div>
+              {
+                edit ? "" : <p>Автор: {data.author.firstName + " " + data.author.lastName}</p>
+              }
+            </div>
+            <div>
+              {edit ?
                 <div className="m-1 col-6">
-                  <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.taskDesc} onChange={(e) => setForm({ ...form, taskDesc: e.target.value })}></input>
-                </div>
-                : <h4>Описание: {data.taskDesc}</h4>
-            }
-          </div>
-          <div>
-            {
-              edit ?
-                <div className="m-1 col-6">
-                  <input type="date" className="form-control" id="nameOfTask" placeholder="" value={form.begDate} onChange={(e) => setForm({ ...form, begDate: e.target.value })}></input>
-                </div>
-                : <p>Дата начала: {data.begDate}</p>
-            }
-          </div>
-          <div>
-            {
-              edit ?
-                <div className="m-1 col-6">
-                  <input type="date" className="form-control" id="nameOfTask" placeholder="" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })}></input>
-                </div>
-                : <p>Дата окончания: {data.endDate}</p>
-            }
-          </div>
-          <div>
-            {
-              edit ?
-                <div className="m-1 col-6">
-                  <input type="input" className="form-control" id="expdate"
-                    value={form.employee.userName}
-                    onFocus={(e) => searchListUserVisible(e.target.value, true)}
-                    onChange={(e) => {
-                      if (users.length < 1) { getUsers(); }
-                      setForm({ ...form, employee: { userName: e.target.value } });
-                      searchListUserVisible(e.target.value, true);
-                    }}>
-                  </input>
-                  {searchListUser ?
+                  <div className="d-flex">
+                    <input type="input" className="form-control priotity-style" id="prioDir" readOnly={true}
+                      value={form.priority.priorityName}
+                      onFocus={(e) => {
+                        if (priority.length < 1) { getPriority(); }
+                      }}
+                      onClick={e => {
+                        setListPriority(!listPriority);
+                        setToggle(!toggle)
+                      }}
+                      onChange={(e) => {
+                        setForm({ ...form, priority: { priorityName: e.target.value } })
+                      }}
+                    >
+                    </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} />
+                  </div>
+                  {listPriority ?
                     <div className="list-group list-group-pos col-12">
-                      {usersFilter.map((user) => {
+                      {priority.map((item) => {
                         return (
                           <button
                             type="button"
                             className="list-group-item list-group-item-action"
-                            id={user.id}
-                            key={user.id}
+                            id={item.id}
+                            key={item.id}
                             onClick={(e) => {
-                              setForm({ ...form, employee: { id: user.id, userName: user.userName } });
-                              setSearchListUser(false)
+                              setToggle(false)
+                              setForm({ ...form, priority: { id: item.id, priorityName: item.priorityName } })
+                              setListPriority(false)
                             }}
                           >
-                            {user.userName}
+                            {item.priorityName}
                           </button>
                         )
                       })}
@@ -297,68 +349,30 @@ export const DetailTask = (props) => {
                     : ""
                   }
                 </div>
-                : <p>Исполнитель: {data.employee.firstName + " " + data.employee.lastName}</p>
-            }
-          </div>
-          <div>
-            {
-              edit ? "" : <p>Автор: {data.author.firstName + " " + data.author.lastName}</p>
-            }
-          </div>
-          <div>
-            {edit ?
-              <div className="m-1 col-6">
-                <div className="d-flex">
-                  <input type="input" className="form-control priotity-style" id="prioDir" readOnly={true}
-                    value={form.priority.priorityName}
-                    onFocus={(e) => {
-                      if (priority.length < 1) { getPriority(); }
-                    }}
-                    onClick={e => {
-                      setListPriority(!listPriority);
-                      setToggle(!toggle)
-                    }}
-                    onChange={(e) => {
-                      setForm({ ...form, priority: { priorityName: e.target.value } })
-                    }}
-                  >
-                  </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} />
-                </div>
-                {listPriority ?
-                  <div className="list-group list-group-pos col-12">
-                    {priority.map((item) => {
-                      return (
-                        <button
-                          type="button"
-                          className="list-group-item list-group-item-action"
-                          id={item.id}
-                          key={item.id}
-                          onClick={(e) => {
-                            setToggle(false)
-                            setForm({ ...form, priority: { id: item.id, priorityName: item.priorityName } })
-                            setListPriority(false)
-                          }}
-                        >
-                          {item.priorityName}
-                        </button>
-                      )
-                    })}
-                  </div>
-                  : ""
+                : <p>Приоритет: {data.priority.priorityName}</p>
+              }
+              <div>
+                {
+                  edit ? "" :
+                    data.files ?
+                      data.files.map((file, index) => {
+                        return <a href="#" key={file.id} onClick={e => { getFile(index, file.fileName) }}>{file.fileName} </a>
+                      })
+                      : ""
                 }
               </div>
-              : <p>Приоритет: {data.priority.priorityName}</p>
-            }
-            <div>
-              {
-                edit ? "" :
-                  data.files ?
-                    data.files.map((file, index) => {
-                      return <a href="#" key={file.id} onClick={e => { getFile(index,file.fileName) }}>{file.fileName} </a>
-                    })
-                    : ""
-              }
             </div>
+          </div>
+          <div className="col-12 d-block">
+            {openChat ?
+              <div>
+                <Chat setOpenChat={setOpenChat} user_id={userId}/>
+              </div>
+              :
+              <button type="button" className="btn" onClick={e => setOpenChat(true)}>
+                <ChatDots size={30} />
+              </button>
+            }
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -392,6 +406,7 @@ export const DetailTask = (props) => {
             </div>
           </div>
         </Modal.Footer>
+
       </Modal>
     );
   } else {

@@ -8,19 +8,21 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin("*")
 @Controller
 public class ChatController {
 
     /*-------------------- Group (Public) chat--------------------*/
     @MessageMapping("/sendMessage")
-    @SendTo("/topic/pubic")
+    @SendTo("/topic/public")
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
         return chatMessage;
     }
 
     @MessageMapping("/addUser")
-    @SendTo("/topic/pubic")
+    @SendTo("/topic/public")
     public ChatMessage addUser(@Payload ChatMessage chatMessage,
                                SimpMessageHeaderAccessor headerAccessor) {
         // Add user in web socket session
@@ -34,11 +36,11 @@ public class ChatController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/sendPrivateMessage")
-    //@SendTo("/queue/reply")
-    public void sendPrivateMessage(@Payload ChatMessage chatMessage) {
+    //@SendTo("/user/reply")
+    public ChatMessage sendPrivateMessage(@Payload ChatMessage chatMessage) {
         simpMessagingTemplate.convertAndSendToUser(
                 chatMessage.getReceiver().trim(), "/reply", chatMessage);
-        //return chatMessage;
+        return chatMessage;
     }
 
     @MessageMapping("/addPrivateUser")
