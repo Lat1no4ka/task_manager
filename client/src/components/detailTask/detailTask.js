@@ -361,17 +361,6 @@ export const DetailTask = (props) => {
                       : ""
                 }
               </div>
-              : <p>Приоритет: {data.priority.priorityName}</p>
-            }
-            <div>
-              {
-                edit ? "" :
-                  data.files ?
-                    data.files.map((file, index) => {
-                      return <a href="#" key={file.id} onClick={e => { getFile(index,file.fileName) }}>{file.fileName}</a>
-                    })
-                    : ""
-              }
             </div>
           </div>
           <div className="col-12 d-block">

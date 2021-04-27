@@ -1,6 +1,8 @@
 import "./chat.scss";
 import { useState, useEffect } from "react";
 import { X } from 'react-bootstrap-icons';
+import SockJS from "sockjs-client";
+import Stomp from "@stomp/stompjs";
 
 var stompClient = null;
 export const Chat = (props) => {
