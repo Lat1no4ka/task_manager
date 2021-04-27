@@ -50,7 +50,6 @@ public class UserController {
             User usr = user.get(i);
             Long idu = usr.getId();
             UserEntity ousr = userEntityRepository.findById(idu);
-            //ousr.setPassword(""); - кто это нахуй сделал???
             usrList.add(ousr);
         }
 

@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface FilesEntityRepository extends CrudRepository<FilesEntity, String> {
     FilesEntity findByUserId(Long userId);
+    FilesEntity findById(Long id);
 }

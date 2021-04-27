@@ -106,6 +106,22 @@ public class FilesController {
         return responseEntity;
     }
 
+
+    //Получение картинки пользователя по id пользователя
+    @RequestMapping(value = "/getProfilePicture", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public String downloadPicByUserId(@RequestBody FilesEntity files) throws IOException  {
+        FilesEntity link = filesEntityRepository.findByUserId(files.getUserId());
+        return link.getFilePath();
+    }
+
+    //Получение картинки пользователя по id файла
+    @RequestMapping(value = "/getProfilePic", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public String downloadPicById(@RequestBody FilesEntity files) throws IOException  {
+        FilesEntity link = filesEntityRepository.findById(files.getId());
+        return link.getFilePath();
+    }
+
+
     //Удаление файла - ловит id, удаляет файл из БД и сервера
     @RequestMapping(value = "/deleteFile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public File deleteFile(@RequestBody Files files) throws IOException  {
