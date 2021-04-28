@@ -363,22 +363,22 @@ export const DetailTask = (props) => {
               </div>
             </div>
           </div>
-          <div className="col-12 d-block">
+        </Modal.Body>
+        <Modal.Footer className="d-block">
+          <div className="d-flex justify-content-between">
             {openChat ?
-              <div>
-                <Chat setOpenChat={setOpenChat} user_id={userId}/>
+              <div className="d-flex w-100">
+                <Chat setOpenChat={setOpenChat} users={[data.employee,data.author]} userId={userId} />
               </div>
               :
-              <button type="button" className="btn" onClick={e => setOpenChat(true)}>
-                <ChatDots size={30} />
-              </button>
+              <div>
+                <button type="button" className="btn" onClick={e => setOpenChat(true)}>
+                  <ChatDots size={30} />
+                </button>
+              </div>
             }
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <div>
-            <div className="d-flex justify-content-between">
-              <div className="col-2 d-flex row">
+            <div style={openChat ? { display: "none" } : { display: "block" }}>
+              <div className="">
                 {subTasks.length > 0 ?
                   subTasks.map((item, index) => {
                     return (<SubTask key={index} id={index} />)
@@ -389,7 +389,7 @@ export const DetailTask = (props) => {
                 <div>
                   {
                     edit ?
-                      <div className="d-flex">
+                      <div className="">
                         <div className="m-1">
                           <button type="button" className="btn btn-secondary" onClick={e => saveEdit()} >Сохранить</button>
                         </div>
@@ -406,7 +406,6 @@ export const DetailTask = (props) => {
             </div>
           </div>
         </Modal.Footer>
-
       </Modal>
     );
   } else {
