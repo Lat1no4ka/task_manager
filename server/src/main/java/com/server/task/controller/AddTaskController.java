@@ -10,11 +10,13 @@ import com.server.task.repo.FilesRepository;
 import com.server.task.repo.TaskEntityRepository;
 import com.server.task.repo.UTconnectorRepository;
 import com.server.task.repo.UserRepository;
+import com.server.task.repo.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.server.task.model.Files;
 import com.server.task.model.Task;
 import com.server.task.model.UTconnector;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
 import java.util.*;
@@ -30,6 +32,8 @@ public class AddTaskController {
     UTconnectorRepository utRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserEntityRepository userEntityRepository;
     @Autowired
     TaskEntityRepository taskEntityRepository;
     @Autowired
@@ -163,6 +167,28 @@ public class AddTaskController {
     {
         Date sysdate = new Date();
         return sysdate;
+    }
+
+    //ловит id родительской задачи и выводит список всех пользователей
+    @RequestMapping(value = {"/getTaskUsers"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Set<UserEntity> ListTaskUsers(@RequestBody TaskEntity task) {
+        Long parentId = task.getId();
+        TaskEntity maintask = taskEntityRepository.findById(parentId);
+        List<UTconnector> utList = utRepository.findByTaskId(parentId);
+        Set<UserEntity> userSet = new HashSet<>();
+        userSet.add(maintask.getAuthor());
+        for (UTconnector users : utList) {
+            userSet.add(userEntityRepository.findById(users.getUserId()));
+        }
+        List<TaskEntity> subTaskList = taskEntityRepository.findByParentId(parentId);
+        for (TaskEntity tasks : subTaskList) {
+            List<UTconnector> utLists = utRepository.findByTaskId(tasks.getId());
+            for (UTconnector userd : utLists) {
+                userSet.add(userEntityRepository.findById(userd.getUserId()));
+            }
+        }
+
+        return userSet;
     }
 
 }
