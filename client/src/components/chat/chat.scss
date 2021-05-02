@@ -1,48 +1,56 @@
-.chat{
-    width: 360px;
+.chat {
+    width: 100%;
     height: 400px;
     background-color: white;
     border-radius: 10px;
     border: 1px solid #6c757d;
     display: block;
-    
-    .chat-header{
+    margin-bottom: 40px;
+
+    .chat-header {
         display: block;
         height: 50px;
         border-bottom: 1px solid #6c757d;
-        button{
+        button {
             position: relative;
             float: right;
         }
     }
-    .chat-body{
+    .chat-body {
         display: block;
         height: 280px;
     }
-    .chat-fother{
+    .chat-fother {
         display: block;
         height: 70px;
-        textarea{
+        textarea {
             border-radius: 0 0 10px 10px;
             resize: none;
             width: 100%;
             height: 70px;
-            &:focus,:active,:hover{
+            &:focus,
+            :active,
+            :hover {
                 outline: none;
             }
-            &::-webkit-scrollbar{
-                display:none;
+            &::-webkit-scrollbar {
+                display: none;
             }
         }
     }
 }
 
-.open_chat{
+.open_chat {
     animation-duration: 0.5s;
     animation-name: open-chat;
-  }
-  
-  @keyframes open-chat {
-    from {width: 0;}
-    to {width: 360px;}
+    overflow: hidden;
+}
+
+@keyframes open-chat {
+    from {
+        height: 0;
     }
+    to {
+        height: 400px;
+    }
+}
