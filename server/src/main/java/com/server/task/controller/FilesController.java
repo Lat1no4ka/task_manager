@@ -1,9 +1,7 @@
 package com.server.task.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,13 +12,21 @@ import com.server.task.model.entity.FilesEntity;
 import com.server.task.repo.FilesRepository;
 import com.server.task.repo.FilesEntityRepository;
 import com.server.task.model.Files;
+
+import com.server.task.services.FilesService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 @CrossOrigin("*")
 @RestController
@@ -28,6 +34,8 @@ import org.springframework.web.bind.annotation.*;
 @ResponseBody
 public class FilesController {
 
+    @Autowired
+    public FilesService imageService;
     @Autowired
     FilesRepository filesRepository;
     @Autowired
@@ -43,7 +51,7 @@ public class FilesController {
             FilesEntity files = new FilesEntity();
             files.setFileName(file.getOriginalFilename());
             String hashFilename = (UUID.randomUUID()).toString();
-            File convertFile = new File("src\\main\\resources\\uploads\\profile\\" + hashFilename);
+            File convertFile = new File("src\\main\\resources\\static\\profile\\" + hashFilename);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(file.getBytes());
@@ -68,7 +76,7 @@ public class FilesController {
             Files file = new Files();
             file.setFileName(mPFile.getOriginalFilename());
             String hashFilename = (UUID.randomUUID()).toString();
-            File convertFile = new File("src\\main\\resources\\uploads\\documents\\" + hashFilename);
+            File convertFile = new File("src\\main\\resources\\static\\documents\\" + hashFilename);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(mPFile.getBytes());
@@ -107,19 +115,16 @@ public class FilesController {
     }
 
 
-    //Получение картинки пользователя по id пользователя
-    @RequestMapping(value = "/getProfilePicture", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public String downloadPicByUserId(@RequestBody FilesEntity files) throws IOException  {
-        FilesEntity link = filesEntityRepository.findByUserId(files.getUserId());
-        return link.getFilePath();
-    }
-
     //Получение картинки пользователя по id файла
     @RequestMapping(value = "/getProfilePic", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public String downloadPicById(@RequestBody FilesEntity files) throws IOException  {
+    public String getImageAsLink(@RequestBody FilesEntity files) throws IOException {
         FilesEntity link = filesEntityRepository.findById(files.getId());
-        return link.getFilePath();
+        String[] parts = link.getFilePath().split(Pattern.quote("\\"));
+        String filename  = parts[parts.length-1];
+        String lnk = "http://127.0.0.1:8080/getImage/"+filename;
+        return lnk;
     }
+
 
 
     //Удаление файла - ловит id, удаляет файл из БД и сервера
@@ -135,6 +140,14 @@ public class FilesController {
 
     }
 
+
+    @GetMapping(
+            value = "getImage/{imageName:.+}",
+            produces = {MediaType.IMAGE_JPEG_VALUE,MediaType.IMAGE_GIF_VALUE,MediaType.IMAGE_PNG_VALUE}
+    )
+    public @ResponseBody byte[] getImageWithMediaType(@PathVariable(name = "imageName") String fileName) throws IOException {
+        return this.imageService.getImageWithMediaType(fileName);
+    }
 
 
 
