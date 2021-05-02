@@ -8,11 +8,14 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 import com.server.task.model.Task;
+import com.server.task.model.User;
 import com.server.task.model.entity.FilesEntity;
+import com.server.task.model.entity.UserEntity;
 import com.server.task.repo.FilesRepository;
 import com.server.task.repo.FilesEntityRepository;
 import com.server.task.model.Files;
 
+import com.server.task.repo.UserEntityRepository;
 import com.server.task.services.FilesService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.InputStreamResource;
@@ -40,6 +43,8 @@ public class FilesController {
     FilesRepository filesRepository;
     @Autowired
     FilesEntityRepository filesEntityRepository;
+    @Autowired
+    UserEntityRepository userEntityRepository;
 
     //загрузка картинки пользователя с проверкой на изображение
     @RequestMapping(value = "/uploadProfilePic", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -57,8 +62,10 @@ public class FilesController {
             fout.write(file.getBytes());
             fout.close();
             files.setFilePath(convertFile.toString());
-            files.setUserId(id);
+            UserEntity usr = userEntityRepository.findById(id);
             filesEntityRepository.save(files);
+            usr.setPicture(files);
+            userEntityRepository.save(usr);
             return "Изображение успешно добавлено";
         }
         else{
@@ -148,7 +155,6 @@ public class FilesController {
     public @ResponseBody byte[] getImageWithMediaType(@PathVariable(name = "imageName") String fileName) throws IOException {
         return this.imageService.getImageWithMediaType(fileName);
     }
-
 
 
 }
