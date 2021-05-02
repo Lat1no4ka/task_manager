@@ -19,7 +19,7 @@ public class FilesService {
 
 
     //!!!!  ---Путь до папки с фотографиями--- !!!!
-    public final String storageDirectoryPath = "C:\\Users\\Chameleon\\Desktop\\diplom\\Chat\\diploma\\server\\src\\main\\resources\\static\\profile";
+    public final String storageDirectoryPath = "D:\\Programs\\DIplom\\diploma\\server\\src\\main\\resources\\uploads\\profile";
     //!!!!
     public  byte[] getImageWithMediaType(String imageName) throws IOException {
         Path destination =   Paths.get(storageDirectoryPath+"\\"+imageName);

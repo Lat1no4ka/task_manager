@@ -26,13 +26,25 @@ const ProfileInfo = () => {
 
 
     const getImage = async () => {
+        try{
 
-        const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-        const response = await fetch("http://127.0.0.1:8080/downloadFile", { method: "POST", body: JSON.stringify(data.files), headers })       
-        console.log(response);
-      };
+            console.log("полностью объект", userInfo);
+        console.log("переходим в picture", userInfo.picture);
+        const imageId = [
+            {
+                "id": userInfo.picture.id
+            }
 
-
+        ]
+  console.log("идём в id, но тут...",imageId);
+         const imagelink = await request("http://127.0.0.1:8080/getProfilePic", "POST", JSON.stringify(imageId));      
+         console.log(imagelink);
+     
+    }
+    catch (error) {
+        console.log(error);
+    }
+ };
     const getInfo = async () => {
         const userData = JSON.parse(localStorage.getItem("userData"));
         try {
@@ -96,8 +108,8 @@ const ProfileInfo = () => {
                     <div className="d-flex justify-content-center">
                         <Container>
                             <Row>
-                                <Col xs={15} md={10}>
-                                <Image src="https://i.pinimg.com/originals/f5/27/41/f52741fb62bf1d821948a49204406bdc.jpg"  thumbnail />
+                                <Col xs={22} md={11}>
+                                <Image src="https://avatarko.ru/img/kartinka/1/Crazy_Frog.jpg"  thumbnail />
                                 </Col>
                             </Row>
                         </Container>
