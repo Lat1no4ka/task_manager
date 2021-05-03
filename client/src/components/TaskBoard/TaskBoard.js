@@ -38,7 +38,7 @@ const TaskBoard = () => {
 
 
   return (
-    <div className="d-flex">
+    <div className="d-flex"  style={{ backgroundImage: `url("http://localhost:8080/getImage/ad1cb822-94e6-4911-a02c-4400e9e30c3d")` }}>
       <div className="container col-9">
         <div className="d-flex mt-3 justify-content-end">
           <div className="m-2" onClick={() => iconClick("history")}>
@@ -53,8 +53,8 @@ const TaskBoard = () => {
 
             tasks.map((item, index) => {
               return (
-                <div key={item.id} className="col-4" onClick={(e) => { setTaskNum(index); setShowDetail(true) }}>
-                  <TaskItem props={item} />
+                <div  key={item.id} className="col-4" onClick={(e) => { setTaskNum(index); setShowDetail(true) }}>
+                  <TaskItem props={item} style={{backgroundColor: 'blue'}}/>
                 </div>
               );
             })
@@ -68,6 +68,7 @@ const TaskBoard = () => {
         /> : ""}
       <SideBar display={active} block={block} />
     </div>
+
   );
 };
 

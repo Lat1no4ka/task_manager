@@ -1,6 +1,7 @@
 package com.server.task.controller;
 
 import com.server.task.model.ChatMessage;
+import com.server.task.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -17,17 +18,17 @@ public class ChatController {
     /*-------------------- Group (Public) chat--------------------*/
     @MessageMapping("/sendMessage")
     @SendTo("/topic/public")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-        return chatMessage;
+    public Message sendMessage(@Payload Message message) {
+        return message;
     }
 
     @MessageMapping("/addUser")
     @SendTo("/topic/public")
-    public ChatMessage addUser(@Payload ChatMessage chatMessage,
-                               SimpMessageHeaderAccessor headerAccessor) {
+    public Message addUser(@Payload Message message,
+                           SimpMessageHeaderAccessor headerAccessor) {
         // Add user in web socket session
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        return chatMessage;
+        headerAccessor.getSessionAttributes().put("username", message.getSender());
+        return message;
     }
 
 
@@ -36,19 +37,19 @@ public class ChatController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/sendPrivateMessage")
-    //@SendTo("/user/reply")
-    public ChatMessage sendPrivateMessage(@Payload ChatMessage chatMessage) {
+    @SendTo("/queue/reply")
+    public  Message sendPrivateMessage(@Payload Message message) {
         simpMessagingTemplate.convertAndSendToUser(
-                chatMessage.getReceiver().trim(), "/reply", chatMessage);
-        return chatMessage;
+                message.getReceiver().trim(), "/reply", message);
+        return message;
     }
 
     @MessageMapping("/addPrivateUser")
     @SendTo("/queue/reply")
-    public ChatMessage addPrivateUser(@Payload ChatMessage chatMessage,
-                                      SimpMessageHeaderAccessor headerAccessor) {
+    public Message addPrivateUser(@Payload Message message,
+                                  SimpMessageHeaderAccessor headerAccessor) {
         // Add user in web socket session
-        headerAccessor.getSessionAttributes().put("private-username", chatMessage.getSender());
-        return chatMessage;
+        headerAccessor.getSessionAttributes().put("private-username", message.getSender());
+        return message;
     }
 }

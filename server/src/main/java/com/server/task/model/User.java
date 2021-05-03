@@ -36,8 +36,6 @@ public class User implements Serializable {
     @JoinColumn(name = "role_id")
     private Role role;
 
-
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "utconnector",
             joinColumns = @JoinColumn(name = "user_id"),

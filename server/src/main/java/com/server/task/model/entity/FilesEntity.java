@@ -17,9 +17,6 @@ public class FilesEntity implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
-
     @Column(name = "file_path")
     private String filePath;
 

@@ -1,26 +1,35 @@
 package com.server.task.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 import com.server.task.model.Task;
+import com.server.task.model.User;
 import com.server.task.model.entity.FilesEntity;
+import com.server.task.model.entity.UserEntity;
 import com.server.task.repo.FilesRepository;
 import com.server.task.repo.FilesEntityRepository;
 import com.server.task.model.Files;
+
+import com.server.task.repo.UserEntityRepository;
+import com.server.task.services.FilesService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 @CrossOrigin("*")
 @RestController
@@ -29,9 +38,13 @@ import org.springframework.web.bind.annotation.*;
 public class FilesController {
 
     @Autowired
+    public FilesService imageService;
+    @Autowired
     FilesRepository filesRepository;
     @Autowired
     FilesEntityRepository filesEntityRepository;
+    @Autowired
+    UserEntityRepository userEntityRepository;
 
     //загрузка картинки пользователя с проверкой на изображение
     @RequestMapping(value = "/uploadProfilePic", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -43,14 +56,16 @@ public class FilesController {
             FilesEntity files = new FilesEntity();
             files.setFileName(file.getOriginalFilename());
             String hashFilename = (UUID.randomUUID()).toString();
-            File convertFile = new File("src\\main\\resources\\uploads\\profile\\" + hashFilename);
+            File convertFile = new File("src\\main\\resources\\static\\profile\\" + hashFilename);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(file.getBytes());
             fout.close();
             files.setFilePath(convertFile.toString());
-            files.setUserId(id);
+            UserEntity usr = userEntityRepository.findById(id);
             filesEntityRepository.save(files);
+            usr.setPicture(files);
+            userEntityRepository.save(usr);
             return "Изображение успешно добавлено";
         }
         else{
@@ -68,7 +83,7 @@ public class FilesController {
             Files file = new Files();
             file.setFileName(mPFile.getOriginalFilename());
             String hashFilename = (UUID.randomUUID()).toString();
-            File convertFile = new File("src\\main\\resources\\uploads\\documents\\" + hashFilename);
+            File convertFile = new File("src\\main\\resources\\static\\documents\\" + hashFilename);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(mPFile.getBytes());
@@ -81,13 +96,6 @@ public class FilesController {
         filesRepository.saveAll(fileList);
 
         return fileList;
-    }
-
-    //Получение картинки пользователя по id
-    @RequestMapping(value = "/getProfilePic", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public String downloadFile(@RequestBody FilesEntity files) throws IOException  {
-        FilesEntity link = filesEntityRepository.findByUserId(files.getUserId());
-        return link.getFilePath();
     }
 
 
@@ -113,6 +121,19 @@ public class FilesController {
         return responseEntity;
     }
 
+
+    //Получение картинки пользователя по id файла
+    @RequestMapping(value = "/getProfilePic", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public String getImageAsLink(@RequestBody FilesEntity files) throws IOException {
+        FilesEntity link = filesEntityRepository.findById(files.getId());
+        String[] parts = link.getFilePath().split(Pattern.quote("\\"));
+        String filename  = parts[parts.length-1];
+        String lnk = "http://127.0.0.1:8080/getImage/"+filename;
+        return lnk;
+    }
+
+
+
     //Удаление файла - ловит id, удаляет файл из БД и сервера
     @RequestMapping(value = "/deleteFile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public File deleteFile(@RequestBody Files files) throws IOException  {
@@ -127,6 +148,13 @@ public class FilesController {
     }
 
 
+    @GetMapping(
+            value = "getImage/{imageName:.+}",
+            produces = {MediaType.IMAGE_JPEG_VALUE,MediaType.IMAGE_GIF_VALUE,MediaType.IMAGE_PNG_VALUE}
+    )
+    public @ResponseBody byte[] getImageWithMediaType(@PathVariable(name = "imageName") String fileName) throws IOException {
+        return this.imageService.getImageWithMediaType(fileName);
+    }
 
 
 }
