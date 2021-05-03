@@ -43,11 +43,23 @@
                                   referencedColumnNames="id"
                                   referencedTableName="tasks"/>
 
-        <addForeignKeyConstraint  baseColumnNames="user_id"
-                                  baseTableName="files"
+        <addForeignKeyConstraint  baseColumnNames="picture_id"
+                                  baseTableName="users"
                                   constraintName="fk_user_files_id"
                                   referencedColumnNames="id"
-                                  referencedTableName="users"/>
+                                  referencedTableName="files"/>
+
+        <addForeignKeyConstraint  baseColumnNames="chatroom_id"
+                                  baseTableName="messages"
+                                  constraintName="fk_messages_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="chatroom"/>
+
+        <addForeignKeyConstraint  baseColumnNames="task_id"
+                                  baseTableName="chatroom"
+                                  constraintName="fk_chatroom_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="tasks"/>
 
     </changeSet>
 </databaseChangeLog>

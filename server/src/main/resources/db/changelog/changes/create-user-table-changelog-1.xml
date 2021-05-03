@@ -28,6 +28,9 @@
             <column name="role_id" type="INT">
                 <constraints nullable="true"/>
             </column>
+            <column name="picture_id" type="INT">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
         <rollback>
             <dropTable tableName="users"/>

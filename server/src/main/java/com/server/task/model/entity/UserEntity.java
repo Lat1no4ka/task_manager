@@ -26,9 +26,9 @@ public class UserEntity implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @OneToMany
-    @JoinColumn(name = "user_id")
-    private List<FilesEntity> picture = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "picture_id", referencedColumnName = "id")
+    private FilesEntity picture = new FilesEntity();
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -64,9 +64,9 @@ public class UserEntity implements Serializable {
         this.role = role;
     }
 
-    public List<FilesEntity> getPicture() {return picture;}
+    public FilesEntity getPicture() {return picture;}
 
-    public void setPicture(List<FilesEntity> picture) { this.picture = picture; }
+    public void setPicture(FilesEntity picture) { this.picture = picture; }
 
     public void setUserName(String userName) {
         this.userName = userName;

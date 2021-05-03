@@ -16,7 +16,7 @@ const TaskItem = (props) => {
   });
   if (item) {
     return (
-      <div >
+      <div style={{backgroundColor: 'white'}}>
         <div className="task mt-5 p-3">
           <div className="task-header">
             <p>{item.taskName}</p>
