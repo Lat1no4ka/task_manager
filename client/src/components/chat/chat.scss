@@ -1,11 +1,12 @@
 .chat {
     width: 100%;
-    height: 800px;
+    min-height: 600px;
     background-color: white;
     border-radius: 10px;
     border: 1px solid #6c757d;
     display: block;
     margin-bottom: 40px;
+    padding: 10px 0px;
 
     .chat-header {
         display: block;
@@ -32,7 +33,7 @@
                 margin: 0 !important;
             }
         }
-        
+
         .text {
             font-size: 16px;
             flex-wrap: wrap;
@@ -43,17 +44,46 @@
         .sender {
             font-size: 12px;
         }
-        
     }
+
+    .chat-body-private {
+        display: block;
+        height: 400px;
+        padding: 20px;
+        .my-message {
+            text-align: right;
+            p {
+                margin: 0 !important;
+            }
+        }
+        .other-message {
+            text-align: left;
+            p {
+                margin: 0 !important;
+            }
+        }
+
+        .text {
+            font-size: 16px;
+            flex-wrap: wrap;
+        }
+        .date {
+            font-size: 12px;
+        }
+        .sender {
+            font-size: 12px;
+        }
+    }
+
     .chat-footer {
         display: block;
-        height: 70px;
+        height: 90px;
 
         textarea {
             border-radius: 0 0 10px 10px;
             resize: none;
             width: 100%;
-            height: 100px;
+            height: 100%;
             font-size: 20px;
             padding: 0 10px;
             &:focus,
@@ -82,4 +112,3 @@
         height: 400px;
     }
 }
-

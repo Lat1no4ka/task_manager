@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Chat } from "../chat/chat"
+import { PublicChat } from "../chat/publicChat"
 import "./sidebar.scss";
 
 export const SideBar = (props) => {
@@ -7,7 +7,7 @@ export const SideBar = (props) => {
   if (props.showChat) {
     return (
       < div className="sidebar-show" >
-        <Chat  type="public"/>
+        <PublicChat  private={false}/>
       </div>
 
     )
