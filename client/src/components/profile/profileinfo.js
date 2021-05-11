@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Text } from "react";
 import "./profileinf.scss";
 import { useHttp } from "../../hooks/http.hook";
-import { Row, Col, Alert, Container, Image} from "react-bootstrap";
+import { Row, Col, Alert, Container, Image, Button, Form} from "react-bootstrap";
 
 import ModalCreateUser from "./modal-create-user"
 import ModalUpdateUser from "./modal-update-user";
@@ -21,8 +21,10 @@ const ProfileInfo = () => {
 
      const [data, setData] = useState("");
 
-    
+     const [selectedFile, setSelectedFile] = useState();
+     const [isSelected, setIsSelected] = useState(false);
 
+     const [userId, setUserId] = useState("");
 
     useEffect(() => {
         const fetch = async () => {
@@ -35,6 +37,51 @@ const ProfileInfo = () => {
         ev.target.src = "https://avtokadry.infoorel.ru/images/inc/noavatar.jpg" // this could be an imported image or url
       }
    
+
+    //   const sendFile = async (userId, propImages) => {
+    //     const formData = new FormData();
+    //     propImages.forEach(file => {
+    //         formData.append('file', file)
+    //     });
+    //     formData.append('userId', userId)
+    //     const headers = { 'Access-Control-Allow-Credentials': 'true' }
+    //     await request("http://127.0.0.1:8080/uploadFiles", "POST", formData, headers)
+    // }
+
+
+
+
+
+	const changeHandler = (event) => {
+		setSelectedFile(event.target.files[0]);
+		setIsSelected(true);
+	};
+
+	const handleSubmission = async (userId) => {
+		const formData = new FormData();
+
+		formData.append('file', selectedFile);
+        formData.append('userId', userId)
+console.log(formData);
+		await fetch(
+			"http://localhost:8080/uploadProfilePic",
+			{
+				method: 'POST',
+				body: formData,
+			}
+		)
+			.then((response) => response.json())
+			.then((result) => {
+				console.log('Success:', result);
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+            getInfo();
+	};
+
+    
+
     const getInfo = async () => {
         const userData = JSON.parse(localStorage.getItem("userData"));
         try {
@@ -59,7 +106,8 @@ const ProfileInfo = () => {
             setFirstName(userInfo.firstName);
             setLastName(userInfo.lastName);
             setUserName(userInfo.userName);
-            console.log(userInfo);
+            setUserId(userInfo.id);
+            console.log(userId);
                 const imagebody = 
                             {
                                 "id": userInfo.picture.id
@@ -112,6 +160,23 @@ const ProfileInfo = () => {
 
                         </div>
                         
+                        <div>
+                            <br />
+                            <h4>Изменить фото:</h4>
+                            <input type="file" name="file" onChange={changeHandler} />
+                            {isSelected ? (
+                                <div>
+                                    <br />
+                                    <button onClick={() => handleSubmission(userId)}>Подтвердить</button>
+                                </div>
+                            ) : (
+                                <p></p>
+                            )}
+                            
+                            
+                        </div>
+
+
                     </div>
                     <div className="d-flex justify-content-center">
                         <Container>
@@ -150,8 +215,25 @@ const ProfileInfo = () => {
                         
                         <div className="form-group">
                             <ModalUpdateUser/>
-
+                        
                         </div>
+                        
+                        <div>
+                            <br />
+            <h4>Изменить фото:</h4>
+			<input type="file" name="file" onChange={changeHandler} />
+			{isSelected ? (
+				<div>
+                    <br />
+                    <button onClick={() => handleSubmission(userId)}>Подтвердить</button>
+                </div>
+			) : (
+				<p></p>
+			)}
+            
+			
+		</div>
+                        
                         
                     </div>
                     <div className="d-flex justify-content-center">
@@ -161,9 +243,15 @@ const ProfileInfo = () => {
                                 <Image src={imageLink} alt="" onError={addDefaultSrc} thumbnail />
                                 </Col>
                             </Row>
+                            
                         </Container>
+                        
+
                 </div>
+                
+                    
                 </div>
+                        
             </div>
 
         );
