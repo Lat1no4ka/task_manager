@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface UserEntityRepository extends CrudRepository<UserEntity, String>{
     UserEntity findById(Long id);
+    UserEntity findByPictureId(Long id);
 }

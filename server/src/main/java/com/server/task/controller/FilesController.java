@@ -137,14 +137,24 @@ public class FilesController {
     //Удаление файла - ловит id, удаляет файл из БД и сервера
     @RequestMapping(value = "/deleteFile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public File deleteFile(@RequestBody Files files) throws IOException  {
-
         Files dbFile = filesRepository.findById(files.getId());
         File storageFile = new File(dbFile.getFilePath());
         filesRepository.delete(dbFile);
         storageFile.delete();
-
         return storageFile;
+    }
 
+    //Удаление картинки - ловит id, удаляет файл из БД и сервера
+    @RequestMapping(value = "/deletePicture", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public String deleteProfilePic(@RequestBody Files picture) throws IOException  {
+        Files dbFile = filesRepository.findById(picture.getId());
+        File storageFile = new File(dbFile.getFilePath());
+        UserEntity user = userEntityRepository.findByPictureId(picture.getId());
+        user.setPicture(null);
+        userEntityRepository.save(user);
+        filesRepository.delete(dbFile);
+        storageFile.delete();
+        return "Изображение удалено";
     }
 
 
