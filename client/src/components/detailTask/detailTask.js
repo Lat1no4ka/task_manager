@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { DetailTask as DetailSubTask } from "./detailTask"
 import { CaretDownFill, ChatDots } from 'react-bootstrap-icons';
-import { Chat } from '../chat/chat'
+import { PrivateChat } from '../chat/privateChat'
 export const DetailSubTaskCreate = (props) => {
   const data = props.data;
   return (
@@ -368,7 +368,7 @@ export const DetailTask = (props) => {
           <div className="d-flex justify-content-between">
             {openChat ?
               <div className="d-flex w-100">
-                <Chat setOpenChat={setOpenChat} users={[data.employee,data.author]} userId={userId} />
+                <PrivateChat setOpenChat={setOpenChat} private={true} data={data}/>
               </div>
               :
               <div>
@@ -378,11 +378,11 @@ export const DetailTask = (props) => {
               </div>
             }
             <div style={openChat ? { display: "none" } : { display: "block" }}>
-              <div className="">
+              <div>
                 {subTasks.length > 0 ?
                   subTasks.map((item, index) => {
                     return (<SubTask key={index} id={index} />)
-                  }) : ""
+                  }) : null
                 }
               </div>
               {data.author.id == userId ?

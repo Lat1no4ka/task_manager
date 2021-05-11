@@ -1,21 +1,13 @@
 package com.server.task.controller;
 
+import com.server.task.model.*;
 import com.server.task.model.dictionary.Status;
 import com.server.task.model.entity.TaskEntity;
 import com.server.task.model.entity.TaskAlterEntity;
-import com.server.task.model.User;
 import com.server.task.model.entity.UserEntity;
-import com.server.task.repo.TaskRepository;
-import com.server.task.repo.FilesRepository;
-import com.server.task.repo.TaskEntityRepository;
-import com.server.task.repo.UTconnectorRepository;
-import com.server.task.repo.UserRepository;
-import com.server.task.repo.UserEntityRepository;
+import com.server.task.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.server.task.model.Files;
-import com.server.task.model.Task;
-import com.server.task.model.UTconnector;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
@@ -38,6 +30,8 @@ public class AddTaskController {
     TaskEntityRepository taskEntityRepository;
     @Autowired
     FilesRepository filesRepository;
+    @Autowired
+    MessageRepository messageRepository;
 
 
     @RequestMapping(value = {"/addTaskOld"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
@@ -189,6 +183,24 @@ public class AddTaskController {
         }
 
         return userSet;
+    }
+
+    //Получение приватных сообщений
+    @RequestMapping(value = {"/getPrivateMessages"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public List<Message> ListPrivateMessages(@RequestBody Message sample) {
+        String sender = sample.getSender();
+        String receiver = sample.getReceiver();
+        List<Message> messagesList = new ArrayList<>(messageRepository.findBySenderAndReceiver(sender, receiver));
+        List<Message> reverse = messageRepository.findBySenderAndReceiver(receiver, sender);
+        messagesList.addAll(reverse);
+        return messagesList;
+    }
+
+    //Получение общих сообщений
+    @RequestMapping(value = {"/getPublicMessages"}, method = RequestMethod.GET, headers = {"Content-type=application/json"})
+    public List<Message> ListPublicMessages() {
+        List<Message> messagesList = new ArrayList<>(messageRepository.findByReceiverIsNull());
+        return messagesList;
     }
 
 }
