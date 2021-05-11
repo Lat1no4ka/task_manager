@@ -265,6 +265,11 @@ export const TaskForm = (props) => {
                             return <p className="m-2" key={index}>{file.name}</p>
                         })}
                     </div>
+                    <div>
+                        {task.task.files.map((file, index) => {
+                            return <p className="m-2" key={index}>{file.name}</p>
+                        })}
+                    </div>
                 </div>
                 <div className="form-group col-12">
                     <button type="button" className="btn btn-secondary" onClick={e => saveTask(e)} >Создать задачу</button>

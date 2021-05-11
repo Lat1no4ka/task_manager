@@ -56,7 +56,7 @@ public class FilesController {
             FilesEntity files = new FilesEntity();
             files.setFileName(file.getOriginalFilename());
             String hashFilename = (UUID.randomUUID()).toString();
-            File convertFile = new File("src\\main\\resources\\static\\profile\\" + hashFilename);
+            File convertFile = new File("src\\main\\resources\\uploads\\profile\\" + hashFilename);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(file.getBytes());
@@ -83,7 +83,7 @@ public class FilesController {
             Files file = new Files();
             file.setFileName(mPFile.getOriginalFilename());
             String hashFilename = (UUID.randomUUID()).toString();
-            File convertFile = new File("src\\main\\resources\\static\\documents\\" + hashFilename);
+            File convertFile = new File("src\\main\\resources\\uploads\\documents\\" + hashFilename);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(mPFile.getBytes());
@@ -129,7 +129,7 @@ public class FilesController {
         String[] parts = link.getFilePath().split(Pattern.quote("\\"));
         String filename  = parts[parts.length-1];
         String lnk = "http://127.0.0.1:8080/getImage/"+filename;
-        return lnk;
+        return "{\"link\": \" "+ lnk +"\"}";
     }
 
 
