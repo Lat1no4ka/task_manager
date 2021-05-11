@@ -5,6 +5,7 @@ import { ChatBodyPrivate } from './bodyPrivate'
 import { ChatFooter } from './footer'
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux"
+import { useHttp } from "../../hooks/http.hook";
 
 var stompClient = null;
 export const PublicChat = (props) => {
@@ -12,6 +13,7 @@ export const PublicChat = (props) => {
     const [broadcastMessage, setBroadcastMessage] = useState([])
     const [messagesCounter, setMessagesCounter] = useState(0);
     const [selectedUser, setSelectedUser] = useState(null)
+    const { request } = useHttp();
 
     const connect = () => {
         const Stomp = require("stompjs");
@@ -87,11 +89,27 @@ export const PublicChat = (props) => {
         }
     }
 
+    const getPublicMessages = async () => {
+        const messages = await request('http://127.0.0.1:8080/getPublicMessages', 'GET')
+        let history = []
+        messages.forEach(message => {
+            let date = new Date(...message.dateTime)
+            date = `${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
+            history.push({
+                message: message.content,
+                sender: message.sender,
+                dateTime: date
+            })
+        });
+        setBroadcastMessage(history)
+        setMessagesCounter(history.length)
+    }
 
     useEffect(() => {
         if (!stompClient) {
             connect()
         }
+        getPublicMessages();
     }, [messagesCounter])
 
     if (props.private) {

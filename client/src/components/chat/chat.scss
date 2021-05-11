@@ -18,6 +18,7 @@
         }
     }
     .chat-body {
+        overflow-y: scroll;
         display: block;
         height: 600px;
         padding: 20px;
@@ -47,6 +48,7 @@
     }
 
     .chat-body-private {
+        overflow-y: scroll;
         display: block;
         height: 400px;
         padding: 20px;

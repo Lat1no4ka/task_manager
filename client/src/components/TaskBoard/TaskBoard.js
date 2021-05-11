@@ -9,7 +9,9 @@ import "./home.scss";
 
 const TaskBoard = () => {
   const { request } = useHttp();
+  const [sorted, setSorted] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const [tasksForFilter, setTasksForFilter] = useState([]);
   const [taskNum, setTaskNum] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
   const [showChat, setShowChat] = useState(false);
@@ -19,6 +21,7 @@ const TaskBoard = () => {
   const getTask = async () => {
     const tasks = await request("http://127.0.0.1:8080/getTasks", "POST", JSON.stringify({ id }))
     setTasks(tasks);
+    setTasksForFilter(tasks);
   };
 
   useEffect(() => {
@@ -32,7 +35,7 @@ const TaskBoard = () => {
       <div className="container">
         <div className="d-flex mt-3 justify-content-end">
           <div className="m-2">
-            <ChatDots size={28} className="icon" onClick={ e => {
+            <ChatDots size={28} className="icon" onClick={e => {
               setShowChat(!showChat)
               setShowFilter(false)
             }} />
@@ -62,7 +65,7 @@ const TaskBoard = () => {
           data={tasks[taskNum]}
           show={showDetail} onHide={() => setShowDetail(false)}
         /> : null}
-      <SideBar showChat={showChat} showFilter={showFilter}/>
+      <SideBar showChat={showChat} showFilter={showFilter} tasks={tasksForFilter} setTasks={setTasks} setSorted={setSorted} sorted={sorted} />
     </div>
 
   );
