@@ -16,38 +16,29 @@ const ProfileInfo = () => {
      const [emailinf, setEmail] = useState("");
      const [userInfo, setUserInfo] = useState(0);
      const [roleinf, setRole] = useState("");
-
+     const [imageId, setImageId] = useState("");
+     const [imageLink, setImageLink] = useState(0);
 
      const [data, setData] = useState("");
 
+    
+
+
     useEffect(() => {
-        getInfo();
+        const fetch = async () => {
+            await getInfo();
+        }
+       fetch()
     }, []);
 
-
-    const getImage = async () => {
-        try{
-
-            console.log("полностью объект", userInfo);
-        console.log("переходим в picture", userInfo.picture);
-        const imageId = [
-            {
-                "id": userInfo.picture.id
-            }
-
-        ]
-  console.log("идём в id, но тут...",imageId);
-         const imagelink = await request("http://127.0.0.1:8080/getProfilePic", "POST", JSON.stringify(imageId));      
-         console.log(imagelink);
-     
-    }
-    catch (error) {
-        console.log(error);
-    }
- };
+    const addDefaultSrc = (ev) => {
+        ev.target.src = "https://avtokadry.infoorel.ru/images/inc/noavatar.jpg" // this could be an imported image or url
+      }
+   
     const getInfo = async () => {
         const userData = JSON.parse(localStorage.getItem("userData"));
         try {
+            
             const body = [
                 {
                     "id": userData.userId
@@ -55,15 +46,31 @@ const ProfileInfo = () => {
 
             ]
 
+            console.log(body);
+            
+            
+            
             
             const data = await request("http://127.0.0.1:8080/listUsers", "POST", JSON.stringify(body));
             const userInfo = data[0];
-            
             setUserInfo(userInfo);
+             
             setEmail(userInfo.email);
             setFirstName(userInfo.firstName);
             setLastName(userInfo.lastName);
             setUserName(userInfo.userName);
+            console.log(userInfo);
+                const imagebody = 
+                            {
+                                "id": userInfo.picture.id
+                            }
+
+            setImageId(imagebody);
+
+                        console.log(imagebody);
+            const {link} = await request('http://127.0.0.1:8080/getProfilePic', "POST", JSON.stringify(imagebody))
+            setImageLink(link);
+
             if (userInfo.role.roleName == "admin") {
                 setRole("Администратор");
             }
@@ -73,7 +80,8 @@ const ProfileInfo = () => {
         } catch (error) {
             console.log(error);
         }
-        getImage();
+
+       
     };
     if (userInfo?.role?.roleName == "admin") {
         return (
@@ -109,7 +117,7 @@ const ProfileInfo = () => {
                         <Container>
                             <Row>
                                 <Col xs={22} md={11}>
-                                <Image src="https://avatarko.ru/img/kartinka/1/Crazy_Frog.jpg"  thumbnail />
+                                <Image src={imageLink} alt="" onError={addDefaultSrc} thumbnail />
                                 </Col>
                             </Row>
                         </Container>
@@ -139,19 +147,26 @@ const ProfileInfo = () => {
                         <div>
                             <p>Роль: Пользователь</p>
                         </div>
+                        
                         <div className="form-group">
                             <ModalUpdateUser/>
 
                         </div>
-
+                        
                     </div>
-
+                    <div className="d-flex justify-content-center">
+                        <Container>
+                            <Row>
+                                <Col xs={22} md={11}>
+                                <Image src={imageLink} alt="" onError={addDefaultSrc} thumbnail />
+                                </Col>
+                            </Row>
+                        </Container>
                 </div>
-
+                </div>
             </div>
 
         );
-
     }
 };
 

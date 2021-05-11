@@ -129,7 +129,7 @@ public class FilesController {
         String[] parts = link.getFilePath().split(Pattern.quote("\\"));
         String filename  = parts[parts.length-1];
         String lnk = "http://127.0.0.1:8080/getImage/"+filename;
-        return lnk;
+        return "{\"link\": \" "+ lnk +"\"}";
     }
 
 

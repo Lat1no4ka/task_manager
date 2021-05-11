@@ -28,13 +28,12 @@ const ModalCreateUser = () => {
   });
 
   const sendForm = async () => {
-    console.log(form);
+  
     try {
         const data = await request("http://127.0.0.1:8080/registerUser", "POST", JSON.stringify({ ...form }));
     } catch (error) {
         console.log(error);
     }
-    console.log(typeof(form.role.id));
     handleClose();
 };
 
