@@ -4,19 +4,23 @@ import AddTask from "./pages/AddTask";
 import AuthPage from "./pages/AuthPage";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
+import CalendarPage from "./pages/Calendar";
 
 const UseRoutes = (isAuthenticated) => {
   if (isAuthenticated) {
     return (
       <Switch>
         <Route path="/home">
-         <Home/>
+          <Home />
         </Route>
         <Route path="/profile">
-        <Profile/>
+          <Profile />
+        </Route>
+        <Route path="/calendar">
+          <CalendarPage />
         </Route>
         <Route path="/AddTask">
-         <AddTask/>
+          <AddTask />
         </Route>
         <Redirect to="/home" />
       </Switch>

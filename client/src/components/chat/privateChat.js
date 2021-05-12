@@ -67,11 +67,34 @@ export const PrivateChat = (props) => {
         setUsers(users)
     }
 
+    const getPrivateMessages = async () => {
+        const data = {
+            sender: user.userId,
+            receiver: selectedUser
+        };
+        const messages = await request('http://127.0.0.1:8080/getPrivateMessages', 'POST', JSON.stringify(data))
+        let history = []
+        messages.forEach(message => {
+            let date = new Date(...message.dateTime)
+            date = `${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
+            history.push({
+                message: message.content,
+                sender: message.sender,
+                dateTime: date
+            })
+        });
+        setBroadcastMessage(history)
+        setMessagesCounter(history.length)
+    }
+
 
     useEffect(() => {
         getUsers()
         if (!stompClient && selectedUser) {
             connect()
+        }
+        if (!messagesCounter && selectedUser) {
+            getPrivateMessages()
         }
     }, [messagesCounter, selectedUser])
     return (

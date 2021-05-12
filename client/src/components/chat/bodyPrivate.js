@@ -6,6 +6,7 @@ export const ChatBodyPrivate = (props) => {
         console.log(props)
     }, [])
 
+    
 
 
     const prepareMessage = (message, index) => {
