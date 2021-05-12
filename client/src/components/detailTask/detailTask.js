@@ -110,10 +110,11 @@ export const DetailTask = (props) => {
     const subTasks = await request("http://127.0.0.1:8080/getSubtasks", "POST", JSON.stringify({ id: data.id }))
     setSubTasks(subTasks);
   };
-  const saveEdit = async () => {
+  const saveEdit = async (status) => {
     let update = { ...form };
+    console.log(status)
     update.priority = update.priority.id
-    update.status = update.status.id
+    update.status = status.id
     update.author = update.author.id
     update.employee = update.employee.id
     await request("http://127.0.0.1:8080/alterTask", "POST", JSON.stringify({ ...update }))
@@ -218,11 +219,11 @@ export const DetailTask = (props) => {
                     <div>
                       {/* {console.log(nextStatus)} */}
                       <button type="button" className="btn btn-secondary m-1"
-                        onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit() }}>
+                        onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[0]) }}>
                         {nextStatus[0]?.statusName}
                       </button>
                       <button type="button" className="btn btn-secondary m-1"
-                        onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit() }}
+                        onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[1]) }}
                       >
                         {nextStatus[1]?.statusName}
                       </button>
