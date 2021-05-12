@@ -16,7 +16,7 @@ const ProfileInfo = () => {
      const [emailinf, setEmail] = useState("");
      const [userInfo, setUserInfo] = useState(0);
      const [roleinf, setRole] = useState("");
-     const [imageId, setImageId] = useState("");
+     const [imageId, setImageId] = useState(null);
      const [imageLink, setImageLink] = useState(0);
 
      const [data, setData] = useState("");
@@ -27,10 +27,9 @@ const ProfileInfo = () => {
      const [userId, setUserId] = useState("");
 
     useEffect(() => {
-        const fetch = async () => {
-            await getInfo();
-        }
-       fetch()
+        
+            getInfo();
+        
     }, []);
 
     const addDefaultSrc = (ev) => {
@@ -58,6 +57,27 @@ const ProfileInfo = () => {
 	};
 
 	const handleSubmission = async (userId) => {
+
+        if (imageId != null){
+            console.log(imageId);
+     
+            // await request("http://127.0.0.1:8080/deletePicture", "POST", JSON.stringify(imageId));
+    
+
+            await request(
+                "http://localhost:8080/deletePicture", 'POST', JSON.stringify(imageId)
+                
+            )
+                .then((response) => response.json())
+                .then((result) => {
+                    console.log('Success:', result);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+
+        }
+
 		const formData = new FormData();
 
 		formData.append('file', selectedFile);
