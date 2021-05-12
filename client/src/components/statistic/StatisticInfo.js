@@ -29,7 +29,7 @@ export const StatisticInfo = () => {
             return id == user.id && user.role.roleName == 'admin' ? user : null
         })
         setUsers(users)
-        if (admin) {
+        if (admin.length) {
             setStatisticShow(true)
         }
     }
@@ -42,9 +42,9 @@ export const StatisticInfo = () => {
     }
 
     useEffect(() => {
+        checkUser()
         getUserStatistic()
         getStatistic()
-        checkUser()
     }, [])
 
     if (userStatistic && !statisticShow) {
