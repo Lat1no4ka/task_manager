@@ -13,4 +13,5 @@ public interface TaskEntityRepository extends CrudRepository<TaskEntity, String>
     TaskEntity findById(Long id);
     List<UserEntity> findByAuthor(Long authorId);
     List<TaskEntity> findByParentId(Long parentId);
+    List<TaskEntity> findByEmployee(UserEntity emp);
 }

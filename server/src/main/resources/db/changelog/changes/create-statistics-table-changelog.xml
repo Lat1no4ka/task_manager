@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="admin" id="19">
+        <createTable tableName="statistics">
+
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="user_id" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="task_counter" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="stat_1" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="stat_2" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="stat_3" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="stat_4" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="stat_5" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="stat_6" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="author" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+        </createTable>
+        <rollback>
+            <dropTable tableName="statistics"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

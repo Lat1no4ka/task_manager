@@ -61,5 +61,11 @@
                                   referencedColumnNames="id"
                                   referencedTableName="tasks"/>
 
+        <addForeignKeyConstraint  baseColumnNames="user_id"
+                                  baseTableName="statistics"
+                                  constraintName="fk_statistics_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="users"/>
+
     </changeSet>
 </databaseChangeLog>
