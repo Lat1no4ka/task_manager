@@ -65,12 +65,12 @@ public class StatisticsController {
             if((tasks.getStatus()).getId()==5){ stat5+=1; }
             if((tasks.getStatus()).getId()==6){ stat6+=1; }
         }
-        userStat.setStat1(stat1);
-        userStat.setStat2(stat2);
-        userStat.setStat3(stat3);
-        userStat.setStat4(stat4);
-        userStat.setStat5(stat5);
-        userStat.setStat6(stat6);
+        userStat.setNewTask(stat1);
+        userStat.setWorkTask(stat2);
+        userStat.setCheckTask(stat3);
+        userStat.setRevisionTask(stat4);
+        userStat.setAcceptedTask(stat5);
+        userStat.setClosedTask(stat6);
         return userStat;
     }
 
@@ -101,12 +101,12 @@ public class StatisticsController {
                 if ((tasks.getStatus()).getId() == 5) { stat5 += 1; }
                 if ((tasks.getStatus()).getId() == 6) { stat6 += 1; }
             }
-            userStat.setStat1(stat1);
-            userStat.setStat2(stat2);
-            userStat.setStat3(stat3);
-            userStat.setStat4(stat4);
-            userStat.setStat5(stat5);
-            userStat.setStat6(stat6);
+            userStat.setNewTask(stat1);
+            userStat.setWorkTask(stat2);
+            userStat.setCheckTask(stat3);
+            userStat.setRevisionTask(stat4);
+            userStat.setAcceptedTask(stat5);
+            userStat.setClosedTask(stat6);
             allStat.add(userStat);
         }
         return allStat;

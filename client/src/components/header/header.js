@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import {
@@ -36,13 +36,13 @@ const Header = () => {
           <Nav.Link href="profile">
             <PersonSquare size={28} />
           </Nav.Link>
-          <Nav.Link href="list">
+          {/* <Nav.Link href="list">
             <CardChecklist size={28} />
-          </Nav.Link>
+          </Nav.Link> */}
           <Nav.Link href="bell">
             <Bell size={28} />
           </Nav.Link>
-          <Nav.Link href="table">
+          <Nav.Link href="statistic">
             <Table size={28} />
           </Nav.Link>
           <Nav.Link href="addTask">

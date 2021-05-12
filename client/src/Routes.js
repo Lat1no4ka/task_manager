@@ -5,6 +5,7 @@ import AuthPage from "./pages/AuthPage";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import CalendarPage from "./pages/Calendar";
+import Statistic from "./pages/Statistic";
 
 const UseRoutes = (isAuthenticated) => {
   if (isAuthenticated) {
@@ -18,6 +19,9 @@ const UseRoutes = (isAuthenticated) => {
         </Route>
         <Route path="/calendar">
           <CalendarPage />
+        </Route>
+        <Route path="/statistic">
+          <Statistic />
         </Route>
         <Route path="/AddTask">
           <AddTask />

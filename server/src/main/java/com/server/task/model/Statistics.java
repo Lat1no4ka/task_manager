@@ -28,22 +28,22 @@ public class Statistics implements Serializable {
     private int taskCounter;
 
     @Column(name = "stat_1")
-    private int stat1;
+    private int newTask;
 
     @Column(name = "stat_2")
-    private int stat2;
+    private int workTask;
 
     @Column(name = "stat_3")
-    private int stat3;
+    private int checkTask;
 
     @Column(name = "stat_4")
-    private int stat4;
+    private int revisionTask;
 
     @Column(name = "stat_5")
-    private int stat5;
+    private int acceptedTask;
 
     @Column(name = "stat_6")
-    private int stat6;
+    private int closedTask;
 
     @Column(name = "author")
     private int isAuthor;
