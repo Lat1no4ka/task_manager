@@ -6,8 +6,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "utconnector")
 public class UTconnector implements Serializable {
@@ -22,4 +20,28 @@ public class UTconnector implements Serializable {
 
     @Column(name = "task_id")
     private Long taskId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
+    }
 }

@@ -81,7 +81,7 @@ public class UserController {
                 else{return user.getPassword() + " ___ " + " ___ " + newusr.getPassword();}
         }
 
-        //Старое изменение - просто заменяет пароль  "Неверно введен старый пароль"
+        //Старое изменение - просто заменяет пароль
         //if (user.getPassword()!=null){newusr.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));}
 
         userRepository.save(newusr);
