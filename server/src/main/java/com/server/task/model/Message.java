@@ -1,6 +1,5 @@
 package com.server.task.model;
 
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
