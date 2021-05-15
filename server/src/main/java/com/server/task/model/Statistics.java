@@ -2,15 +2,11 @@ package com.server.task.model;
 
 import com.server.task.model.entity.FilesEntity;
 import com.server.task.model.entity.UserEntity;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "statistics")
 public class Statistics implements Serializable {
@@ -48,4 +44,83 @@ public class Statistics implements Serializable {
     @Column(name = "author")
     private int isAuthor;
 
+    public Long getId() {
+        return id;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public int getTaskCounter() {
+        return taskCounter;
+    }
+
+    public int getNewTask() {
+        return newTask;
+    }
+
+    public int getWorkTask() {
+        return workTask;
+    }
+
+    public int getCheckTask() {
+        return checkTask;
+    }
+
+    public int getRevisionTask() {
+        return revisionTask;
+    }
+
+    public int getAcceptedTask() {
+        return acceptedTask;
+    }
+
+    public int getClosedTask() {
+        return closedTask;
+    }
+
+    public int getIsAuthor() {
+        return isAuthor;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public void setTaskCounter(int taskCounter) {
+        this.taskCounter = taskCounter;
+    }
+
+    public void setNewTask(int newTask) {
+        this.newTask = newTask;
+    }
+
+    public void setWorkTask(int workTask) {
+        this.workTask = workTask;
+    }
+
+    public void setCheckTask(int checkTask) {
+        this.checkTask = checkTask;
+    }
+
+    public void setRevisionTask(int revisionTask) {
+        this.revisionTask = revisionTask;
+    }
+
+    public void setAcceptedTask(int acceptedTask) {
+        this.acceptedTask = acceptedTask;
+    }
+
+    public void setClosedTask(int closedTask) {
+        this.closedTask = closedTask;
+    }
+
+    public void setIsAuthor(int isAuthor) {
+        this.isAuthor = isAuthor;
+    }
 }

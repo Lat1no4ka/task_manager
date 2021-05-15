@@ -3,8 +3,7 @@ package com.server.task.model.entity;
 import com.server.task.model.dictionary.Role;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Entity
 @Table(name = "users")

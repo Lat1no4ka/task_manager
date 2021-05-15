@@ -1,13 +1,8 @@
 package com.server.task.model.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "files")
 public class FilesEntity implements Serializable {
@@ -23,5 +18,27 @@ public class FilesEntity implements Serializable {
     @Column(name = "file_name")
     private String fileName;
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
 }
