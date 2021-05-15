@@ -15,7 +15,7 @@
 
         </insert>
 
-        <insert tableName="PrioDir">
+        <insert tableName="priodir">
 
             <column name="id" valueNumeric="2"/>
 
