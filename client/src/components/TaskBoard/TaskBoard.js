@@ -19,7 +19,7 @@ const TaskBoard = () => {
   const id = useSelector(auth => auth.auth.userId)
 
   const getTask = async () => {
-    const tasks = await request("http://127.0.0.1:8080/getTasks", "POST", JSON.stringify({ id }))
+    const tasks = await request(`${process.env.REACT_APP_API_URL}/getTasks`, "POST", JSON.stringify({ id }))
     setTasks(tasks);
     setTasksForFilter(tasks);
   };
@@ -31,7 +31,7 @@ const TaskBoard = () => {
 
 
   return (
-    <div className="d-flex" style={{ backgroundImage: `url("http://localhost:8080/getImage/ad1cb822-94e6-4911-a02c-4400e9e30c3d")` }}>
+    <div className="d-flex">
       <div className="container">
         <div className="d-flex mt-3 justify-content-end">
           <div className="m-2">

@@ -18,7 +18,7 @@ export const PrivateChat = (props) => {
     const connect = () => {
         const Stomp = require("stompjs");
         var SockJS = require("sockjs-client");
-        SockJS = new SockJS("http://localhost:8080/ws");
+        SockJS = new SockJS(`${process.env.REACT_APP_API_URL}/ws`);
         stompClient = Stomp.over(SockJS);
         // stompClient.debug = null
         stompClient.connect({}, onConnected, onError);
@@ -60,7 +60,7 @@ export const PrivateChat = (props) => {
     }
 
     const getUsers = async () => {
-        const response = await request("http://127.0.0.1:8080/getTaskUsers", "POST", JSON.stringify({ id: props.data.id }))
+        const response = await request(`${process.env.REACT_APP_API_URL}/getTaskUsers`, "POST", JSON.stringify({ id: props.data.id }))
         const users = response.filter((allUser) => {
             return allUser.id != user.userId ? allUser : null
         })
@@ -72,7 +72,7 @@ export const PrivateChat = (props) => {
             sender: user.userId,
             receiver: selectedUser
         };
-        const messages = await request('http://127.0.0.1:8080/getPrivateMessages', 'POST', JSON.stringify(data))
+        const messages = await request(`${process.env.REACT_APP_API_URL}/getPrivateMessages`, 'POST', JSON.stringify(data))
         let history = []
         messages.forEach(message => {
             let date = new Date(...message.dateTime)

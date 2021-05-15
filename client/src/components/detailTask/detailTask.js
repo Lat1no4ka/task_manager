@@ -78,7 +78,7 @@ export const DetailTask = (props) => {
   const getFile = async (index, fileName) => {
 
     const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-    const response = await fetch("http://127.0.0.1:8080/downloadFile", { method: "POST", body: JSON.stringify(data.files[index]), headers })
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/downloadFile`, { method: "POST", body: JSON.stringify(data.files[index]), headers })
       .then(res => res.blob())
       .then(blob => {
         downloadFile(blob, fileName)
@@ -97,17 +97,17 @@ export const DetailTask = (props) => {
   }
 
   const getPriority = async () => {
-    const priority = await request("http://127.0.0.1:8080/getPriority", "GET");
+    const priority = await request(`${process.env.REACT_APP_API_URL}/getPriority`, "GET");
     setPriority(priority);
   }
 
   const getUsers = async () => {
-    const users = await request("http://127.0.0.1:8080/allUsers", "GET");
+    const users = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
     setUsers(users);
   }
 
   const getSubTasks = async () => {
-    const subTasks = await request("http://127.0.0.1:8080/getSubtasks", "POST", JSON.stringify({ id: data.id }))
+    const subTasks = await request(`${process.env.REACT_APP_API_URL}/getSubtasks`, "POST", JSON.stringify({ id: data.id }))
     setSubTasks(subTasks);
   };
   const saveEdit = async (status) => {
@@ -117,7 +117,7 @@ export const DetailTask = (props) => {
     update.status = status.id
     update.author = update.author.id
     update.employee = update.employee.id
-    await request("http://127.0.0.1:8080/alterTask", "POST", JSON.stringify({ ...update }))
+    await request(`${process.env.REACT_APP_API_URL}/alterTask`, "POST", JSON.stringify({ ...update }))
     setData({ ...form })
   }
 
@@ -141,7 +141,7 @@ export const DetailTask = (props) => {
   }
 
   const selectNextStatus = async () => {
-    const status = await request("http://127.0.0.1:8080/getStatus", "GET");
+    const status = await request(`${process.env.REACT_APP_API_URL}/getStatus`, "GET");
     let next = null;
     switch (form.status.alias) {
       case "new":

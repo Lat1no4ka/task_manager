@@ -39,7 +39,7 @@ export const SubTask = () => {
         });
         formData.append('taskId', taskId)
         const headers = { 'Access-Control-Allow-Credentials': 'true' }
-        await request("http://127.0.0.1:8080/uploadFiles", "POST", formData, headers)
+        await request(`${process.env.REACT_APP_API_URL}/uploadFiles`, "POST", formData, headers)
     }
 
     const addSubTask = (e) => {
@@ -55,12 +55,12 @@ export const SubTask = () => {
     }
 
     const getUsers = async () => {
-        const users = await request("http://127.0.0.1:8080/allUsers", "GET");
+        const users = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
         setUsers(users);
     }
 
     const getPriority = async () => {
-        const priority = await request("http://127.0.0.1:8080/getPriority", "GET");
+        const priority = await request(`${process.env.REACT_APP_API_URL}/getPriority`, "GET");
         setPriority(priority);
     }
 

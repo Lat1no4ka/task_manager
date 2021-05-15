@@ -41,7 +41,7 @@ export const TaskForm = (props) => {
         });
         formData.append('taskId', taskId)
         const headers = { 'Access-Control-Allow-Credentials': 'true' }
-        await request("http://127.0.0.1:8080/uploadFiles", "POST", formData, headers)
+        await request(`${process.env.REACT_APP_API_URL}/uploadFiles`, "POST", formData, headers)
     }
 
 
@@ -54,7 +54,7 @@ export const TaskForm = (props) => {
         const parenTask = { ...task.task };
         parenTask.priority = task.task.priority.id;
         parenTask.employee = task.task.employee.id;
-        const id = await request("http://127.0.0.1:8080/addTask", "POST", JSON.stringify({ ...parenTask }))
+        const id = await request(`${process.env.REACT_APP_API_URL}/addTask`, "POST", JSON.stringify({ ...parenTask }))
         if (task.task.files.length > 0) {
             sendFile(id, task.task.files)
         }
@@ -64,7 +64,7 @@ export const TaskForm = (props) => {
             subTask.priority = task.task.priority.id;
             subTask.employee = task.task.employee.id;
         });
-        const subTask = await request("http://127.0.0.1:8080/addSubtask", "POST", JSON.stringify(task.subTask))
+        const subTask = await request(`${process.env.REACT_APP_API_URL}/addSubtask`, "POST", JSON.stringify(task.subTask))
         if (task.subTaskFile.length > 0) {
             console.log(task.subTaskFile)
             subTask.forEach((item, index) => {
@@ -89,12 +89,12 @@ export const TaskForm = (props) => {
     }
 
     const getUsers = async () => {
-        const users = await request("http://127.0.0.1:8080/allUsers", "GET");
+        const users = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
         setUsers(users);
     }
 
     const getPriority = async () => {
-        const priority = await request("http://127.0.0.1:8080/getPriority", "GET");
+        const priority = await request(`${process.env.REACT_APP_API_URL}/getPriority`, "GET");
         setPriority(priority);
     }
 

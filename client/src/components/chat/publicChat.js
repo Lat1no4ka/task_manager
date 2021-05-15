@@ -18,7 +18,7 @@ export const PublicChat = (props) => {
     const connect = () => {
         const Stomp = require("stompjs");
         var SockJS = require("sockjs-client");
-        SockJS = new SockJS("http://localhost:8080/ws");
+        SockJS = new SockJS(`${process.env.REACT_APP_API_URL}/ws`);
         stompClient = Stomp.over(SockJS);
         // stompClient.debug = null
         stompClient.connect({}, onConnected, onError);
@@ -90,7 +90,7 @@ export const PublicChat = (props) => {
     }
 
     const getPublicMessages = async () => {
-        const messages = await request('http://127.0.0.1:8080/getPublicMessages', 'GET')
+        const messages = await request(`${process.env.REACT_APP_API_URL}/getPublicMessages`, 'GET')
         let history = []
         messages.forEach(message => {
             let date = new Date(...message.dateTime)

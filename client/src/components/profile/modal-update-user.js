@@ -50,7 +50,7 @@ const ModalUpdateUser = () => {
           ]
 
          
-          const data = await request("http://127.0.0.1:8080/listUsers", "POST", JSON.stringify(body));
+          const data = await request(`${process.env.REACT_APP_API_URL}/listUsers`, "POST", JSON.stringify(body));
           const userInfo = data[0];
           setUserInfo(userInfo);
           setEmail(userInfo.email);
@@ -67,7 +67,7 @@ const ModalUpdateUser = () => {
 
  
     try {
-        const data = await request("http://127.0.0.1:8080/alterUser", "POST", JSON.stringify({ ...form }));
+        const data = await request(`${process.env.REACT_APP_API_URL}/alterUser`, "POST", JSON.stringify({ ...form }));
     } catch (error) {
         console.log(error);
     }

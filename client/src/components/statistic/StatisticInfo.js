@@ -14,17 +14,17 @@ export const StatisticInfo = () => {
     const [users, setUsers] = useState([])
 
     const getUserStatistic = async () => {
-        const userStatistic = await request("http://127.0.0.1:8080/getUserStat", "POST", JSON.stringify({ id }));
+        const userStatistic = await request(`${process.env.REACT_APP_API_URL}/getUserStat`, "POST", JSON.stringify({ id }));
         setUserStatistic(userStatistic)
     }
 
     const getStatistic = async () => {
-        const statistic = await request("http://127.0.0.1:8080/getFullStat", "GET");
+        const statistic = await request(`${process.env.REACT_APP_API_URL}/getFullStat`, "GET");
         setStatistic(statistic)
     }
 
     const checkUser = async () => {
-        const users = await request("http://127.0.0.1:8080/allUsers", "GET");
+        const users = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
         const admin = users.filter((user) => {
             return id == user.id && user.role.roleName == 'admin' ? user : null
         })

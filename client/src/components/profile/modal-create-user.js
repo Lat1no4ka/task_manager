@@ -30,7 +30,7 @@ const ModalCreateUser = () => {
   const sendForm = async () => {
   
     try {
-        const data = await request("http://127.0.0.1:8080/registerUser", "POST", JSON.stringify({ ...form }));
+        const data = await request(`${process.env.REACT_APP_API_URL}/registerUser`, "POST", JSON.stringify({ ...form }));
     } catch (error) {
         console.log(error);
     }

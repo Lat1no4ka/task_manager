@@ -13,7 +13,7 @@ export const Calendar = (props) => {
 
 
     const getTasks = async () => {
-        const tasks = await request("http://127.0.0.1:8080/getTasks", "POST", JSON.stringify({ id: user.userId }))
+        const tasks = await request(`${process.env.REACT_APP_API_URL}/getTasks`, "POST", JSON.stringify({ id: user.userId }))
         setEvent(tasks)
     }
 

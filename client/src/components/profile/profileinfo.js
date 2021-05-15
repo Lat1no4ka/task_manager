@@ -44,7 +44,7 @@ const ProfileInfo = () => {
     //     });
     //     formData.append('userId', userId)
     //     const headers = { 'Access-Control-Allow-Credentials': 'true' }
-    //     await request("http://127.0.0.1:8080/uploadFiles", "POST", formData, headers)
+    //     await request(`${process.env.REACT_APP_API_URL}/uploadFiles`, "POST", formData, headers)
     // }
 
 
@@ -61,11 +61,11 @@ const ProfileInfo = () => {
         if (imageId != null){
             console.log(imageId);
      
-            // await request("http://127.0.0.1:8080/deletePicture", "POST", JSON.stringify(imageId));
+            // await request(`${process.env.REACT_APP_API_URL}/deletePicture`, "POST", JSON.stringify(imageId));
     
 
             await request(
-                "http://localhost:8080/deletePicture", 'POST', JSON.stringify(imageId)
+                `${process.env.REACT_APP_API_URL}/deletePicture`, 'POST', JSON.stringify(imageId)
                 
             )
                 .then((response) => response.json())
@@ -84,7 +84,7 @@ const ProfileInfo = () => {
         formData.append('userId', userId)
 console.log(formData);
 		await fetch(
-			"http://localhost:8080/uploadProfilePic",
+			`${process.env.REACT_APP_API_URL}/uploadProfilePic`,
 			{
 				method: 'POST',
 				body: formData,
@@ -118,7 +118,7 @@ console.log(formData);
             
             
             
-            const data = await request("http://127.0.0.1:8080/listUsers", "POST", JSON.stringify(body));
+            const data = await request(`${process.env.REACT_APP_API_URL}/listUsers`, "POST", JSON.stringify(body));
             const userInfo = data[0];
             setUserInfo(userInfo);
              
@@ -136,7 +136,7 @@ console.log(formData);
             setImageId(imagebody);
 
                         console.log(imagebody);
-            const {link} = await request('http://127.0.0.1:8080/getProfilePic', "POST", JSON.stringify(imagebody))
+            const {link} = await request(`${process.env.REACT_APP_API_URL}/getProfilePic`, "POST", JSON.stringify(imagebody))
             setImageLink(link);
 
             if (userInfo.role.roleName == "admin") {
