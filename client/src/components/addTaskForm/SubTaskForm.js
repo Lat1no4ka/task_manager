@@ -1,20 +1,19 @@
-import { useState } from "react";
-import "./form.scss";
+import { useState, useEffect } from "react";
+import { Typeahead } from 'react-bootstrap-typeahead';
 import { useHttp } from "../../hooks/http.hook";
 import { useDispatch, useSelector } from "react-redux";
 import { taskAtions } from "../../redux/task/action";
 import { CaretDownFill } from 'react-bootstrap-icons';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import "./form.scss";
+
 export const SubTask = () => {
     const dispatch = useDispatch();
     const { request } = useHttp();
     const task = useSelector((state) => state.task);
     const userId = useSelector((state) => state.auth.userId);
-    const [toggle, setToggle] = useState(false);
     const [users, setUsers] = useState([]);
     const [priority, setPriority] = useState([]);
-    const [usersFilter, setUsersFilter] = useState([]);
-    const [searchListUser, setSearchListUser] = useState(false);
-    const [listPriority, setListPriority] = useState(false);
     const [form, setForm] = useState(
         {
             taskName: "",
@@ -32,15 +31,14 @@ export const SubTask = () => {
 
     const [files, setFiles] = useState([]);
 
-    const sendFile = async (taskId, propFiles) => {
-        const formData = new FormData();
-        propFiles.forEach(file => {
-            formData.append('file', file)
-        });
-        formData.append('taskId', taskId)
-        const headers = { 'Access-Control-Allow-Credentials': 'true' }
-        await request(`${process.env.REACT_APP_API_URL}/uploadFiles`, "POST", formData, headers)
-    }
+
+    useEffect(() => {
+        if (!users.length)
+            getUsers()
+        if (!priority.length)
+            getPriority()
+    }, [users, priority])
+
 
     const addSubTask = (e) => {
         e.preventDefault();
@@ -55,7 +53,10 @@ export const SubTask = () => {
     }
 
     const getUsers = async () => {
-        const users = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
+        const response = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
+        const users = await response.map(user => {
+            return { id: user.id, name: user.userName }
+        })
         setUsers(users);
     }
 
@@ -64,21 +65,12 @@ export const SubTask = () => {
         setPriority(priority);
     }
 
-    const searchListUserVisible = (searchText, visible) => {
-        setSearchListUser(visible);
-        if (searchText.length > 1) {
-            let filterUser = users.filter((user) => {
-                return user ? !user.userName.indexOf(searchText) : null;
-            })
-            setUsersFilter(filterUser);
-        } else {
-            setUsersFilter(users);
-        }
-    }
-
     const setSubTaskFile = () => {
-        task.subTaskFile.push(form.files)
-        dispatch(taskAtions.setSubTaskFile(task.subTaskFile));
+
+        if (form.files.length) {
+            task.subTaskFile.push(form.files)
+            dispatch(taskAtions.setSubTaskFile(task.subTaskFile));
+        }
     }
 
     const prepareSubTaskFiles = (e) => {
@@ -111,92 +103,37 @@ export const SubTask = () => {
                 </div>
                 <div className="form-group col-6">
                     <label>Назначена:</label>
-                    <input type="input" className="form-control" id="expdate"
-                        value={form.employee.userName}
-                        onFocus={
-                            (e) => {
-                                searchListUserVisible(e.target.value, true);
-                                console.log(form)
-                            }
-
-                        }
-                        onChange={(e) => {
-                            if (users.length < 1) { getUsers(); }
-                            setForm({ ...form, employee: { id: "", userName: e.target.value } });
-                            searchListUserVisible(e.target.value, true);
-                        }}>
-                    </input>
-                    {searchListUser ?
-                        <div className="list-group  list-group-pos col-12">
-                            {usersFilter.map((user) => {
-                                return (
-                                    <button
-                                        type="button"
-                                        className="list-group-item list-group-item-action"
-                                        id={user.id}
-                                        key={user.id}
-                                        onClick={(e) => {
-                                            setForm({ ...form, employee: { id: user.id, userName: user.userName } })
-                                            setSearchListUser(false)
-                                        }}
-                                    >
-                                        {user.userName}
-                                    </button>
-                                )
-                            })}
-                        </div>
-                        : ""
-                    }
+                    <Typeahead
+                        clearButton
+                        labelKey="name"
+                        id="selections-example"
+                        onChange={(user) => setForm({ ...form, employee: { id: user[0]?.id, userName: user[0]?.userName } })}
+                        options={users.length ? users : []}
+                        placeholder="Назначить на"
+                    />
                 </div>
-                <div className="form-group col-6">
+                <div className="form-group col-6" >
                     <label>Приоритет</label>
-                    <div className="d-flex">
-                        <input type="input" className="form-control" id="prioDir" readOnly={true}
-                            value={form.priority.priorityName}
-                            onFocus={(e) => {
-                                if (priority.length < 1) { getPriority(); }
-                            }}
-                            onClick={e => {
-                                setListPriority(!listPriority);
-                                setToggle(!toggle)
-                            }}
-                            onChange={(e) => {
-                                setForm({ ...form, priority: { id: "", priorityName: e.target.value } });
-                            }}>
-                        </input>
-                        <CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} />
-                    </div>
-                    {listPriority ?
-                        <div className="list-group list-group-pos col-12">
-                            {priority.map((item) => {
-                                return (
-                                    <button
-                                        type="button"
-                                        className="list-group-item list-group-item-action"
-                                        id={item.id}
-                                        key={item.id}
-                                        onClick={(e) => {
-                                            setForm({ ...form, priority: { id: item.id, priorityName: item.priorityName } })
-                                            setListPriority(false)
-                                        }}
-                                    >
-                                        {item.priorityName}
-                                    </button>
-                                )
-                            })}
-                        </div>
-                        : ""
-                    }
+                    <select className="custom-select" id="inputGroupSelect01"
+                        onClick={e => setForm({ ...form, priority: { id: e.target.value, priorityName: e.target.value } })}>
+                         <option  hidden value={null}></option>
+                        {
+                            priority.length ?
+                                priority.map((item) => {
+                                    return <option key={item.id} value={item.id}>{item.priorityName}</option>
+                                }) : null
+                        }
+                    </select>
                 </div>
                 <div className="form-group col-5">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFile" multiple={true}
+                    <div className="custom-file">
+                        <input type="file" className="custom-file-input" id="customFile" multiple={true}
                             onChange={e => {
                                 setForm({ ...form, files: prepareSubTaskFiles(e) })
                             }}
                         >
                         </input>
-                        <label class="custom-file-label" for="customFile">Выбирите файл</label>
+                        <label className="custom-file-label">Выбирите файл</label>
                     </div>
                     <div>
                         {form.files.map((file, index) => {

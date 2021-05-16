@@ -1,24 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { Typeahead } from 'react-bootstrap-typeahead';
 import { CaretDownFill, XCircleFill } from 'react-bootstrap-icons';
 import { useHttp } from "../../hooks/http.hook";
 import { useDispatch, useSelector } from "react-redux";
 import { taskAtions } from "../../redux/task/action";
 import { DetailSubTaskCreate } from "../detailTask/detailTask"
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./form.scss";
-import { Form } from "react-bootstrap";
 
 export const TaskForm = (props) => {
-    const { request } = useHttp();
+    const ref = useRef(null);
+    const refSelected = useRef(null);
+    const { request, error } = useHttp();
     const task = useSelector((state) => state.task);
     const userId = useSelector((state) => state.auth.userId);
     const [showDetail, setShowDetail] = useState(false)
     const [selectedSubTaskId, setSelectedSubTaskId] = useState(false)
-    const [toggle, setToggle] = useState(false);
     const [users, setUsers] = useState([]);
     const [priority, setPriority] = useState([]);
-    const [usersFilter, setUsersFilter] = useState([]);
-    const [searchListUser, setSearchListUser] = useState(false);
-    const [listPriority, setListPriority] = useState(false);
+    const [success, setSuccess] = useState(false);
     const dispatch = useDispatch();
     const form = {
         taskName: "",
@@ -33,6 +33,12 @@ export const TaskForm = (props) => {
         parentId: null
     }
 
+    useEffect(() => {
+        if (!users.length)
+            getUsers()
+        if (!priority.length)
+            getPriority()
+    }, [users, priority])
 
     const sendFile = async (taskId, propFiles) => {
         const formData = new FormData();
@@ -54,27 +60,37 @@ export const TaskForm = (props) => {
         const parenTask = { ...task.task };
         parenTask.priority = task.task.priority.id;
         parenTask.employee = task.task.employee.id;
+
         const id = await request(`${process.env.REACT_APP_API_URL}/addTask`, "POST", JSON.stringify({ ...parenTask }))
+
         if (task.task.files.length > 0) {
             sendFile(id, task.task.files)
         }
+
         dispatch(taskAtions.setTask(form));
+
         task.subTask.forEach(subTask => {
             subTask.parent = id;
-            subTask.priority = task.task.priority.id;
-            subTask.employee = task.task.employee.id;
+            subTask.priority = subTask.priority.id;
+            subTask.employee = subTask.employee.id;
         });
+
         const subTask = await request(`${process.env.REACT_APP_API_URL}/addSubtask`, "POST", JSON.stringify(task.subTask))
+
         if (task.subTaskFile.length > 0) {
-            console.log(task.subTaskFile)
             subTask.forEach((item, index) => {
                 sendFile(item.id, task.subTaskFile[index])
             })
         }
-
+        setSuccess(true)
+        setTimeout(showSuccess, 3000)
     };
+
+    const showSuccess = () => {
+        setSuccess(false)
+    }
+
     const cacheTaskForm = (e, param) => {
-        e.preventDefault();
         dispatch(taskAtions.setTask(param))
     }
 
@@ -86,10 +102,15 @@ export const TaskForm = (props) => {
     const saveTask = (e) => {
         e.preventDefault();
         sendForm();
+        ref.current.clear()
+        refSelected.current.value = "";
     }
 
     const getUsers = async () => {
-        const users = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
+        const response = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
+        const users = await response.map(user => {
+            return { id: user.id, name: user.userName }
+        })
         setUsers(users);
     }
 
@@ -98,17 +119,6 @@ export const TaskForm = (props) => {
         setPriority(priority);
     }
 
-    const searchListUserVisible = (searchText, visible) => {
-        setSearchListUser(visible);
-        if (searchText.length > 1) {
-            let filterUser = users.filter((user) => {
-                return user ? !user.userName.indexOf(searchText) : null;
-            })
-            setUsersFilter(filterUser);
-        } else {
-            setUsersFilter(users);
-        }
-    }
 
 
     const SubTask = (props) => {
@@ -144,7 +154,10 @@ export const TaskForm = (props) => {
     return (
         <div className="taskForm">
             <div>
-                <h1>Новая задача</h1>
+                {console.log(success)}
+                {success ? <h1>Задача успешно создана</h1> :
+                    <h1>Новая задача</h1>
+                }
             </div>
 
             <form className="d-flex row">
@@ -166,77 +179,29 @@ export const TaskForm = (props) => {
                 </div>
                 <div className="form-group col-6">
                     <label>Назначена:</label>
-                    <input type="input" className="form-control" id="expdate"
-                        value={task.task.employee.userName}
-                        onFocus={(e) => searchListUserVisible(e.target.value, true)}
-                        onChange={(e) => {
-                            if (users.length < 1) { getUsers(); }
-                            cacheTaskForm(e, { ...task.task, employee: { id: "", userName: e.target.value } });
-                            searchListUserVisible(e.target.value, true);
-                        }}>
-                    </input>
-                    {searchListUser ?
-                        <div className="list-group list-group-pos col-12">
-                            {usersFilter.map((user) => {
-                                return (
-                                    <button
-                                        type="button"
-                                        className="list-group-item list-group-item-action"
-                                        id={user.id}
-                                        key={user.id}
-                                        onClick={(e) => {
-                                            cacheTaskForm(e, { ...task.task, employee: { id: user.id, userName: user.userName } })
-                                            setSearchListUser(false)
-                                        }}
-                                    >
-                                        {user.userName}
-                                    </button>
-                                )
-                            })}
-                        </div>
-                        : ""
-                    }
+                    <Typeahead
+                        clearButton
+                        labelKey="name"
+                        id="selections-example"
+                        defaultSelected={[{ id: task.task.employee.id ?? "", name: task.task.employee.userName ?? "" }]}
+                        onChange={(user, e) => { cacheTaskForm(e, { ...task.task, employee: { id: user[0]?.id, userName: user[0]?.name } }) }}
+                        options={users.length ? users : []}
+                        placeholder="Назначить на"
+                        ref={ref}
+                    />
                 </div>
                 <div className="form-group col-6" >
-                    <label htmlFor="select">Приоритет</label>
-                    <div className="d-flex">
-                        <input type="input" className="form-control priotity-style" id="prioDir" readOnly={true}
-                            value={task.task.priority.priorityName}
-                            onFocus={(e) => {
-                                if (priority.length < 1) { getPriority(); }
-                            }}
-                            onClick={e => {
-                                setListPriority(!listPriority);
-                                setToggle(!toggle)
-                            }}
-                            onChange={(e) => {
-                                cacheTaskForm(e, { ...task.task, priority: { id: "", priorityName: e.target.value } });
-                            }}
-                        >
-                        </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} />
-                    </div>
-                    {listPriority ?
-                        <div className="list-group list-group-pos col-12">
-                            {priority.map((item) => {
-                                return (
-                                    <button
-                                        type="button"
-                                        className="list-group-item list-group-item-action"
-                                        id={item.id}
-                                        key={item.id}
-                                        onClick={(e) => {
-                                            setToggle(false)
-                                            cacheTaskForm(e, { ...task.task, priority: { id: item.id, priorityName: item.priorityName } })
-                                            setListPriority(false)
-                                        }}
-                                    >
-                                        {item.priorityName}
-                                    </button>
-                                )
-                            })}
-                        </div>
-                        : ""
-                    }
+                    <label>Приоритет</label>
+                    <select className="custom-select" id="inputGroupSelect01" ref={refSelected}
+                        onClick={e => cacheTaskForm(e, { ...task.task, priority: { id: e.target.value, priorityName: e.target.options[e.target.options.selectedIndex]?.text } })}>
+                        <option hidden value={task.task.priority.id}>{task.task.priority.priorityName}</option>
+                        {
+                            priority.length ?
+                                priority.map((item) => {
+                                    return <option key={item.id} value={item.id}>{item.priorityName}</option>
+                                }) : null
+                        }
+                    </select>
                 </div>
                 <div className="form-group col-3">
                     <button type="button" className="btn btn-secondary"
@@ -251,14 +216,14 @@ export const TaskForm = (props) => {
                     }
                 </div>
                 <div className="form-group col-4">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFile" multiple={true}
+                    <div className="custom-file">
+                        <input type="file" className="custom-file-input" id="customFile" multiple={true}
                             onChange={e => {
                                 cacheTaskForm(e, { ...task.task, files: prepareTaskFiles(e) })
                             }}
                         >
                         </input>
-                        <label class="custom-file-label" for="customFile">Выберите файл</label>
+                        <label className="custom-file-label">Выберите файл</label>
                     </div>
                     <div>
                         {task.task.files.map((file, index) => {
