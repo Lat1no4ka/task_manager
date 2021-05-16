@@ -7,7 +7,7 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet author="admin" id="10">
 
-        <insert tableName="StatusDir">
+        <insert tableName="statusdir">
 
             <column name="id" valueNumeric="1"/>
 
@@ -17,7 +17,7 @@
 
         </insert>
 
-        <insert tableName="StatusDir">
+        <insert tableName="statusdir">
 
             <column name="id" valueNumeric="2"/>
 
@@ -27,7 +27,7 @@
 
         </insert>
 
-        <insert tableName="StatusDir">
+        <insert tableName="statusdir">
 
             <column name="id" valueNumeric="3"/>
 
@@ -37,7 +37,7 @@
 
         </insert>
 
-        <insert tableName="StatusDir">
+        <insert tableName="statusdir">
 
             <column name="id" valueNumeric="4"/>
 
@@ -47,7 +47,7 @@
 
         </insert>
 
-        <insert tableName="StatusDir">
+        <insert tableName="statusdir">
 
             <column name="id" valueNumeric="5"/>
 
@@ -57,7 +57,7 @@
 
         </insert>
 
-        <insert tableName="StatusDir">
+        <insert tableName="statusdir">
 
             <column name="id" valueNumeric="6"/>
 
