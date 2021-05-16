@@ -104,6 +104,7 @@ export const TaskForm = (props) => {
         sendForm();
         ref.current.clear()
         refSelected.current.value = "";
+        dispatch(taskAtions.setSubTask([]));
     }
 
     const getUsers = async () => {
@@ -165,7 +166,7 @@ export const TaskForm = (props) => {
                     <label>Название</label>
                     <input type="value" className="form-control" id="nameOfTask" placeholder="" value={task.task.taskName} onChange={(e) => cacheTaskForm(e, { ...task.task, taskName: e.target.value })}></input>
                 </div>
-                <div className="form-group col-12">
+                <div className="form-group col-12 desc_task">
                     <label>Описание</label>
                     <textarea className="form-control" id="descOfTask" value={task.task.taskDesc} onChange={e => cacheTaskForm(e, { ...task.task, taskDesc: e.target.value })}></textarea>
                 </div>
@@ -224,11 +225,6 @@ export const TaskForm = (props) => {
                         >
                         </input>
                         <label className="custom-file-label">Выберите файл</label>
-                    </div>
-                    <div>
-                        {task.task.files.map((file, index) => {
-                            return <p className="m-2" key={index}>{file.name}</p>
-                        })}
                     </div>
                     <div>
                         {task.task.files.map((file, index) => {

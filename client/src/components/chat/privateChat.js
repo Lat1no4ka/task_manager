@@ -14,6 +14,7 @@ export const PrivateChat = (props) => {
     const [messagesCounter, setMessagesCounter] = useState(0);
     const [selectedUser, setSelectedUser] = useState(null)
     const [users, setUsers] = useState([])
+    const [currUsers,setCurrUsers] = useState(null)
 
     const connect = () => {
         const Stomp = require("stompjs");
@@ -64,6 +65,11 @@ export const PrivateChat = (props) => {
         const users = response.filter((allUser) => {
             return allUser.id != user.userId ? allUser : null
         })
+        users.sort((a,b) => a.id-b.id)
+        const currUsers = response.filter((allUser) => {
+            return allUser.id == user.userId ? allUser : null
+        })
+        setCurrUsers(currUsers[0] ?? null)
         setUsers(users)
     }
 
@@ -98,11 +104,11 @@ export const PrivateChat = (props) => {
         }
     }, [messagesCounter, selectedUser])
     return (
-        <div className="d-flex flex-row w-100">
-            <div className="col-2">
+        <div className="d-flex col-12">
+            <div className="col-4 d-flex flex-column">
                 {
                     users.map((user) => {
-                        return <button type="button" key={user.id} className="btn btn-secondary"
+                        return <button type="button" key={user.id} className="btn btn-secondary m-1"
                             onClick={e => {
                                 setSelectedUser(user.id)
                             }}
@@ -111,8 +117,8 @@ export const PrivateChat = (props) => {
                     })
                 }
             </div>
-            <div className="chat col-9" >
-                <ChatHeader />
+            <div className="chat col-8" >
+                <ChatHeader  currUsers={currUsers} setOpenChat={props.setOpenChat} />
                 <ChatBodyPrivate messages={broadcastMessage} user={user} />
                 {selectedUser ?
                     <ChatFooter sendMessage={sendMessage} />

@@ -19,7 +19,6 @@ export const Calendar = (props) => {
 
 
     const setEvent = (tasks) => {
-        console.log(tasks)
         let eventsList = tasks.map((task) => {
             return {
                 title: task.taskName,
@@ -27,8 +26,8 @@ export const Calendar = (props) => {
                 end: task.endDate,
             }
         })
-        setEventsList(eventsList)
-        
+        eventsList.length ? setEventsList(eventsList) : setEventsList([{}])
+
     }
     useEffect(() => {
         getTasks()
@@ -40,14 +39,12 @@ export const Calendar = (props) => {
                 <BigCalendar
                     localizer={localizer}
                     events={eventsList}
-                    startAccessor="start"
-                    endAccessor="end"
                     style={{ height: 1000 }}
                 />
             </div>
         )
     } else {
-        return(
+        return (
             <div>
                 loading
             </div>

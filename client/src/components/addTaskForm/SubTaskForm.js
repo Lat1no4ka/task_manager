@@ -89,7 +89,7 @@ export const SubTask = () => {
                     <label>Название</label>
                     <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.taskName} onChange={(e) => setForm({ ...form, taskName: e.target.value })}></input>
                 </div>
-                <div className="form-group col-12">
+                <div className="form-group col-12 desc_task">
                     <label>Описание</label>
                     <textarea className="form-control" id="descOfTask" value={form.taskDesc} onChange={e => setForm({ ...form, taskDesc: e.target.value })}></textarea>
                 </div>
@@ -115,8 +115,8 @@ export const SubTask = () => {
                 <div className="form-group col-6" >
                     <label>Приоритет</label>
                     <select className="custom-select" id="inputGroupSelect01"
-                        onClick={e => setForm({ ...form, priority: { id: e.target.value, priorityName: e.target.value } })}>
-                         <option  hidden value={null}></option>
+                        onClick={e => setForm({ ...form, priority: { id: e.target.value, priorityName: e.target.options[e.target.options.selectedIndex]?.text } })}>
+                        <option hidden value={null}></option>
                         {
                             priority.length ?
                                 priority.map((item) => {

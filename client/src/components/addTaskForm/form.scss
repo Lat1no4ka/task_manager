@@ -78,3 +78,12 @@
   margin-top: 150px;
   width: 800px;
 }
+
+.desc_task{
+  height: 190px;
+  margin-bottom: 20px;
+  textarea{
+    height: 170px !important;
+    resize: none;
+  }
+}

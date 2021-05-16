@@ -27,16 +27,16 @@ export const DetailSubTaskCreate = (props) => {
           <h4>Описание: {data.taskDesc}</h4>
         </div>
         <div>
-          <p>Дата начала: {data.begDate}</p>
+          <p className="desc">Дата начала: {data.begDate}</p>
         </div>
         <div>
-          <p>Дата окончания: {data.endDate}</p>
+          <p className="desc">Дата окончания: {data.endDate}</p>
         </div>
         <div>
-          <p>Исполнитель: {data.employee.userName}</p>
+          <p className="desc">Исполнитель: {data.employee.userName}</p>
         </div>
         <div>
-          <p>Приоритет: {data.priority.priorityName}</p>
+          <p className="desc">Приоритет: {data.priority.priorityName}</p>
         </div>
       </Modal.Body>
     </Modal>
@@ -132,6 +132,7 @@ export const DetailTask = (props) => {
     update.employee = update.employee.id
     await request(`${process.env.REACT_APP_API_URL}/alterTask`, "POST", JSON.stringify({ ...update }))
     setData({ ...form })
+    setEdit(!edit)
   }
 
   const SubTask = (props) => {
@@ -209,7 +210,8 @@ export const DetailTask = (props) => {
             <Modal.Title className="col-6">
               {
                 edit ?
-                  <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.taskName} onChange={(e) => setForm({ ...form, taskName: e.target.value })}></input>
+                  <div className="col-12">
+                    <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.taskName} onChange={(e) => setForm({ ...form, taskName: e.target.value })}></input></div>
                   : data.taskName
               }
             </Modal.Title>
@@ -234,17 +236,17 @@ export const DetailTask = (props) => {
           </div>
         </Modal.Header>
         <Modal.Body className="d-flex flex-row ">
-          <div className="d-flex flex-column col-6">
+          <div className="d-flex flex-column w-100">
             <div>
-              {edit ? "" : <p>Статус: {form.status.statusName}</p>}
+              {edit ? "" : <p className="desc">Статус: <span>{form.status.statusName}</span></p>}
             </div>
             <div>
               {
                 edit ?
-                  <div className="m-1 col-6">
-                    <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.taskDesc} onChange={(e) => setForm({ ...form, taskDesc: e.target.value })}></input>
+                  <div className="m-1 col-12 desc_task">
+                    <textarea type="value" className="form-control" id="nameOfTask" placeholder="" value={form.taskDesc} onChange={(e) => setForm({ ...form, taskDesc: e.target.value })}></textarea>
                   </div>
-                  : <h4>Описание: {data.taskDesc}</h4>
+                  : <p className="desc">Описание: <span>{data.taskDesc}</span></p>
               }
             </div>
             <div>
@@ -253,7 +255,7 @@ export const DetailTask = (props) => {
                   <div className="m-1 col-6">
                     <input type="date" className="form-control" id="nameOfTask" placeholder="" value={form.begDate} onChange={(e) => setForm({ ...form, begDate: e.target.value })}></input>
                   </div>
-                  : <p>Дата начала: {data.begDate}</p>
+                  : <p className="desc">Дата начала: <span>{data.begDate}</span></p>
               }
             </div>
             <div>
@@ -262,7 +264,7 @@ export const DetailTask = (props) => {
                   <div className="m-1 col-6">
                     <input type="date" className="form-control" id="nameOfTask" placeholder="" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })}></input>
                   </div>
-                  : <p>Дата окончания: {data.endDate}</p>
+                  : <p className="desc">Дата окончания: <span>{data.endDate}</span></p>
               }
             </div>
             <div>
@@ -280,19 +282,19 @@ export const DetailTask = (props) => {
                       placeholder="Назначить на"
                     />
                   </div>
-                  : <p>Исполнитель: {data.employee.firstName + " " + data.employee.lastName}</p>
+                  : <p className="desc">Исполнитель: <span>{data.employee.firstName + " " + data.employee.lastName}</span></p>
               }
             </div>
             <div>
               {
-                edit ? "" : <p>Автор: {data.author.firstName + " " + data.author.lastName}</p>
+                edit ? "" : <p className="desc">Автор: <span>{data.author.firstName + " " + data.author.lastName}</span></p>
               }
             </div>
             <div>
               {edit ?
                 <div className="m-1 col-6">
                   <select className="custom-select" id="inputGroupSelect01"
-                    onClick={e => setForm({ ...form, priority: { id: e.target.value,  priorityName: e.target.options[e.target.options.selectedIndex]?.text } })}>
+                    onClick={e => setForm({ ...form, priority: { id: e.target.value, priorityName: e.target.options[e.target.options.selectedIndex]?.text } })}>
                     <option hidden value={data.priority.id}>{data.priority.priorityName}</option>
                     {
                       priority.length ?
@@ -303,61 +305,67 @@ export const DetailTask = (props) => {
                   </select>
 
                 </div>
-                : <p>Приоритет: {data.priority.priorityName}</p>
+                : <p className="desc">Приоритет: <span>{data.priority.priorityName}</span></p>
               }
               <div>
                 {
                   edit ? "" :
                     data.files ?
                       data.files.map((file, index) => {
-                        return <a href="#" key={file.id} onClick={e => { getFile(index, file.fileName) }}>{file.fileName} </a>
+                        return <div className="files"> <a href="#" key={file.id} onClick={e => { getFile(index, file.fileName) }}>{file.fileName} </a> </div>
                       })
                       : ""
                 }
               </div>
+              {edit ? null :
+                <div className="">
+                  {subTasks.length > 0 ?
+                    subTasks.map((item, index) => {
+                      return (<SubTask key={index} id={index} />)
+                    }) : null
+                  }
+                </div>
+              }
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer className="d-block">
-          <div className="d-flex justify-content-between">
-            {openChat ?
-              <div className="d-flex w-100">
-                <PrivateChat setOpenChat={setOpenChat} private={true} data={data} />
-              </div>
-              :
+        <Modal.Footer className="d-flex modal-foter">
+          <div className="col-12">
+            {data.author.id == userId ?
               <div>
-                <button type="button" className="btn" onClick={e => setOpenChat(true)}>
-                  <ChatDots size={30} />
-                </button>
-              </div>
-            }
-            <div style={openChat ? { display: "none" } : { display: "block" }}>
-              <div>
-                {subTasks.length > 0 ?
-                  subTasks.map((item, index) => {
-                    return (<SubTask key={index} id={index} />)
-                  }) : null
+                {
+                  edit ?
+                    <div className="d-flex justify-content-between">
+                      <div className="">
+                        <button type="button" className="btn btn-secondary" onClick={e => saveEdit()} >Сохранить</button>
+                      </div>
+                      <div className="">
+                        <button type="button" className="btn btn-secondary" onClick={e => setEdit(!edit)} >Отмена</button>
+                      </div>
+                    </div>
+                    :
+                    <div className="d-flex justify-content-between">
+                      {openChat ?
+                        <PrivateChat setOpenChat={setOpenChat} private={true} data={data} />
+                        :
+                        <div className="">
+                          {edit ? null :
+                            <button type="button" className="btn" onClick={e => setOpenChat(true)}>
+                              <ChatDots size={30} />
+                            </button>
+                          }
+                        </div>
+                      }
+                      {openChat ? null :
+                        <div>
+                          <button type="button" className="btn btn-secondary" onClick={e => setEdit(!edit)} >Редактировать</button>
+                        </div>
+                      }
+                    </div>
                 }
               </div>
-              {data.author.id == userId ?
-                <div>
-                  {
-                    edit ?
-                      <div className="">
-                        <div className="m-1">
-                          <button type="button" className="btn btn-secondary" onClick={e => saveEdit()} >Сохранить</button>
-                        </div>
-                        <div className="m-1">
-                          <button type="button" className="btn btn-secondary" onClick={e => setEdit(!edit)} >Отмена</button>
-                        </div>
-                      </div>
-                      :
-                      <button type="button" className="btn btn-secondary" onClick={e => setEdit(!edit)} >Редактировать</button>
-                  }
-                </div>
-                : ""
-              }
-            </div>
+              : null
+            }
           </div>
         </Modal.Footer>
       </Modal>
