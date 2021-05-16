@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { Typeahead } from 'react-bootstrap-typeahead';
 import { CaretDownFill, XCircleFill } from 'react-bootstrap-icons';
 import { useHttp } from "../../hooks/http.hook";
 import { useDispatch, useSelector } from "react-redux";
 import { taskAtions } from "../../redux/task/action";
 import { DetailSubTaskCreate } from "../detailTask/detailTask"
+import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./form.scss";
 

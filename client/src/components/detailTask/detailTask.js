@@ -6,6 +6,9 @@ import { useSelector } from "react-redux";
 import { DetailTask as DetailSubTask } from "./detailTask"
 import { CaretDownFill, ChatDots } from 'react-bootstrap-icons';
 import { PrivateChat } from '../chat/privateChat'
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+
 export const DetailSubTaskCreate = (props) => {
   const data = props.data;
   return (
@@ -75,6 +78,13 @@ export const DetailTask = (props) => {
     selectNextStatus();
   }, [form.status, file])
 
+  useEffect(() => {
+    if (!users.length)
+      getUsers()
+    if (!priority.length)
+      getPriority()
+  }, [users, priority])
+
   const getFile = async (index, fileName) => {
 
     const headers = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
@@ -102,7 +112,10 @@ export const DetailTask = (props) => {
   }
 
   const getUsers = async () => {
-    const users = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
+    const response = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
+    const users = await response.map(user => {
+      return { id: user.id, name: user.userName }
+    })
     setUsers(users);
   }
 
@@ -114,7 +127,7 @@ export const DetailTask = (props) => {
     let update = { ...form };
     console.log(status)
     update.priority = update.priority.id
-    update.status = status.id
+    status ? update.status = status.id : update.status = update.status.id
     update.author = update.author.id
     update.employee = update.employee.id
     await request(`${process.env.REACT_APP_API_URL}/alterTask`, "POST", JSON.stringify({ ...update }))
@@ -183,18 +196,6 @@ export const DetailTask = (props) => {
     }
   }
 
-  const searchListUserVisible = (searchText, visible) => {
-    setSearchListUser(visible);
-    if (searchText.length > 1) {
-      let filterUser = users.filter((user) => {
-        return user ? !user.userName.indexOf(searchText) : null;
-      })
-      setUsersFilter(filterUser);
-    } else {
-      setUsersFilter(users);
-    }
-  }
-
   if (!showDetail) {
     return (
       <Modal
@@ -217,7 +218,6 @@ export const DetailTask = (props) => {
                 edit ? "" :
                   nextStatus ?
                     <div>
-                      {/* {console.log(nextStatus)} */}
                       <button type="button" className="btn btn-secondary m-1"
                         onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[0]) }}>
                         {nextStatus[0]?.statusName}
@@ -269,36 +269,16 @@ export const DetailTask = (props) => {
               {
                 edit ?
                   <div className="m-1 col-6">
-                    <input type="input" className="form-control" id="expdate"
-                      value={form.employee.userName}
-                      onFocus={(e) => searchListUserVisible(e.target.value, true)}
-                      onChange={(e) => {
-                        if (users.length < 1) { getUsers(); }
-                        setForm({ ...form, employee: { userName: e.target.value } });
-                        searchListUserVisible(e.target.value, true);
-                      }}>
-                    </input>
-                    {searchListUser ?
-                      <div className="list-group list-group-pos col-12">
-                        {usersFilter.map((user) => {
-                          return (
-                            <button
-                              type="button"
-                              className="list-group-item list-group-item-action"
-                              id={user.id}
-                              key={user.id}
-                              onClick={(e) => {
-                                setForm({ ...form, employee: { id: user.id, userName: user.userName } });
-                                setSearchListUser(false)
-                              }}
-                            >
-                              {user.userName}
-                            </button>
-                          )
-                        })}
-                      </div>
-                      : ""
-                    }
+                    {console.log(form)}
+                    <Typeahead
+                      clearButton
+                      labelKey="name"
+                      id="selections-example"
+                      defaultSelected={[{ id: data.employee.id ?? "", name: data.employee.userName ?? "" }]}
+                      onChange={(user, e) => { setForm({ ...form, employee: { id: user[0]?.id, userName: user[0]?.name } }) }}
+                      options={users.length ? users : []}
+                      placeholder="Назначить на"
+                    />
                   </div>
                   : <p>Исполнитель: {data.employee.firstName + " " + data.employee.lastName}</p>
               }
@@ -311,44 +291,17 @@ export const DetailTask = (props) => {
             <div>
               {edit ?
                 <div className="m-1 col-6">
-                  <div className="d-flex">
-                    <input type="input" className="form-control priotity-style" id="prioDir" readOnly={true}
-                      value={form.priority.priorityName}
-                      onFocus={(e) => {
-                        if (priority.length < 1) { getPriority(); }
-                      }}
-                      onClick={e => {
-                        setListPriority(!listPriority);
-                        setToggle(!toggle)
-                      }}
-                      onChange={(e) => {
-                        setForm({ ...form, priority: { priorityName: e.target.value } })
-                      }}
-                    >
-                    </input><CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} />
-                  </div>
-                  {listPriority ?
-                    <div className="list-group list-group-pos col-12">
-                      {priority.map((item) => {
-                        return (
-                          <button
-                            type="button"
-                            className="list-group-item list-group-item-action"
-                            id={item.id}
-                            key={item.id}
-                            onClick={(e) => {
-                              setToggle(false)
-                              setForm({ ...form, priority: { id: item.id, priorityName: item.priorityName } })
-                              setListPriority(false)
-                            }}
-                          >
-                            {item.priorityName}
-                          </button>
-                        )
-                      })}
-                    </div>
-                    : ""
-                  }
+                  <select className="custom-select" id="inputGroupSelect01"
+                    onClick={e => setForm({ ...form, priority: { id: e.target.value,  priorityName: e.target.options[e.target.options.selectedIndex]?.text } })}>
+                    <option hidden value={data.priority.id}>{data.priority.priorityName}</option>
+                    {
+                      priority.length ?
+                        priority.map((item) => {
+                          return <option key={item.id} value={item.id}>{item.priorityName}</option>
+                        }) : null
+                    }
+                  </select>
+
                 </div>
                 : <p>Приоритет: {data.priority.priorityName}</p>
               }
@@ -369,7 +322,7 @@ export const DetailTask = (props) => {
           <div className="d-flex justify-content-between">
             {openChat ?
               <div className="d-flex w-100">
-                <PrivateChat setOpenChat={setOpenChat} private={true} data={data}/>
+                <PrivateChat setOpenChat={setOpenChat} private={true} data={data} />
               </div>
               :
               <div>
