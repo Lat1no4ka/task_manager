@@ -56,7 +56,7 @@ public class FilesController {
             FilesEntity files = new FilesEntity();
             files.setFileName(file.getOriginalFilename());
             String hashFilename = (UUID.randomUUID()).toString();
-            File convertFile = new File("src\\main\\resources\\uploads\\profile\\" + hashFilename);
+            File convertFile = new File("src/main/resources/static/profile/" + hashFilename);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(file.getBytes());
@@ -83,7 +83,7 @@ public class FilesController {
             Files file = new Files();
             file.setFileName(mPFile.getOriginalFilename());
             String hashFilename = (UUID.randomUUID()).toString();
-            File convertFile = new File("src\\main\\resources\\uploads\\documents\\" + hashFilename);
+            File convertFile = new File("src/main/resources/static/documents/" + hashFilename);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(mPFile.getBytes());
@@ -126,9 +126,9 @@ public class FilesController {
     @RequestMapping(value = "/getProfilePic", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public String getImageAsLink(@RequestBody FilesEntity files) throws IOException {
         FilesEntity link = filesEntityRepository.findById(files.getId());
-        String[] parts = link.getFilePath().split(Pattern.quote("\\"));
+        String[] parts = link.getFilePath().split(Pattern.quote("/"));
         String filename  = parts[parts.length-1];
-        String lnk = "http://127.0.0.1:8080/getImage/"+filename;
+        String lnk = "http://82.179.12.183:8080/getImage/"+filename;
         return "{\"link\": \" "+ lnk +"\"}";
     }
 
