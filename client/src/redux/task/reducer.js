@@ -1,12 +1,14 @@
 import { taskActionTypes } from "./action";
 
+const date = new Date()
+
 const initialState = {
     visible: false,
     task: {
         taskName: "",
         taskDesc: "",
-        begDate: "",
-        endDate: "",
+        begDate: `${date.getFullYear()}-${("0"+(date.getMonth() + 1)).slice(-2)}-${("0"+date.getDate()).slice(-2)}`,
+        endDate:  `${date.getFullYear()}-${("0"+(date.getMonth() + 1)).slice(-2)}-${("0"+date.getDate()).slice(-2)}`,
         priority: { id: "", priorityName: "" },
         employee: { id: "", userName: "" },
         files: [],
