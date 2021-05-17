@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { CaretDownFill, XCircleFill } from 'react-bootstrap-icons';
+import { XCircleFill } from 'react-bootstrap-icons';
 import { useHttp } from "../../hooks/http.hook";
 import { useDispatch, useSelector } from "react-redux";
 import { taskAtions } from "../../redux/task/action";
 import { DetailSubTaskCreate } from "../detailTask/detailTask"
 import { Typeahead } from 'react-bootstrap-typeahead';
+import { useForm } from "react-hook-form";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./form.scss";
 
@@ -32,6 +33,8 @@ export const TaskForm = (props) => {
         author: userId,
         parentId: null
     }
+
+    const { register, handleSubmit, formState: { errors }, setValue, clearErrors,getValues,reset } = useForm();
 
     useEffect(() => {
         if (!users.length)
@@ -83,10 +86,11 @@ export const TaskForm = (props) => {
             })
         }
         setSuccess(true)
-        setTimeout(showSuccess, 3000)
+        setTimeout(showSuccess, 2000)
     };
 
     const showSuccess = () => {
+        window.location.reload();
         setSuccess(false)
     }
 
@@ -100,9 +104,11 @@ export const TaskForm = (props) => {
     }
 
     const saveTask = (e) => {
-        e.preventDefault();
+        
         sendForm();
         ref.current.clear()
+        reset("priorityRequired")
+        console.log(getValues("priorityRequired"))
         refSelected.current.value = "";
         dispatch(taskAtions.setSubTask([]));
     }
@@ -152,48 +158,65 @@ export const TaskForm = (props) => {
         )
     }
 
+
     return (
         <div className="taskForm">
             <div>
-                {console.log(success)}
                 {success ? <h1>Задача успешно создана</h1> :
                     <h1>Новая задача</h1>
                 }
             </div>
 
-            <form className="d-flex row">
-                <div className="form-group col-6">
+            <form className="d-flex row" onSubmit={handleSubmit(saveTask)}>
+                <div className="form-group col-6 title">
                     <label>Название</label>
-                    <input type="value" className="form-control" id="nameOfTask" placeholder="" value={task.task.taskName} onChange={(e) => cacheTaskForm(e, { ...task.task, taskName: e.target.value })}></input>
+                    <input type="value" className={errors.titleRequired ? "form-control error" : "form-control"} id="nameOfTask" placeholder=""
+                        {...register("titleRequired", { required: true })}
+                        value={task.task.taskName} onChange={(e) => { cacheTaskForm(e, { ...task.task, taskName: e.target.value }); clearErrors("titleRequired") }}>
+                    </input>
+                    {errors.titleRequired && <span className="error">Введите название задачи</span>}
                 </div>
                 <div className="form-group col-12 desc_task">
                     <label>Описание</label>
                     <textarea className="form-control" id="descOfTask" value={task.task.taskDesc} onChange={e => cacheTaskForm(e, { ...task.task, taskDesc: e.target.value })}></textarea>
                 </div>
-                <div className="form-group col-6">
+                <div className="form-group col-6 other_inputs">
                     <label>Дата начала:</label>
-                    <input type="date" className="form-control" id="begdate" value={task.task.begDate} onChange={(e) => cacheTaskForm(e, { ...task.task, begDate: e.target.value })}></input>
+                    <input type="date" className={errors.startDateRequired ? "form-control error" : "form-control"} id="begdate" {...register("startDateRequired", { required: true })}
+                        value={task.task.begDate} onChange={(e) => { cacheTaskForm(e, { ...task.task, begDate: e.target.value }); clearErrors("startDateRequired") }}></input>
+                    {errors.startDateRequired && <span className="error">Введите дату начала</span>}
                 </div>
-                <div className="form-group col-6">
+                <div className="form-group col-6 other_inputs">
                     <label>Дата окончания:</label>
-                    <input type="date" className="form-control" id="expdate" value={task.task.endDate} onChange={(e) => cacheTaskForm(e, { ...task.task, endDate: e.target.value })}></input>
+                    <input type="date" className={errors.endDateRequired ? "form-control error" : "form-control"} id="expdate" {...register("endDateRequired", { required: true })}
+                        value={task.task.endDate} onChange={(e) => { cacheTaskForm(e, { ...task.task, endDate: e.target.value }); clearErrors("endDateRequired") }}></input>
+                    {errors.endDateRequired && <span className="error">Введите дату окончания</span>}
                 </div>
-                <div className="form-group col-6">
+                <div className="form-group col-6 other_inputs">
                     <label>Назначена:</label>
+                    {setValue('employerRequired',{ id: task.task.employee.id ?? "", name: task.task.employee.userName ?? "" })}
                     <Typeahead
+                        className={errors.employerRequired ? "error-input" : ""}
+                        {...register("employerRequired", { required: true })}
                         clearButton
                         labelKey="name"
                         id="selections-example"
                         defaultSelected={[{ id: task.task.employee.id ?? "", name: task.task.employee.userName ?? "" }]}
-                        onChange={(user, e) => { cacheTaskForm(e, { ...task.task, employee: { id: user[0]?.id, userName: user[0]?.name } }) }}
+                        onChange={(user, e) => {
+                            cacheTaskForm(e, { ...task.task, employee: { id: user[0]?.id, userName: user[0]?.name } });
+                            setValue('employerRequired',user[0]?.id)
+                            clearErrors("employerRequired")
+                        }}
                         options={users.length ? users : []}
                         placeholder="Назначить на"
                         ref={ref}
                     />
+                    {errors.employerRequired && <span className="error">Назначьте исполнителя</span>}
                 </div>
-                <div className="form-group col-6" >
+                <div className="form-group col-6 other_inputs" >
                     <label>Приоритет</label>
-                    <select className="custom-select" id="inputGroupSelect01" ref={refSelected}
+                    <select className={errors.priorityRequired ? "custom-select error" : "custom-select"} id="inputGroupSelect01" ref={refSelected}
+                        {...register("priorityRequired", { required: true })}
                         onClick={e => cacheTaskForm(e, { ...task.task, priority: { id: e.target.value, priorityName: e.target.options[e.target.options.selectedIndex]?.text } })}>
                         <option hidden value={task.task.priority.id}>{task.task.priority.priorityName}</option>
                         {
@@ -203,6 +226,7 @@ export const TaskForm = (props) => {
                                 }) : null
                         }
                     </select>
+                    {errors.priorityRequired && <span className="error">Выбирите приоритет</span>}
                 </div>
                 <div className="form-group col-3">
                     <button type="button" className="btn btn-secondary"
@@ -233,7 +257,7 @@ export const TaskForm = (props) => {
                     </div>
                 </div>
                 <div className="form-group col-12">
-                    <button type="button" className="btn btn-secondary" onClick={e => saveTask(e)} >Создать задачу</button>
+                    <input type="submit" className="btn btn-secondary" value="Создать задачу" />
                 </div>
             </form>
             <div className="detail-task-window">

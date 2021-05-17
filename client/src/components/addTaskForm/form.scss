@@ -79,11 +79,32 @@
   width: 800px;
 }
 
-.desc_task{
+.desc_task {
   height: 190px;
   margin-bottom: 20px;
-  textarea{
+  textarea {
     height: 170px !important;
     resize: none;
+  }
+}
+
+.error {
+  color: rgb(233, 10, 10);
+  border-color: rgb(233, 10, 10) !important;
+  white-space: nowrap;
+}
+.title {
+  min-height: 80px;
+  max-height: 80px;
+}
+
+.other_inputs {
+  min-height: 85px;
+  max-height: 85px;
+}
+.error-input {
+  input {
+    border-radius: 5px;
+    border-color: rgb(233, 10, 10) !important;
   }
 }
