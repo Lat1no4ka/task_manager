@@ -50,12 +50,8 @@ export const DetailTask = (props) => {
   const [showDetail, setShowDetail] = useState(false);
   const [selectedSubTaskId, setSelectedSubTaskId] = useState(null);
   const [edit, setEdit] = useState(false);
-  const [toggle, setToggle] = useState(false);
   const [users, setUsers] = useState([]);
   const [priority, setPriority] = useState([]);
-  const [usersFilter, setUsersFilter] = useState([]);
-  const [searchListUser, setSearchListUser] = useState(false);
-  const [listPriority, setListPriority] = useState(false);
   const [nextStatus, setNextStatus] = useState(null);
   const userId = useSelector((state) => state.auth.userId);
   const [file, setFile] = useState(null)
@@ -132,7 +128,7 @@ export const DetailTask = (props) => {
     update.employee = update.employee.id
     await request(`${process.env.REACT_APP_API_URL}/alterTask`, "POST", JSON.stringify({ ...update }))
     setData({ ...form })
-    setEdit(!edit)
+    setEdit(false)
   }
 
   const SubTask = (props) => {
@@ -184,13 +180,14 @@ export const DetailTask = (props) => {
         break
       case "accepted":
         next = status.filter(item => {
-          return item.alias === "work" || item.alias == 'closed' ? item : null;
+          return item.alias == 'closed' ? item : null;
         })
         setNextStatus(next)
         break
+
       default:
         next = status.filter(item => {
-          return item.alias === 'work' || item.alias == "closed" ? item : null;
+          return null;
         })
         setNextStatus(next)
         break
@@ -220,15 +217,19 @@ export const DetailTask = (props) => {
                 edit ? "" :
                   nextStatus ?
                     <div>
-                      <button type="button" className="btn btn-secondary m-1"
-                        onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[0]) }}>
-                        {nextStatus[0]?.statusName}
-                      </button>
-                      <button type="button" className="btn btn-secondary m-1"
-                        onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[1]) }}
-                      >
-                        {nextStatus[1]?.statusName}
-                      </button>
+                      {nextStatus[0] ?
+                        <button type="button" className="btn btn-secondary m-1"
+                          onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[0]) }}>
+                          {nextStatus[0]?.statusName}
+                        </button> : null
+                      }
+                      {nextStatus[1] ?
+                        <button type="button" className="btn btn-secondary m-1"
+                          onClick={(e) => { setForm({ ...form, status: nextStatus[1] }); saveEdit(nextStatus[1]) }}
+                        >
+                          {nextStatus[1]?.statusName}
+                        </button> : null
+                      }
                     </div>
                     : ""
               }
@@ -271,7 +272,6 @@ export const DetailTask = (props) => {
               {
                 edit ?
                   <div className="m-1 col-6">
-                    {console.log(form)}
                     <Typeahead
                       clearButton
                       labelKey="name"
