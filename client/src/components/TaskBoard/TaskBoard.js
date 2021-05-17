@@ -17,6 +17,7 @@ const TaskBoard = () => {
   const [showChat, setShowChat] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const id = useSelector(auth => auth.auth.userId)
+  const [loadinPic, setLoadinPic] = useState(false)
 
   const getTask = async () => {
     const tasks = await request(`${process.env.REACT_APP_API_URL}/getTasks`, "POST", JSON.stringify({ id }))
@@ -26,7 +27,7 @@ const TaskBoard = () => {
 
   useEffect(() => {
     getTask();
-  }, []);
+  }, [loadinPic]);
 
 
 
@@ -53,7 +54,7 @@ const TaskBoard = () => {
             tasks.map((item, index) => {
               return (
                 <div key={item.id} className="col-4" onClick={(e) => { setTaskNum(index); setShowDetail(true) }}>
-                  <TaskItem props={item} style={{ backgroundColor: 'blue' }} />
+                  <TaskItem props={item} setLoadinPic={setLoadinPic} style={{ backgroundColor: 'blue' }} />
                 </div>
               );
             })

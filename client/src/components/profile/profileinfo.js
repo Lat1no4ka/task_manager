@@ -135,7 +135,6 @@ console.log(formData);
 
             setImageId(imagebody);
 
-                        console.log(imagebody);
             const {link} = await request(`${process.env.REACT_APP_API_URL}/getProfilePic`, "POST", JSON.stringify(imagebody))
             setImageLink(link);
 
