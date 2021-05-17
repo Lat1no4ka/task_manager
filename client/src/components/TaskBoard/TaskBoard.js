@@ -31,7 +31,7 @@ const TaskBoard = () => {
 
 
   return (
-    <div className="d-flex">
+    <div className="d-flex" style={{ backgroundImage:`url("https://krot.info/uploads/posts/2020-10/thumbs/1603493783_38-p-foni-s-krasivimi-ikonkami-43.png")`, position: 'absolute', width: '100%', height: '100%'}}>
       <div className="container">
         <div className="d-flex mt-3 justify-content-end">
           <div className="m-2">
