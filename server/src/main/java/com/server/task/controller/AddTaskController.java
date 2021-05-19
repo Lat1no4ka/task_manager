@@ -44,7 +44,7 @@ public class AddTaskController {
     @RequestMapping(value = {"/addTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public Long addNewTask(@RequestBody Task task) {
 
-        if (task.getBegDate()==null) {
+        if (task.getBegDate() == null) {
             task.setBegDate(new Date());
         }
         taskRepository.save(task);
@@ -78,18 +78,28 @@ public class AddTaskController {
     public UTconnector alterTask(@RequestBody TaskAlterEntity task) {
         UTconnector link = new UTconnector();
         Task newtask = taskRepository.findById(task.getId());
-        if (task.getTaskName()!=null){newtask.setTaskName(task.getTaskName());}
-        if (task.getTaskDesc()!=null){newtask.setTaskDesc(task.getTaskDesc());}
+        if (task.getTaskName() != null) {
+            newtask.setTaskName(task.getTaskName());
+        }
+        if (task.getTaskDesc() != null) {
+            newtask.setTaskDesc(task.getTaskDesc());
+        }
         //if (task.getBegDate()!=null){newtask.setBegDate(task.getBegDate());}
-        if (task.getEndDate()!=null){newtask.setEndDate(task.getEndDate());}
-        if (task.getEmployee()!=null){
+        if (task.getEndDate() != null) {
+            newtask.setEndDate(task.getEndDate());
+        }
+        if (task.getEmployee() != null) {
             link = utRepository.findByUserIdAndTaskId(newtask.getEmployee(), task.getId());
             link.setUserId(task.getEmployee());
             utRepository.save(link);
             newtask.setEmployee(task.getEmployee());
         }
-        if (task.getPriority()!=null){newtask.setPriority(task.getPriority());}
-        if (task.getStatus()!=null){newtask.setStatus(task.getStatus());}
+        if (task.getPriority() != null) {
+            newtask.setPriority(task.getPriority());
+        }
+        if (task.getStatus() != null) {
+            newtask.setStatus(task.getStatus());
+        }
         taskRepository.save(newtask);
         return link;
     }
@@ -135,11 +145,10 @@ public class AddTaskController {
 
         //Ищет задачи, где пользователь - автор
         for (Task tasks : taskListAut) {
-           TaskEntity task = taskEntityRepository.findById(tasks.getId());
+            TaskEntity task = taskEntityRepository.findById(tasks.getId());
             if (task.getParentId() == null) {
                 parTasksSet.add(task);
-            }
-            else{
+            } else {
                 parTasksSet.add(taskEntityRepository.findById(task.getParentId()));
             }
         }
@@ -148,17 +157,15 @@ public class AddTaskController {
         for (TaskEntity tasks : taskListEmp) {
             if (tasks.getParentId() == null) {
                 parTasksSet.add(tasks);
-            }
-            else{
+            } else {
                 parTasksSet.add(taskEntityRepository.findById(tasks.getParentId()));
             }
         }
         return parTasksSet;
     }
 
-    @RequestMapping(value={"/getDate"}, headers = {"Content-type=application/json"}, method= RequestMethod.GET)
-    public Date GetStatus()
-    {
+    @RequestMapping(value = {"/getDate"}, headers = {"Content-type=application/json"}, method = RequestMethod.GET)
+    public Date GetStatus() {
         Date sysdate = new Date();
         return sysdate;
     }
@@ -201,6 +208,29 @@ public class AddTaskController {
     public List<Message> ListPublicMessages() {
         List<Message> messagesList = new ArrayList<>(messageRepository.findByReceiverIsNull());
         return messagesList;
+    }
+
+
+    //Получение списка пользователей и их назначенных им родительских задач (ловит id назначившего - возвращает список пользователей и их задачи, автор получает задачи, назначенные ему)
+    @RequestMapping(value = {"/getParentTasks"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public List<User> ListUserParentTasks(@RequestBody UserEntity user) {
+        Long authId = user.getId();
+        UserEntity author = userEntityRepository.findById(authId);
+        List<User> userList = userRepository.findAll();
+        for (User usr : userList)
+        {
+            if(usr.getId() == authId){
+                UserEntity myUser = userEntityRepository.findById(authId);
+                usr.setTasks(taskEntityRepository.findByEmployeeAndParentIdIsNull(myUser));
+                usr.setPassword(null);
+            }
+            else {
+                UserEntity myUsr = userEntityRepository.findById(usr.getId());
+                usr.setTasks(taskEntityRepository.findByEmployeeAndAuthorAndParentIdIsNull(myUsr,author));
+                usr.setPassword(null);
+            }
+        }
+        return userList;
     }
 
 }
