@@ -5,6 +5,7 @@ import com.server.task.model.dictionary.Status;
 import com.server.task.model.entity.TaskEntity;
 import com.server.task.model.entity.TaskAlterEntity;
 import com.server.task.model.entity.UserEntity;
+import com.server.task.model.entity.UserFolderEntity;
 import com.server.task.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,8 @@ public class AddTaskController {
     FilesRepository filesRepository;
     @Autowired
     MessageRepository messageRepository;
+    @Autowired
+    UserFolderEntityRepository userFolderEntityRepository;
 
 
     @RequestMapping(value = {"/addTaskOld"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
@@ -213,21 +216,19 @@ public class AddTaskController {
 
     //Получение списка пользователей и их назначенных им родительских задач (ловит id назначившего - возвращает список пользователей и их задачи, автор получает задачи, назначенные ему)
     @RequestMapping(value = {"/getParentTasks"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<User> ListUserParentTasks(@RequestBody UserEntity user) {
+    public List<UserFolderEntity> ListUserParentTasks(@RequestBody UserEntity user) {
         Long authId = user.getId();
         UserEntity author = userEntityRepository.findById(authId);
-        List<User> userList = userRepository.findAll();
-        for (User usr : userList)
+        List<UserFolderEntity> userList = userFolderEntityRepository.findAll();
+        for (UserFolderEntity usr : userList)
         {
             if(usr.getId() == authId){
                 UserEntity myUser = userEntityRepository.findById(authId);
                 usr.setTasks(taskEntityRepository.findByEmployeeAndParentIdIsNull(myUser));
-                usr.setPassword(null);
             }
             else {
                 UserEntity myUsr = userEntityRepository.findById(usr.getId());
                 usr.setTasks(taskEntityRepository.findByEmployeeAndAuthorAndParentIdIsNull(myUsr,author));
-                usr.setPassword(null);
             }
         }
         return userList;
