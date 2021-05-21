@@ -46,7 +46,11 @@ public class Task implements Serializable {
     @Column(name = "par_task_id")
     private Long parentId;
 
-    public Task(Long id, String taskName,Date begDate, String endDate, String taskDesc, Long authorId, Long employeeId, Long parentId) {
+    @Column(name = "stat_change")
+    private Date lastChange;
+
+
+    public Task(Long id, String taskName, Date begDate, String endDate, String taskDesc, Long authorId, Long employeeId, Long parentId) {
         this.id = id;
         this.taskName = taskName;
         this.taskDesc = taskDesc;
@@ -74,6 +78,10 @@ public class Task implements Serializable {
         this.employeeId = null;
         this.parentId = null;
     }
+
+    public Date getLastChange(){return lastChange;}
+
+    public void setLastChange(Date lastChange) { this.lastChange = lastChange; }
 
     public Long getPriority() {
         return priorityId;

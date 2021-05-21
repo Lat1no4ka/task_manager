@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
+import java.sql.Timestamp;
 import java.util.*;
 
 @CrossOrigin("*")
@@ -51,6 +52,8 @@ public class AddTaskController {
         if (task.getBegDate() == null) {
             task.setBegDate(new Date());
         }
+        Date date = new Date();
+        task.setLastChange(date);
         taskRepository.save(task);
         UTconnector link = new UTconnector();
         link.setUserId(task.getEmployee());
@@ -104,6 +107,8 @@ public class AddTaskController {
         if (task.getStatus() != null) {
             newtask.setStatus(task.getStatus());
         }
+        Date date = new Date();
+        newtask.setLastChange(date);
         taskRepository.save(newtask);
         return link;
     }
@@ -237,13 +242,15 @@ public class AddTaskController {
 
     //Обновление просроченного задания, ловит id задачи, добавляет в просроченные
     @RequestMapping(value = {"/setExpired"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public TaskEntity setTaskExpired(@RequestBody TaskEntity task) {
+    public String setTaskExpired(@RequestBody TaskEntity task) {
         TaskEntity tsk = taskEntityRepository.findById(task.getId());
         tsk.setOverdue("#cf1717");
         Long statId = new Long(7);
         tsk.setStatus(statusRepository.findById(statId));
+        Date date = new Date();
+        tsk.setLastChange(date);
         taskEntityRepository.save(tsk);
-        return tsk;
+        return date.toString();
     }
 
 }

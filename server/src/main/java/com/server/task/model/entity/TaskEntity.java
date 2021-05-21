@@ -7,7 +7,9 @@ import com.server.task.model.dictionary.Status;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -61,6 +63,9 @@ public class TaskEntity implements Serializable {
     @Column(name = "overdue")
     private String overdue;
 
+    @Column(name = "stat_change")
+    private Date lastChange;
+
     public TaskEntity(Long id, String taskName, String begDate, String endDate, String taskDesc, UserEntity author, UserEntity employee, Long parentId) {
         this.id = id;
         this.taskName = taskName;
@@ -93,6 +98,10 @@ public class TaskEntity implements Serializable {
     public String getOverdue() {return overdue;}
 
     public void setOverdue(String overdue) {this.overdue = overdue;}
+
+    public Date getLastChange() {return lastChange;}
+
+    public void setLastChange(Date lastChange) {this.lastChange = lastChange;}
 
     public List<Files> getFiles() {return files;}
 
