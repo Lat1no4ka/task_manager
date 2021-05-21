@@ -91,6 +91,31 @@ public class RestoreController {
     }
 
 
+    //Отправляет оповещение о просроченой задаче. Ловит id задачи
+    @RequestMapping(value={"/sendExpiredMessage"}, method= RequestMethod.POST, headers = {"Content-type=application/json"})
+    public String SendExpiredMessage (@RequestBody TaskEntity task) throws IOException {
+
+        TaskEntity tsk = taskEntityRepository.findById(task.getId());
+        UserEntity user = tsk.getEmployee();
+        UserEntity author = tsk.getAuthor();
+        String userMail = (userEntityRepository.findById(user.getId())).getEmail();
+        try (GenericXmlApplicationContext context = new GenericXmlApplicationContext()) {
+            context.load("classpath:applicationContext.xml");
+            context.refresh();
+            JavaMailSender mailSender = context.getBean("mailSender", JavaMailSender.class);
+            SimpleMailMessage templateMessage = context.getBean("templateMessage", SimpleMailMessage.class);
+            SimpleMailMessage mailMessage = new SimpleMailMessage(templateMessage);
+            mailMessage.setTo(userMail);
+            mailMessage.setText("Срок выполнения задачи: '"+tsk.getTaskName() + "' закончился " +tsk.getEndDate() + "\nДанная задача все еще доступна к выполнению, но уже не принесет положительного влияния на вашу статитику");
+            try {
+                mailSender.send(mailMessage);
+            } catch (MailException mailException) {
+                mailException.printStackTrace();
+            }
+        }
+        return "Сообщение отправлено";
+    }
+
 
 
 }
