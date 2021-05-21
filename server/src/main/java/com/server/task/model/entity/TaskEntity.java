@@ -58,6 +58,9 @@ public class TaskEntity implements Serializable {
     @JoinColumn(name = "task_id")
     private List<Files> files = new ArrayList<>();
 
+    @Column(name = "overdue")
+    private String overdue;
+
     public TaskEntity(Long id, String taskName, String begDate, String endDate, String taskDesc, UserEntity author, UserEntity employee, Long parentId) {
         this.id = id;
         this.taskName = taskName;
@@ -86,6 +89,10 @@ public class TaskEntity implements Serializable {
         this.employee = null;
         this.parentId = null;
     }
+
+    public String getOverdue() {return overdue;}
+
+    public void setOverdue(String overdue) {this.overdue = overdue;}
 
     public List<Files> getFiles() {return files;}
 

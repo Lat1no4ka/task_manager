@@ -35,7 +35,8 @@ public class AddTaskController {
     MessageRepository messageRepository;
     @Autowired
     UserFolderEntityRepository userFolderEntityRepository;
-
+    @Autowired
+    StatusDirRepository statusRepository;
 
     @RequestMapping(value = {"/addTaskOld"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public Task addNewTaskPiece(@RequestBody Task task) {
@@ -232,6 +233,17 @@ public class AddTaskController {
             }
         }
         return userList;
+    }
+
+    //Обновление просроченного задания, ловит id задачи, добавляет в просроченные
+    @RequestMapping(value = {"/setExpired"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public TaskEntity setTaskExpired(@RequestBody TaskEntity task) {
+        TaskEntity tsk = taskEntityRepository.findById(task.getId());
+        tsk.setOverdue("#cf1717");
+        Long statId = new Long(7);
+        tsk.setStatus(statusRepository.findById(statId));
+        taskEntityRepository.save(tsk);
+        return tsk;
     }
 
 }
