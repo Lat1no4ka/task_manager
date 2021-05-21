@@ -5,64 +5,41 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-    <changeSet author="maximka" id="3">
-        <createTable tableName="tasks">
+    <changeSet author="maximka" id="20">
+        <createTable tableName="settings">
 
             <column autoIncrement="true" name="id" type="INT">
                 <constraints primaryKey="true"/>
             </column>
 
-            <column name="task_name" type="TEXT">
-                <constraints nullable="true"/>
-            </column>
-
-            <column name="task_desc" type="TEXT">
-                <constraints nullable="true"/>
-            </column>
-
-            <column name="beg_date" type="DATE">
-                <constraints nullable="true"/>
-            </column>
-
-            <column name="exp_date" type="DATE">
-                <constraints nullable="true"/>
-            </column>
-
-            <column name="head_id" type="INT">
+            <column name="user_id" type="INT">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="emp_id" type="INT">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="task_priority_id" type="INT">
+            <column name="emp_view_set" type="INT">
                 <constraints nullable="true"/>
             </column>
 
-            <column name="task_status_id" type="INT">
+            <column name="task_view_set" type="INT">
                 <constraints nullable="true"/>
             </column>
 
-            <column name="par_task_id" type="INT">
+            <column name="background_image_set" type="TEXT">
                 <constraints nullable="true"/>
             </column>
 
-            <column name="overdue" type="TEXT">
+            <column name="font_size_set" type="INT">
                 <constraints nullable="true"/>
             </column>
 
-            <column name="stat_change" type="DATE">
+            <column name="notification_set" type="INT">
                 <constraints nullable="true"/>
             </column>
 
-            <column name="closed" type="DATE">
-                <constraints nullable="true"/>
-            </column>
 
         </createTable>
         <rollback>
-            <dropTable tableName="tasks"/>
+            <dropTable tableName="settings"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>

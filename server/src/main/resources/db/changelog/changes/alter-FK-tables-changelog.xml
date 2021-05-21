@@ -67,5 +67,11 @@
                                   referencedColumnNames="id"
                                   referencedTableName="users"/>
 
+        <addForeignKeyConstraint  baseColumnNames="user_id"
+                                  baseTableName="settings"
+                                  constraintName="fk_settings_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="users"/>
+
     </changeSet>
 </databaseChangeLog>

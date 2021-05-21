@@ -12,6 +12,7 @@
     <include file="/db/changelog/changes/create-chatroom-table-changelog.xml"/>
     <include file="/db/changelog/changes/create-messages-table-changelog.xml"/>
     <include file="/db/changelog/changes/create-statistics-table-changelog.xml"/>
+    <include file="/db/changelog/changes/create-settings-table-changelog.xml"/>
     <include file="/db/changelog/changes/create-PrioDir-table-changelog.xml"/>
     <include file="/db/changelog/changes/create-RoleDir-table-changelog.xml"/>
     <include file="/db/changelog/changes/create-StatusDir-table-changelog.xml"/>
