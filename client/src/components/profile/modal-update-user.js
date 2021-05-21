@@ -30,7 +30,9 @@ const ModalUpdateUser = () => {
       userName: undefined,
       firstName: undefined,
       lastName: undefined,
-      email: undefined
+      email: undefined,
+      password: undefined,
+      newPassword: undefined,
   
     });
 
@@ -106,15 +108,15 @@ function refreshPage(){
             <div className="form-group col-6">
               <label>Фамилия</label>
               <input type="value" className="form-control" id="lastName" placeholder="" defaultValue = {lastnameinf} onChange={(e) => setForm({ ...form, lastName: e.target.value })}></input>            </div>
-           {/* <div className="form-group col-6">
+           <div className="form-group col-6">
               <label>Старый пароль</label>
-              <input type="value" className="form-control" id="password"  onChange={console.log("input")}></input>            </div> */}
+              <input type="password" className="form-control" id="password"  onChange={(e) => setForm({ ...form, password: e.target.value })}></input>            </div>
               <div className="form-group col-6">
               <label>Имя</label>
               <input type="value" className="form-control" id="firstName" placeholder="" defaultValue = {firstNameinf} onChange={(e) => setForm({ ...form, firstName: e.target.value })}></input>            </div>
-              {/* <div className="form-group col-6">
+              <div className="form-group col-6">
               <label>Новый пароль</label>
-              <input type="value" className="form-control" id="password"  onChange={console.log("input")}></input>            </div> */}
+              <input type="password" className="form-control" id="newPassword"  onChange={(e) => setForm({ ...form, newPassword: e.target.value })}></input>            </div>
             
           </form>
 
