@@ -10,18 +10,23 @@ import com.server.task.repo.TaskEntityRepository;
 import com.server.task.repo.UserEntityRepository;
 import com.server.task.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+
+import java.util.Date;
 import java.util.Random;
 
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping(produces = "application/json")
+@EnableScheduling
 @ResponseBody
 public class RestoreController {
 
@@ -115,6 +120,29 @@ public class RestoreController {
         }
         return "Сообщение отправлено";
     }
+
+    public void StatusCheck (TaskEntity task) throws IOException {
+        UserEntity user = task.getEmployee();
+        UserEntity author = task.getAuthor();
+        String userMail = (userEntityRepository.findById(user.getId())).getEmail();
+        try (GenericXmlApplicationContext context = new GenericXmlApplicationContext()) {
+            context.load("classpath:applicationContext.xml");
+            context.refresh();
+            JavaMailSender mailSender = context.getBean("mailSender", JavaMailSender.class);
+            SimpleMailMessage templateMessage = context.getBean("templateMessage", SimpleMailMessage.class);
+            SimpleMailMessage mailMessage = new SimpleMailMessage(templateMessage);
+            mailMessage.setTo(userMail);
+            mailMessage.setText("Срок выполнения задачи: '"+task.getTaskName() + "' закончился " +task.getEndDate() + "\nДанная задача все еще доступна к выполнению, но уже не принесет положительного влияния на вашу статитику");
+            try {
+                mailSender.send(mailMessage);
+            } catch (MailException mailException) {
+                mailException.printStackTrace();
+            }
+        }
+    }
+
+
+
 
 
 

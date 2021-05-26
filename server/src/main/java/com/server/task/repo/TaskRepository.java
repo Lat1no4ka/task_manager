@@ -11,6 +11,7 @@ import java.util.List;
 public interface TaskRepository extends CrudRepository<Task, String> {
     List<Task> findByEmployeeId(Long employeeId);
     Task findById(Long id);
+    List<Task> findAll();
     List<Task> findByParentId(Long parentId);
     List<Task> findByAuthorId(Long authorId);
     Task findFirstByAuthorIdOrderByIdDesc (Long authorId);

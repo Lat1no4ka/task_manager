@@ -7,17 +7,29 @@ import com.server.task.model.entity.TaskAlterEntity;
 import com.server.task.model.entity.UserEntity;
 import com.server.task.model.entity.UserFolderEntity;
 import com.server.task.repo.*;
+import com.server.task.controller.RestoreController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
+import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping(produces = "application/json")
+@EnableScheduling
 @ResponseBody
 public class AddTaskController {
     @Autowired
@@ -38,6 +50,8 @@ public class AddTaskController {
     UserFolderEntityRepository userFolderEntityRepository;
     @Autowired
     StatusDirRepository statusRepository;
+    @Autowired
+    RestoreController restoreController;
 
     @RequestMapping(value = {"/addTaskOld"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public Task addNewTaskPiece(@RequestBody Task task) {
@@ -240,17 +254,38 @@ public class AddTaskController {
         return userList;
     }
 
-    //Обновление просроченного задания, ловит id задачи, добавляет в просроченные
-    @RequestMapping(value = {"/setExpired"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public String setTaskExpired(@RequestBody TaskEntity task) {
-        TaskEntity tsk = taskEntityRepository.findById(task.getId());
-        tsk.setOverdue("#cf1717");
-        Long statId = new Long(7);
-        tsk.setStatus(statusRepository.findById(statId));
-        Date date = new Date();
-        tsk.setLastChange(date);
-        taskEntityRepository.save(tsk);
-        return date.toString();
+
+    //Автоматическая поебень™ смотрит дату и ебашит задачи в просроченные
+    @Scheduled(cron ="59 59 11 * * *")
+    public List<TaskEntity> DailyCheck () throws IOException, ParseException {
+        Date today = new Date();
+        List<TaskEntity> allTasks = taskEntityRepository.findAll();
+        List<TaskEntity> overdueList = new ArrayList<>();
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        for (TaskEntity tsk : allTasks)
+        {
+            if (tsk.getEndDate()!=null)
+            {
+                Date tskdate = format.parse(tsk.getEndDate());
+                if(tskdate.compareTo(today) < 0){
+                    overdueList.add(tsk);
+                }
+            }
+        }
+        setTaskExpired(overdueList);
+        return overdueList;
     }
 
+    //Обновление просроченного задания для автоматической поебени™
+    public void setTaskExpired(List<TaskEntity> taskList) throws IOException {
+        for (TaskEntity tsk : taskList) {
+            tsk.setOverdue("#cf1717");
+            Long statId = new Long(7);
+            tsk.setStatus(statusRepository.findById(statId));
+            Date date = new Date();
+            tsk.setLastChange(date);
+            taskEntityRepository.save(tsk);
+            restoreController.StatusCheck(tsk);
+        }
+    }
 }
