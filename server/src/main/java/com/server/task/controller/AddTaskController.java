@@ -256,7 +256,7 @@ public class AddTaskController {
 
 
     //Автоматическая поебень™ смотрит дату и ебашит задачи в просроченные
-    @Scheduled(cron ="59 59 11 * * *")
+    @Scheduled(cron ="50 59 23 * * *")
     public List<TaskEntity> DailyCheck () throws IOException, ParseException {
         Date today = new Date();
         List<TaskEntity> allTasks = taskEntityRepository.findAll();
@@ -264,7 +264,7 @@ public class AddTaskController {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         for (TaskEntity tsk : allTasks)
         {
-            if (tsk.getEndDate()!=null)
+            if (tsk.getEndDate()!=null && tsk.getStatus().getId()!=7)
             {
                 Date tskdate = format.parse(tsk.getEndDate());
                 if(tskdate.compareTo(today) < 0){
