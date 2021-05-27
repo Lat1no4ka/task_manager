@@ -69,10 +69,13 @@ public class AddTaskController {
         Date date = new Date();
         task.setLastChange(date);
         taskRepository.save(task);
-        UTconnector link = new UTconnector();
-        link.setUserId(task.getEmployee());
-        link.setTaskId(task.getId());
-        utRepository.save(link);
+        List<UserEntity> userList = task.getEmployee();
+        for(UserEntity user : userList){
+            UTconnector link = new UTconnector();
+            link.setUserId(user.getId());
+            link.setTaskId(task.getId());
+            utRepository.save(link);
+        }
         Task usrTask = taskRepository.findFirstByAuthorIdOrderByIdDesc(task.getAuthor());
         return usrTask.getId();
     }
@@ -80,15 +83,19 @@ public class AddTaskController {
 
     //создание подзадачи, ловит List тел и записывет их.
     @RequestMapping(value = {"/addSubtask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List addNewSubtask(@RequestBody List<Task> tasks) {
+    public List addSubtask(@RequestBody List<Task> tasks) {
         List<UTconnector> subLinkList = new ArrayList<>();
         taskRepository.saveAll(tasks);
-        for (int i = 0; i < tasks.size(); i++) {
-            Task subtsk = tasks.get(i);
-            UTconnector link = new UTconnector();
-            link.setUserId(subtsk.getEmployee());
-            link.setTaskId(subtsk.getId());
-            subLinkList.add(link);
+        for (Task subtsk : tasks)
+        {
+            List<UserEntity> userList = subtsk.getEmployee();
+            for(UserEntity user : userList)
+            {
+                UTconnector link = new UTconnector();
+                link.setUserId(user.getId());
+                link.setTaskId(subtsk.getId());
+                subLinkList.add(link);
+            }
         }
         utRepository.saveAll(subLinkList);
         return tasks;
@@ -96,35 +103,46 @@ public class AddTaskController {
 
     //Изменение задач (необходимо добавить в JSON id изменяемой задачи)
     @RequestMapping(value = {"/alterTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public UTconnector alterTask(@RequestBody TaskAlterEntity task) {
-        UTconnector link = new UTconnector();
-        Task newtask = taskRepository.findById(task.getId());
+    public String alterTask(@RequestBody TaskAlterEntity task) {
+        Task oldtask = taskRepository.findById(task.getId());
         if (task.getTaskName() != null) {
-            newtask.setTaskName(task.getTaskName());
+            oldtask.setTaskName(task.getTaskName());
         }
         if (task.getTaskDesc() != null) {
-            newtask.setTaskDesc(task.getTaskDesc());
+            oldtask.setTaskDesc(task.getTaskDesc());
         }
         //if (task.getBegDate()!=null){newtask.setBegDate(task.getBegDate());}
         if (task.getEndDate() != null) {
-            newtask.setEndDate(task.getEndDate());
+            oldtask.setEndDate(task.getEndDate());
         }
         if (task.getEmployee() != null) {
-            link = utRepository.findByUserIdAndTaskId(newtask.getEmployee(), task.getId());
-            link.setUserId(task.getEmployee());
-            utRepository.save(link);
-            newtask.setEmployee(task.getEmployee());
+
+            List<UserEntity> oldUserList = oldtask.getEmployee();
+            for(UserEntity user : oldUserList) {
+                UTconnector link = new UTconnector();
+                link = utRepository.findByUserIdAndTaskId(user.getId(), task.getId());
+                utRepository.delete(link);
+            }
+
+            List<UserEntity> userList = task.getEmployee();
+            for(UserEntity user : userList){
+                UTconnector link = new UTconnector();
+                link.setUserId(user.getId());
+                link.setTaskId(task.getId());
+                utRepository.save(link);
+            }
+            oldtask.setEmployee(task.getEmployee());
         }
         if (task.getPriority() != null) {
-            newtask.setPriority(task.getPriority());
+            oldtask.setPriority(task.getPriority());
         }
         if (task.getStatus() != null) {
-            newtask.setStatus(task.getStatus());
+            oldtask.setStatus(task.getStatus());
         }
         Date date = new Date();
-        newtask.setLastChange(date);
-        taskRepository.save(newtask);
-        return link;
+        oldtask.setLastChange(date);
+        taskRepository.save(oldtask);
+        return "Задание успешно обновлено";
     }
 
     //удаление задачи, подзадач и чистка UT. ловит id задачи
@@ -288,4 +306,13 @@ public class AddTaskController {
             restoreController.StatusCheck(tsk);
         }
     }
+
+    @RequestMapping(value = {"/testFunc"}, method = RequestMethod.GET, headers = {"Content-type=application/json"})
+    public List testFunc() {
+        List<TaskEntity> bruh= taskEntityRepository.findAll();
+        return bruh;
+    }
+
+
+
 }

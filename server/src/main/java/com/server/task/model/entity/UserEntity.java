@@ -3,6 +3,8 @@ package com.server.task.model.entity;
 import com.server.task.model.dictionary.Role;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -32,6 +34,13 @@ public class UserEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "utconnector",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id")
+    )
+    List<TaskEntity> tasksEntity = new ArrayList<>();
 
     public UserEntity() {
         this.userName = null;

@@ -3,6 +3,7 @@ package com.server.task.model.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -27,7 +28,7 @@ public class TaskAlterEntity implements Serializable {
     private String endDate;
 
     @Column(name ="emp_id", nullable = false)
-    private Long employee;
+    private List<UserEntity> employee;
 
     @Column(name ="task_priority_id")
     private Long priority;
@@ -51,7 +52,7 @@ public class TaskAlterEntity implements Serializable {
         return endDate;
     }
 
-    public Long getEmployee() {
+    public List<UserEntity> getEmployee() {
         return employee;
     }
 
@@ -79,7 +80,7 @@ public class TaskAlterEntity implements Serializable {
         this.endDate = endDate;
     }
 
-    public void setEmployee(Long employee) {
+    public void setEmployee(List<UserEntity> employee) {
         this.employee = employee;
     }
 
