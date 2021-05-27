@@ -2,10 +2,7 @@ package com.server.task.controller;
 
 import com.server.task.model.*;
 import com.server.task.model.dictionary.Status;
-import com.server.task.model.entity.TaskEntity;
-import com.server.task.model.entity.TaskAlterEntity;
-import com.server.task.model.entity.UserEntity;
-import com.server.task.model.entity.UserFolderEntity;
+import com.server.task.model.entity.*;
 import com.server.task.repo.*;
 import com.server.task.controller.RestoreController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +40,8 @@ public class AddTaskController {
     @Autowired
     TaskEntityRepository taskEntityRepository;
     @Autowired
+    MainTaskEntityRepository mainTaskEntityRepository;
+    @Autowired
     FilesRepository filesRepository;
     @Autowired
     MessageRepository messageRepository;
@@ -59,6 +58,7 @@ public class AddTaskController {
         return task;
     }
 
+    //Если нужно много пользователей в родительской задаче
     //новый вариант создания задачи, сразу добавляет связь в таблицу UTconnector, возвращает id
     @RequestMapping(value = {"/addTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public Long addNewTask(@RequestBody Task task) {
@@ -78,6 +78,22 @@ public class AddTaskController {
         }
         Task usrTask = taskRepository.findFirstByAuthorIdOrderByIdDesc(task.getAuthor());
         return usrTask.getId();
+    }
+
+    //Если обязательно только 1 пользователь в родительской задаче
+    @RequestMapping(value = {"/addMainTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Long addMainTask(@RequestBody MainTaskEntity task) {
+        if (task.getBegDate() == null) {
+            task.setBegDate(new Date());
+        }
+        Date date = new Date();
+        task.setLastChange(date);
+        mainTaskEntityRepository.save(task);
+        UTconnector link = new UTconnector();
+        link.setUserId(task.getEmployee().getId());
+        link.setTaskId(task.getId());
+        utRepository.save(link);
+        return task.getId();
     }
 
 
