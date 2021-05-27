@@ -2,6 +2,7 @@ package com.server.task.model.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class TaskAlterEntity implements Serializable {
     @Column(name = "exp_date")
     private String endDate;
 
-    @Column(name ="emp_id", nullable = false)
-    private List<UserEntity> employee;
+    @ManyToMany(mappedBy = "tasksEntity")
+    private List<UserEntity> employee = new ArrayList<>();
 
     @Column(name ="task_priority_id")
     private Long priority;

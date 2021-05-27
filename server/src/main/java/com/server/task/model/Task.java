@@ -47,9 +47,6 @@ public class Task implements Serializable {
     @Column(name = "task_status_id")
     private Long statusId;
 
-    @ManyToMany(mappedBy = "tasks")
-    private List<User> users = new ArrayList<>();
-
     @Column(name = "par_task_id")
     private Long parentId;
 
