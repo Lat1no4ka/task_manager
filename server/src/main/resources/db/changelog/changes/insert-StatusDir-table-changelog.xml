@@ -15,6 +15,8 @@
 
             <column name="alias" value="new"/>
 
+            <column name="status_color" value="#17cfc9" />
+
         </insert>
 
         <insert tableName="statusdir">
@@ -24,6 +26,8 @@
             <column name="status_name" value="В работе"/>
 
             <column name="alias" value="work"/>
+
+            <column name="status_color" value="#e8d60e"/>
 
         </insert>
 
@@ -35,6 +39,8 @@
 
             <column name="alias" value="check"/>
 
+            <column name="status_color" value="#1a47db"/>
+
         </insert>
 
         <insert tableName="statusdir">
@@ -44,6 +50,8 @@
             <column name="status_name" value="Возврещено на доработку"/>
 
             <column name="alias" value="revision"/>
+
+            <column name="status_color" value="#db8e1a"/>
 
         </insert>
 
@@ -55,6 +63,8 @@
 
             <column name="alias" value="accepted"/>
 
+            <column name="status_color" value="#4ddb1a"/>
+
         </insert>
 
         <insert tableName="statusdir">
@@ -65,6 +75,21 @@
 
             <column name="alias" value="closed"/>
 
+            <column name="status_color" value="#9fa19f"/>
+
         </insert>
+
+        <insert tableName="statusdir">
+
+            <column name="id" valueNumeric="7"/>
+
+            <column name="status_name" value="Просрочено"/>
+
+            <column name="alias" value="overdue"/>
+
+            <column name="status_color" value="#cf1717"/>
+
+        </insert>
+
     </changeSet>
 </databaseChangeLog>

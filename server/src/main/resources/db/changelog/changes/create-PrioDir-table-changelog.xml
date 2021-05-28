@@ -16,6 +16,10 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="prio_color" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
         </createTable>
         <rollback>
             <dropTable tableName="priodir"/>

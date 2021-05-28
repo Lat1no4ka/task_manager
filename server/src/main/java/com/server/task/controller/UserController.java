@@ -2,11 +2,10 @@ package com.server.task.controller;
 
 
 import com.server.task.model.User;
+import com.server.task.model.Settings;
 import com.server.task.model.entity.UserAlterEntity;
 import com.server.task.model.entity.UserEntity;
-import com.server.task.repo.UserRepository;
-import com.server.task.repo.UserEntityRepository;
-import com.server.task.repo.UserAlterEntityRepository;
+import com.server.task.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,6 +26,9 @@ public class UserController {
     BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     UserEntityRepository userEntityRepository;
+    @Autowired
+    SettingsRepository settingsRepository;
+
 
     //вывод всех пользователей
     @RequestMapping(value={"/allUsers"}, method=RequestMethod.GET, headers = {"Content-type=application/json"})
@@ -88,5 +90,42 @@ public class UserController {
         return "Информация обновлена";
     }
 
+    //Изменение настроек пользователя
+    @RequestMapping(value={"/alterSettings"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Settings alterSettings(@RequestBody Settings settings)
+    {
+        Settings currentSet = settingsRepository.findById(settings.getId());
+        if (currentSet.getEmpViewSet() != null) {
+            currentSet.setEmpViewSet(settings.getEmpViewSet());
+        }
+        if (currentSet.getTaskViewSet() != null) {
+            currentSet.setTaskViewSet(settings.getTaskViewSet());
+        }
+        if (currentSet.getNotificationSet() != null) {
+            currentSet.setNotificationSet(settings.getNotificationSet());
+        }
+        if (currentSet.getFontSizeSet() != null) {
+            currentSet.setFontSizeSet(settings.getFontSizeSet());
+        }
+        if (currentSet.getBackgroundImageSet() != null) {
+            currentSet.setBackgroundImageSet(settings.getBackgroundImageSet());
+        }
+        return settings;
+    }
+
+    //Настройки для новых пользователей
+    @RequestMapping(value={"/newSettings"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Settings ListUsersById(@RequestBody UserEntity user)
+    {
+        Settings setting = new Settings();
+        setting.setUser(userEntityRepository.findById(user.getId()));
+        setting.setEmpViewSet(new Long(1));
+        setting.setNotificationSet(new Long(1));
+        setting.setTaskViewSet(new Long(1));
+        setting.setFontSizeSet(new Long(1));
+        setting.setBackgroundImageSet("https://assets.awwwards.com/awards/images/2015/04/pattern.jpg");
+        settingsRepository.save(setting);
+        return setting;
+    }
 
 }

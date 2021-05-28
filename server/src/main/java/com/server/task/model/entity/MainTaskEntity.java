@@ -1,13 +1,11 @@
 package com.server.task.model.entity;
 
 import com.server.task.model.Files;
-import com.server.task.model.User;
 import com.server.task.model.dictionary.Priority;
 import com.server.task.model.dictionary.Status;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "tasks")
-public class TaskEntity implements Serializable {
+public class MainTaskEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,25 +27,24 @@ public class TaskEntity implements Serializable {
     private String taskDesc;
 
     @Column(name = "beg_date")
-    private String begDate;
+    private Date begDate;
 
     @Column(name = "exp_date")
-    private String endDate;
+    private Date endDate;
 
     @ManyToOne
     @JoinColumn(name ="head_id", nullable = false)
     private UserEntity author;
 
-    @ManyToMany(mappedBy = "tasksEntity")
-    private List<UserEntity> employee = new ArrayList<>();
-
     @ManyToOne
-    @JoinColumn(name ="task_priority_id")
-    private Priority priority;
+    @JoinColumn(name ="emp_id", nullable = false)
+    private UserEntity employee;
 
-    @ManyToOne
-    @JoinColumn(name = "task_status_id")
-    private Status status;
+    @Column(name ="task_priority_id")
+    private Long priorityId;
+
+    @Column(name = "task_status_id")
+    private Long statusId;
 
     @Column(name = "par_task_id")
     private Long parentId;
@@ -62,7 +59,7 @@ public class TaskEntity implements Serializable {
     @Column(name = "stat_change")
     private Date lastChange;
 
-    public TaskEntity(Long id, String taskName, String begDate, String endDate, String taskDesc, UserEntity author, List<UserEntity> employee, Long parentId) {
+    public MainTaskEntity(Long id, String taskName, Date begDate, Date endDate, String taskDesc, UserEntity author, UserEntity employee, Long parentId) {
         this.id = id;
         this.taskName = taskName;
         this.taskDesc = taskDesc;
@@ -74,13 +71,13 @@ public class TaskEntity implements Serializable {
 
     }
 
-    public TaskEntity(Long id, UserEntity author, List<UserEntity> employee) {
+    public MainTaskEntity(Long id, UserEntity author, UserEntity employee) {
         this.id = id;
         this.author = author;
         this.employee = employee;
     }
 
-    public TaskEntity() {
+    public MainTaskEntity() {
         this.id = null;
         this.taskName = null;
         this.taskDesc = null;
@@ -91,7 +88,17 @@ public class TaskEntity implements Serializable {
         this.parentId = null;
     }
 
-    public void setEmployee(List<UserEntity> employee) { this.employee = employee; }
+    public void setPriorityId(Long priorityId) { this.priorityId = priorityId; }
+
+    public void setStatusId(Long statusId) { this.statusId = statusId; }
+
+    public Long getPriorityId() { return priorityId; }
+
+    public Long getStatusId() { return statusId; }
+
+    public void setAuthor(UserEntity author) { this.author = author; }
+
+    public void setEmployee(UserEntity employee) { this.employee = employee; }
 
     public String getOverdue() {return overdue;}
 
@@ -105,22 +112,6 @@ public class TaskEntity implements Serializable {
 
     public void setFiles(List<Files> files) { this.files = files; }
 
-    public Priority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -129,9 +120,9 @@ public class TaskEntity implements Serializable {
 
     public void setTaskDesc(String taskDesc) { this.taskDesc = taskDesc; }
 
-   // public void setBegDate(String begDate) { this.begDate = begDate; }
+    public void setBegDate(Date begDate) { this.begDate = begDate; }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
@@ -151,9 +142,9 @@ public class TaskEntity implements Serializable {
         return taskDesc;
     }
 
-    public String getBegDate() {return begDate;}
+    public Date getBegDate() {return begDate;}
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
@@ -161,7 +152,7 @@ public class TaskEntity implements Serializable {
         return author;
     }
 
-    public List<UserEntity> getEmployee() { return employee; }
+    public UserEntity getEmployee() { return employee; }
 
     public Long getParentId() {
         return parentId;

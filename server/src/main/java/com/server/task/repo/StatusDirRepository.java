@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface StatusDirRepository extends CrudRepository<Status, String> {
     List<Status> findAll();
-    List<Status> getById(Long id);
+    Status findById(Long id);
 }
