@@ -1,4 +1,4 @@
-import TaskBoard from "../components/TaskBoard/TaskBoard";
+import {TaskBoard} from "../components/TaskBoard/TaskBoard";
  const Home = () => {
   return <TaskBoard />;
 };

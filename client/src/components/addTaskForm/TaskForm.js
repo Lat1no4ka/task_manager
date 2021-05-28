@@ -34,7 +34,7 @@ export const TaskForm = (props) => {
         parentId: null
     }
 
-    const { register, handleSubmit, formState: { errors }, setValue, clearErrors,getValues,reset } = useForm();
+    const { register, handleSubmit, formState: { errors }, setValue, clearErrors, getValues, reset } = useForm();
 
     useEffect(() => {
         if (!users.length)
@@ -62,7 +62,7 @@ export const TaskForm = (props) => {
     const sendForm = async () => {
         const parenTask = { ...task.task };
         parenTask.priority = task.task.priority.id;
-        parenTask.employee = task.task.employee.id;
+        parenTask.employee = task.task.employee;
 
         const id = await request(`${process.env.REACT_APP_API_URL}/addTask`, "POST", JSON.stringify({ ...parenTask }))
 
@@ -90,7 +90,7 @@ export const TaskForm = (props) => {
     };
 
     const showSuccess = () => {
-        window.location.reload();
+        // window.location.reload();
         setSuccess(false)
     }
 
@@ -104,11 +104,10 @@ export const TaskForm = (props) => {
     }
 
     const saveTask = (e) => {
-        
+
         sendForm();
         ref.current.clear()
         reset("priorityRequired")
-        console.log(getValues("priorityRequired"))
         refSelected.current.value = "";
         dispatch(taskAtions.setSubTask([]));
     }
@@ -194,17 +193,18 @@ export const TaskForm = (props) => {
                 </div>
                 <div className="form-group col-6 other_inputs">
                     <label>Назначена:</label>
-                    {setValue('employerRequired',{ id: task.task.employee.id ?? "", name: task.task.employee.userName ?? "" })}
+                    {setValue('employerRequired', { id: task.task.employee.id ?? "", name: task.task.employee.userName ?? "" })}
                     <Typeahead
                         className={errors.employerRequired ? "error-input" : ""}
                         {...register("employerRequired", { required: true })}
                         clearButton
                         labelKey="name"
+                        multiple
                         id="selections-example"
                         defaultSelected={[{ id: task.task.employee.id ?? "", name: task.task.employee.userName ?? "" }]}
                         onChange={(user, e) => {
-                            cacheTaskForm(e, { ...task.task, employee: { id: user[0]?.id, userName: user[0]?.name } });
-                            setValue('employerRequired',user[0]?.id)
+                            cacheTaskForm(e, { ...task.task, employee: [{ id: user[0]?.id, userName: user[0]?.name }] });
+                            setValue('employerRequired', user[0]?.id)
                             clearErrors("employerRequired")
                         }}
                         options={users.length ? users : []}
