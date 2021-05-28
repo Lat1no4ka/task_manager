@@ -3,7 +3,9 @@ package com.server.task.controller;
 
 import com.server.task.interfaces.TokenService;
 import com.server.task.model.User;
+import com.server.task.model.entity.UserEntity;
 import com.server.task.repo.UserRepository;
+import com.server.task.controller.UserController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,8 @@ public class AuthController {
     BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     TokenService tokenService;
+    @Autowired
+    UserController userController;
 
 
     @RequestMapping(value = {"/auth"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
@@ -53,6 +57,7 @@ public class AuthController {
                 String password = bCryptPasswordEncoder.encode(user.getPassword());
                 user.setPassword(password);
                 userRepository.save(user);
+                userController.newUserSettings(user);
                 return "successful";
             } catch (Exception e) {
                 return "reg error";
