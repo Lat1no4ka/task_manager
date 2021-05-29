@@ -131,7 +131,7 @@ public class AddTaskController {
         if (task.getEndDate() != null) {
             oldtask.setEndDate(task.getEndDate());
         }
-        if (task.getEmployee() != null) {
+        if (!task.getEmployee().isEmpty()) {
 
             List<UserEntity> oldUserList = oldtask.getEmployee();
             for(UserEntity user : oldUserList) {
@@ -148,6 +148,7 @@ public class AddTaskController {
                 utRepository.save(link);
             }
             oldtask.setEmployee(task.getEmployee());
+
         }
         if (task.getPriority() != null) {
             oldtask.setPriority(task.getPriority());
@@ -325,10 +326,14 @@ public class AddTaskController {
 
     @RequestMapping(value = {"/testFunc"}, method = RequestMethod.GET, headers = {"Content-type=application/json"})
     public List testFunc() {
-        List<TaskEntity> bruh= taskEntityRepository.findAll();
+        List<TaskEntity> bruh = taskEntityRepository.findAll();
         return bruh;
     }
 
-
+    @RequestMapping(value = {"/testFuncUser"}, method = RequestMethod.GET, headers = {"Content-type=application/json"})
+    public List testFuncUser() {
+        List<UserEntity> bruh = userEntityRepository.findAll();
+        return bruh;
+    }
 
 }

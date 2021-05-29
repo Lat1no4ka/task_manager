@@ -113,12 +113,11 @@ public class UserController {
         return settings;
     }
 
-    //Настройки для новых пользователей
+    //Сброс настроек
     @RequestMapping(value={"/newSettings"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
     public Settings ListUsersById(@RequestBody UserEntity user)
     {
-        Settings setting = new Settings();
-        setting.setUser(userEntityRepository.findById(user.getId()));
+        Settings setting =  settingsRepository.findByUser(userEntityRepository.findById(user.getId()));
         setting.setEmpViewSet(new Long(1));
         setting.setNotificationSet(new Long(1));
         setting.setTaskViewSet(new Long(1));
@@ -127,5 +126,20 @@ public class UserController {
         settingsRepository.save(setting);
         return setting;
     }
+
+    //Настройки для новых пользователей, запускаются при создании нового пользователя
+    public void newUserSettings(User user)
+    {
+        UserEntity usr = userEntityRepository.findById(user.getId());
+        Settings setting = new Settings();
+        setting.setUser(usr);
+        setting.setEmpViewSet(new Long(1));
+        setting.setNotificationSet(new Long(1));
+        setting.setTaskViewSet(new Long(1));
+        setting.setFontSizeSet(new Long(1));
+        setting.setBackgroundImageSet("https://assets.awwwards.com/awards/images/2015/04/pattern.jpg");
+        settingsRepository.save(setting);
+    }
+
 
 }
