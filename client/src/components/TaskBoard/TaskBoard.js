@@ -80,6 +80,7 @@ export const TaskBoard = () => {
   const { request, loading } = useHttp();
   const [users, setUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [search, setSearch] = useState("");
 
   const getUsers = async () => {
     const users = await request(`${process.env.REACT_APP_API_URL}/getParentTasks`, "POST", JSON.stringify({ id: userId }))
@@ -103,21 +104,30 @@ export const TaskBoard = () => {
   return (
     <div className="container">
       <div className="input-group mt-2">
-        <input type="text" className="form-control" placeholder="Поиск по имени"></input>
+        <input type="search" className="form-control" placeholder="Поиск" value={search} onChange={e => setSearch(e.target.value)}></input>
       </div>
+      {selectedUserId ? <div className="m-2"><button type="button" class="btn btn-secondary" onClick={e => setSelectedUserId(null)}>Назад</button></div> : null}
       <div className="d-flex flex-wrap justify-content-start">
-        {!selectedUserId && users ? <UsersFolders users={users} setSelectedUserId={setSelectedUserId} /> : null}
-        {selectedUserId ? <UserTasks user={selectedUserId} tasks={userTasks()} /> : null}
+        {!selectedUserId && users ? <UsersFolders users={users} setSelectedUserId={setSelectedUserId} search={search} /> : null}
+        {selectedUserId ? <UserTasks user={[selectedUserId, setSelectedUserId]} tasks={userTasks()} /> : null}
       </div>
     </div>
   )
 };
 
 export const UsersFolders = (props) => {
-  const users = props.users
+  const users = props.users;
+  const search = props.search;
   const setSelectedUserId = props.setSelectedUserId
+
+  const serachUser = (user = "") => {
+    return (user.firstName.toUpperCase().includes(search.toUpperCase()) ||
+      user.lastName.toUpperCase().includes(search.toUpperCase()))
+      ? user : null
+  }
+
   return (
-    users.map((user) => {
+    users.filter(user => serachUser(user)).map((user) => {
       return (
         <div className="folder col-3 m-2" key={user.id} onClick={e => setSelectedUserId(user.id)}>
           <div className="folder_header">
@@ -138,10 +148,10 @@ export const UsersFolders = (props) => {
 }
 
 export const UserTasks = (props) => {
-  const tasks = props.tasks
-  const [showDetail, setShowDetail] = useState(false)
-  const [selectedTask, setSelectedTask] = useState(null)
-  console.log(tasks)
+  const tasks = props.tasks;
+  const [showDetail, setShowDetail] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+
   return (
     <>
       {

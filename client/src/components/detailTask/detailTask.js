@@ -277,7 +277,7 @@ export const DetailTask = (props) => {
                       labelKey="name"
                       id="selections-example"
                       defaultSelected={[{ id: data.employee.id ?? "", name: data.employee.userName ?? "" }]}
-                      onChange={(user, e) => { setForm({ ...form, employee: { id: user[0]?.id, userName: user[0]?.name } }) }}
+                      onChange={(user, e) => { setForm({ ...form, employee: [{ id: user[0]?.id, userName: user[0]?.name }] }) }}
                       options={users.length ? users : []}
                       placeholder="Назначить на"
                     />
