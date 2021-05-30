@@ -103,10 +103,10 @@ export const TaskBoard = () => {
 
   return (
     <div className="container">
-      <div className="input-group mt-2">
+      <div className="input-group mt-2 col-12">
         <input type="search" className="form-control" placeholder="Поиск" value={search} onChange={e => setSearch(e.target.value)}></input>
       </div>
-      {selectedUserId ? <div className="m-2"><button type="button" class="btn btn-secondary" onClick={e => setSelectedUserId(null)}>Назад</button></div> : null}
+      {selectedUserId ? <div className="mt-2 col-12"><button type="button" class="btn btn-secondary" onClick={e => setSelectedUserId(null)}>Назад</button></div> : null}
       <div className="d-flex flex-wrap justify-content-start">
         {!selectedUserId && users ? <UsersFolders users={users} setSelectedUserId={setSelectedUserId} search={search} /> : null}
         {selectedUserId ? <UserTasks user={[selectedUserId, setSelectedUserId]} tasks={userTasks()} /> : null}
