@@ -4,10 +4,9 @@ import { Modal } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { DetailTask as DetailSubTask } from "./detailTask"
-import { CaretDownFill, ChatDots } from 'react-bootstrap-icons';
-import { PrivateChat } from '../chat/privateChat'
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { useForm } from "react-hook-form";
 
 export const DetailSubTaskCreate = (props) => {
   const data = props.data;
@@ -55,7 +54,7 @@ export const DetailTask = (props) => {
   const [nextStatus, setNextStatus] = useState(null);
   const userId = useSelector((state) => state.auth.userId);
   const [file, setFile] = useState(null)
-  const [openChat, setOpenChat] = useState(false)
+  const [showAddSubTask, setShowAddSubTask] = useState(false);
   const [form, setForm] = useState({
     id: data.id,
     taskName: data.taskName,
@@ -194,7 +193,7 @@ export const DetailTask = (props) => {
     }
   }
 
-  if (!showDetail) {
+  if (!showDetail && !showAddSubTask) {
     return (
       <Modal
         {...props}
@@ -345,22 +344,13 @@ export const DetailTask = (props) => {
                     </div>
                     :
                     <div className="d-flex justify-content-between">
-                      {openChat ?
-                        <PrivateChat setOpenChat={setOpenChat} private={true} data={data} />
-                        :
-                        <div className="">
-                          {edit ? null :
-                            <button type="button" className="btn" onClick={e => setOpenChat(true)}>
-                              <ChatDots size={30} />
-                            </button>
-                          }
-                        </div>
-                      }
-                      {openChat ? null :
-                        <div>
-                          <button type="button" className="btn btn-secondary" onClick={e => setEdit(!edit)} >Редактировать</button>
-                        </div>
-                      }
+                      <div>
+                        <button type="button" className="btn btn-secondary mr-2" onClick={e => setEdit(!edit)} >Редактировать</button>
+                        {!edit ? <button type="button" className="btn btn-secondary" onClick={e => { setShowAddSubTask(true); console.log(showAddSubTask) }}>Добавить подзадачу</button> : null}
+                      </div>
+                      <div>
+
+                      </div>
                     </div>
                 }
               </div>
@@ -370,7 +360,14 @@ export const DetailTask = (props) => {
         </Modal.Footer>
       </Modal>
     );
-  } else {
+  } else if (showAddSubTask) {
+    return (
+      <AddSubTask
+        show={showAddSubTask} onHide={() => setShowAddSubTask(false)} parent={data.id}
+      />
+    )
+  }
+  else {
     return (
       <div className="detail-task-window">
         <DetailSubTask
@@ -381,3 +378,175 @@ export const DetailTask = (props) => {
     )
   }
 };
+
+
+
+export const AddSubTask = (props) => {
+  const { register, handleSubmit, formState: { errors }, setValue, clearErrors } = useForm();
+  const date = new Date();
+  const userId = useSelector((state) => state.auth.userId);
+  const [users, setUsers] = useState([]);
+  const { request } = useHttp();
+  const [priority, setPriority] = useState([]);
+  const [subTaskFile, setSubTaskFile] = useState([]);
+  const [form, setForm] = useState(
+    {
+      taskName: "",
+      taskDesc: "",
+      begDate: `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`,
+      endDate: `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`,
+      priority: { id: "", priorityName: "" },
+      employee: { id: "", userName: "" },
+      files: [],
+      status: 1,
+      author: userId,
+      parent: props.parent
+    }
+  );
+
+  useEffect(() => {
+    getUsers();
+    getPriority();
+  }, [])
+
+
+  const getPriority = async () => {
+    const priority = await request(`${process.env.REACT_APP_API_URL}/getPriority`, "GET");
+    setPriority(priority);
+  }
+
+  const getUsers = async () => {
+    const response = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
+    const users = await response.map(user => {
+      return { id: user.id, name: user.userName }
+    })
+    setUsers(users);
+  }
+  const prepareSubTaskFiles = (e) => {
+    form.files.push(...e.target.files)
+    subTaskFile.push(...e.target.files)
+    setSubTaskFile(subTaskFile);
+    return form.files
+  }
+  const addSubTask = async (e, data) => {
+    let parseForm = { ...form };
+    parseForm.priority = parseForm.priority.id
+    const subTask = await request(`${process.env.REACT_APP_API_URL}/addTask`, "POST", JSON.stringify(parseForm))
+    const id = await subTask.id;
+    if (subTaskFile.length > 0) {
+        sendFile(id);
+    }
+  }
+
+  const sendFile = async (taskId) => {
+    const formData = new FormData();
+    subTaskFile.forEach(file => {
+      formData.append('file', file)
+    });
+    formData.append('taskId', taskId)
+    const headers = { 'Access-Control-Allow-Credentials': 'true' }
+    await request(`${process.env.REACT_APP_API_URL}/uploadFiles`, "POST", formData, headers)
+  }
+
+  return (
+    <Modal
+      {...props}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Добавить подзадачу</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form className="d-flex row" onSubmit={handleSubmit(addSubTask)}>
+          <div className="form-group col-6 title">
+            <label>Название</label>
+            <input type="value" className={errors.subTitleRequired ? "form-control error" : "form-control"} id="nameOfTask" placeholder=""
+              {...register("subTitleRequired", { required: true })}
+              value={form.taskName} onChange={(e) => { setForm({ ...form, taskName: e.target.value }); clearErrors("subTitleRequired") }}></input>
+            {errors.subTitleRequired && <span className="error">Введите название</span>}
+          </div>
+          <div className="form-group col-12 desc_task">
+            <label>Описание</label>
+            <textarea className="form-control" id="descOfTask" value={form.taskDesc} onChange={e => setForm({ ...form, taskDesc: e.target.value })}></textarea>
+          </div>
+          <div className="form-group col-6 other_inputs">
+            <label>Дата начала:</label>
+            <input type="date" className={errors.subStartDateRequired ? "form-control error" : "form-control"}
+              {...register("subStartDateRequired", { required: true })}
+              id="begdate" value={form.begDate} onChange={(e) => { setForm({ ...form, begDate: e.target.value }); clearErrors("subStartDateRequired") }}></input>
+            {errors.subStartDateRequired && <span className="error">Введите дату начала</span>}
+          </div>
+          <div className="form-group col-6 other_inputs">
+            <label>Дата окончания:</label>
+            <input type="date" className={errors.subEndDateRequired ? "form-control error" : "form-control"} id="expdate"
+              {...register("subEndDateRequired", { required: true })}
+              value={form.endDate} onChange={(e) => { setForm({ ...form, endDate: e.target.value }); clearErrors("subEndDateRequired") }}></input>
+            {errors.subEndDateRequired && <span className="error">Введите дату окончания</span>}
+          </div>
+          <div className="form-group col-6 other_inputs">
+            <label>Назначена:</label>
+            <Typeahead
+              className={errors.subEmployerRequired && "error-input"}
+              clearButton
+              multiple
+              labelKey="name"
+              id="selections-example"
+              {...register("subEmployerRequired", { required: true })}
+              onChange={(user) => {
+                setForm({ ...form, employee: [{ id: user[0]?.id, userName: user[0]?.name }] });
+                setValue('subEmployerRequired', user);
+                clearErrors("subEmployerRequired")
+              }}
+              options={users.length ? users : []}
+              placeholder="Назначить на"
+            />
+            {errors.subEmployerRequired && <span className="error">Назначьте исполнителя</span>}
+          </div>
+          <div className="form-group col-6 other_inputs" >
+            <label>Приоритет</label>
+            <select className={errors.subPriorityRequired ? "custom-select error" : "custom-select"} id="inputGroupSelect01"
+              {...register("subPriorityRequired", { required: true })}
+              onClick={e => setForm({ ...form, priority: { id: e.target.value, priorityName: e.target.options[e.target.options.selectedIndex]?.text } })}>
+              <option hidden value={null}></option>
+              {
+                priority.length ?
+                  priority.map((item) => {
+                    return <option key={item.id} value={item.id}>{item.priorityName}</option>
+                  }) : null
+              }
+            </select>
+            {errors.subPriorityRequired && <span className="error">Выбирите приоритет</span>}
+          </div>
+          <div className="form-group col-5">
+            <div className="custom-file">
+              <input type="file" className="custom-file-input" id="customFile" multiple={true}
+                onChange={e => {
+                  setForm({ ...form, files: prepareSubTaskFiles(e) })
+                }}
+              >
+              </input>
+              <label className="custom-file-label">Выбирите файл</label>
+            </div>
+            <div>
+              {form.files.map((file, index) => {
+                return <p className="m-2" key={index}>{file.name}</p>
+              })}
+            </div>
+          </div>
+          <div className="d-flex col-12 justify-content-between">
+            <div className="form-group">
+              <input type="submit" className="btn btn-secondary" value="Добавить" />
+            </div>
+            <div className="form-group">
+              <button type="button" className="btn btn-secondary" onClick={(e) => props.onHide(false)}>Отмена</button>
+            </div>
+          </div>
+        </form>
+      </Modal.Body>
+      <Modal.Footer>
+      </Modal.Footer>
+    </Modal>
+  )
+}

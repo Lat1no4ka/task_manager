@@ -61,7 +61,7 @@ public class AddTaskController {
     //Если нужно много пользователей в родительской задаче
     //новый вариант создания задачи, сразу добавляет связь в таблицу UTconnector, возвращает id
     @RequestMapping(value = {"/addTask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Long addNewTask(@RequestBody Task task) {
+    public Task addNewTask(@RequestBody Task task) {
 
         if (task.getBegDate() == null) {
             task.setBegDate(new Date());
@@ -77,7 +77,7 @@ public class AddTaskController {
             utRepository.save(link);
         }
         Task usrTask = taskRepository.findFirstByAuthorIdOrderByIdDesc(task.getAuthor());
-        return usrTask.getId();
+        return usrTask;
     }
 
     //Если обязательно только 1 пользователь в родительской задаче

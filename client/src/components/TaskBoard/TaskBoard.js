@@ -13,8 +13,8 @@ import "./home.scss";
 //   const [tasksForFilter, setTasksForFilter] = useState([]);
 //   const [taskNum, setTaskNum] = useState(null);
 //   const [showDetail, setShowDetail] = useState(false);
-//   const [showChat, setShowChat] = useState(false);
-//   const [showFilter, setShowFilter] = useState(false);
+// const [showChat, setShowChat] = useState(false);
+// const [showFilter, setShowFilter] = useState(false);
 //   const id = useSelector(auth => auth.auth.userId)
 //   const [loadinPic, setLoadinPic] = useState(false)
 
@@ -33,20 +33,20 @@ import "./home.scss";
 //   return (
 //     <div className="d-flex" style={{ backgroundImage:`url("https://krot.info/uploads/posts/2020-10/thumbs/1603493783_38-p-foni-s-krasivimi-ikonkami-43.png")`, position: 'absolute', width: '100%', height: '100%'}}>
 //       <div className="container">
-//         <div className="d-flex mt-3 justify-content-end">
-//           <div className="m-2">
-//             <ChatDots size={28} className="icon" onClick={e => {
-//               setShowChat(!showChat)
-//               setShowFilter(false)
-//             }} />
-//           </div>
-//           <div className="m-2">
-//             <Sliders size={28} className="icon" onClick={e => {
-//               setShowFilter(!showFilter)
-//               setShowChat(false)
-//             }} />
-//           </div>
-//         </div>
+// <div className="d-flex mt-3 justify-content-end">
+//   <div className="m-2">
+//     <ChatDots size={28} className="icon" onClick={e => {
+//       setShowChat(!showChat)
+//       setShowFilter(false)
+//     }} />
+//   </div>
+//   <div className="m-2">
+//     <Sliders size={28} className="icon" onClick={e => {
+//       setShowFilter(!showFilter)
+//       setShowChat(false)
+//     }} />
+//   </div>
+// </div>
 //         <div className="d-flex justify-content-start flex-wrap">
 //           {
 
@@ -65,7 +65,7 @@ import "./home.scss";
 //           data={tasks[taskNum]}
 //           show={showDetail} onHide={() => setShowDetail(false)}
 //         /> : null}
-//       <SideBar showChat={showChat} showFilter={showFilter} tasks={tasksForFilter} setTasks={setTasks} setSorted={setSorted} sorted={sorted} />
+// <SideBar showChat={showChat} showFilter={showFilter} tasks={tasksForFilter} setTasks={setTasks} setSorted={setSorted} sorted={sorted} />
 //     </div>
 
 //   );
@@ -81,6 +81,8 @@ export const TaskBoard = () => {
   const [users, setUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [search, setSearch] = useState("");
+  const [showChat, setShowChat] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
 
   const getUsers = async () => {
     const users = await request(`${process.env.REACT_APP_API_URL}/getParentTasks`, "POST", JSON.stringify({ id: userId }))
@@ -102,15 +104,34 @@ export const TaskBoard = () => {
   }
 
   return (
-    <div className="container">
-      <div className="input-group mt-2 col-12">
-        <input type="search" className="form-control" placeholder="Поиск" value={search} onChange={e => setSearch(e.target.value)}></input>
+    <div className="d-flex">
+      <div className="container">
+        <div className="d-flex">
+          <div className="input-group mt-2 col-10">
+            <input type="search" className="form-control" placeholder="Поиск" value={search} onChange={e => setSearch(e.target.value)}></input>
+          </div>
+          <div className="d-flex mt-3 justify-content-end">
+            <div className="m-2">
+              <ChatDots size={28} className="icon" onClick={e => {
+                setShowChat(!showChat)
+                setShowFilter(false)
+              }} />
+            </div>
+            <div className="m-2">
+              <Sliders size={28} className="icon" onClick={e => {
+                setShowFilter(!showFilter)
+                setShowChat(false)
+              }} />
+            </div>
+          </div>
+        </div>
+        {selectedUserId ? <div className="mt-2 col-12"><button type="button" class="btn btn-secondary" onClick={e => setSelectedUserId(null)}>Назад</button></div> : null}
+        <div className="d-flex flex-wrap justify-content-start">
+          {!selectedUserId && users ? <UsersFolders users={users} setSelectedUserId={setSelectedUserId} search={search} /> : null}
+          {selectedUserId ? <UserTasks user={[selectedUserId, setSelectedUserId]} tasks={userTasks()} /> : null}
+        </div>
       </div>
-      {selectedUserId ? <div className="mt-2 col-12"><button type="button" class="btn btn-secondary" onClick={e => setSelectedUserId(null)}>Назад</button></div> : null}
-      <div className="d-flex flex-wrap justify-content-start">
-        {!selectedUserId && users ? <UsersFolders users={users} setSelectedUserId={setSelectedUserId} search={search} /> : null}
-        {selectedUserId ? <UserTasks user={[selectedUserId, setSelectedUserId]} tasks={userTasks()} /> : null}
-      </div>
+      <SideBar showChat={showChat} showFilter={showFilter} />
     </div>
   )
 };

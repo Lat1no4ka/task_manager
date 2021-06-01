@@ -19,8 +19,8 @@ export const SubTask = () => {
         {
             taskName: "",
             taskDesc: "",
-            begDate: `${date.getFullYear()}-${("0"+(date.getMonth() + 1)).slice(-2)}-${("0"+date.getDate()).slice(-2)}`,
-            endDate:  `${date.getFullYear()}-${("0"+(date.getMonth() + 1)).slice(-2)}-${("0"+date.getDate()).slice(-2)}`,
+            begDate: `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`,
+            endDate: `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`,
             priority: { id: "", priorityName: "" },
             employee: { id: "", userName: "" },
             files: [],
@@ -89,7 +89,7 @@ export const SubTask = () => {
                     <label>Название</label>
                     <input type="value" className={errors.subTitleRequired ? "form-control error" : "form-control"} id="nameOfTask" placeholder=""
                         {...register("subTitleRequired", { required: true })}
-                        value={form.taskName} onChange={(e) => {setForm({ ...form, taskName: e.target.value });clearErrors("subTitleRequired")}}></input>
+                        value={form.taskName} onChange={(e) => { setForm({ ...form, taskName: e.target.value }); clearErrors("subTitleRequired") }}></input>
                     {errors.subTitleRequired && <span className="error">Введите название</span>}
                 </div>
                 <div className="form-group col-12 desc_task">
@@ -100,14 +100,14 @@ export const SubTask = () => {
                     <label>Дата начала:</label>
                     <input type="date" className={errors.subStartDateRequired ? "form-control error" : "form-control"}
                         {...register("subStartDateRequired", { required: true })}
-                        id="begdate" value={form.begDate} onChange={(e) => {setForm({ ...form, begDate: e.target.value });clearErrors("subStartDateRequired")}}></input>
+                        id="begdate" value={form.begDate} onChange={(e) => { setForm({ ...form, begDate: e.target.value }); clearErrors("subStartDateRequired") }}></input>
                     {errors.subStartDateRequired && <span className="error">Введите дату начала</span>}
                 </div>
                 <div className="form-group col-6 other_inputs">
                     <label>Дата окончания:</label>
                     <input type="date" className={errors.subEndDateRequired ? "form-control error" : "form-control"} id="expdate"
                         {...register("subEndDateRequired", { required: true })}
-                        value={form.endDate} onChange={(e) => {setForm({ ...form, endDate: e.target.value });clearErrors("subEndDateRequired")}}></input>
+                        value={form.endDate} onChange={(e) => { setForm({ ...form, endDate: e.target.value }); clearErrors("subEndDateRequired") }}></input>
                     {errors.subEndDateRequired && <span className="error">Введите дату окончания</span>}
                 </div>
                 <div className="form-group col-6 other_inputs">
