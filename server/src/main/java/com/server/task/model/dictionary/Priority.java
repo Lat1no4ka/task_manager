@@ -15,6 +15,9 @@ public class Priority implements Serializable {
     @Column(name = "prio_name", nullable = false)
     private String priorityName;
 
+    @Column(name = "prio_color", nullable = false)
+    private String priorityColor;
+
 
     public Priority() {
         this.id = null;
@@ -25,6 +28,10 @@ public class Priority implements Serializable {
         this.id = id;
         this.priorityName = priorityName;
     }
+
+    public String getPriorityColor() { return priorityColor; }
+
+    public void setPriorityColor(String priorityColor) { this.priorityColor = priorityColor; }
 
     public void setId(Long id) {
         this.id = id;
