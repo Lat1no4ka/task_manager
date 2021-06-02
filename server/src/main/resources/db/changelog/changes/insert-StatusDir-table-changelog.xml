@@ -91,5 +91,17 @@
 
         </insert>
 
+        <insert tableName="statusdir">
+
+            <column name="id" valueNumeric="8"/>
+
+            <column name="status_name" value="В архиве"/>
+
+            <column name="alias" value="archived"/>
+
+            <column name="status_color" value="#8a50b3"/>
+
+        </insert>
+
     </changeSet>
 </databaseChangeLog>
