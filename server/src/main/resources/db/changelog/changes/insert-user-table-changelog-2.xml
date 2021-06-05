@@ -9,6 +9,8 @@
         <insert tableName="users">
             <column name="id" valueNumeric="1"/>
             <column name="user_name" value="admin"/>
+            <column name="first_name" value="admin"/>
+            <column name="last_name" value="admin"/>
             <column name="password" value="$2a$12$rPbZcJwGhQ515Cx9YwPgSeefwc.Ag.yFOMhCJR0i.LgeDRpStQu7G"/>
             <column name="role_id" value="2"/>
             <column name="email" value="dashkovtemk@mail.ru"/>
@@ -17,6 +19,8 @@
         <insert tableName="users">
             <column name="id" valueNumeric="2"/>
             <column name="user_name" value="user"/>
+            <column name="first_name" value="user"/>
+            <column name="last_name" value="user"/>
             <column name="password" value="1234"/>
             <column name="role_id" value="1"/>
         </insert>

@@ -193,7 +193,6 @@ export const TaskForm = (props) => {
                 </div>
                 <div className="form-group col-6 other_inputs">
                     <label>Назначена:</label>
-                    {setValue('employerRequired', { id: task.task.employee.id ?? "", name: task.task.employee.userName ?? "" })}
                     <Typeahead
                         className={errors.employerRequired ? "error-input" : ""}
                         {...register("employerRequired", { required: true })}
@@ -201,7 +200,6 @@ export const TaskForm = (props) => {
                         labelKey="name"
                         multiple
                         id="selections-example"
-                        defaultSelected={[{ id: task.task.employee.id ?? "", name: task.task.employee.userName ?? "" }]}
                         onChange={(user, e) => {
                             cacheTaskForm(e, { ...task.task, employee: [{ id: user[0]?.id, userName: user[0]?.name }] });
                             setValue('employerRequired', user[0]?.id)

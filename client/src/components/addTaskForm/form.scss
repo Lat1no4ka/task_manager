@@ -103,6 +103,10 @@
   max-height: 85px;
 }
 .error-input {
+  div:first-child {
+    border-radius: 5px;
+    border-color: rgb(233, 10, 10) !important;
+  }
   input {
     border-radius: 5px;
     border-color: rgb(233, 10, 10) !important;
