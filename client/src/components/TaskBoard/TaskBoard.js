@@ -107,17 +107,17 @@ export const TaskBoard = () => {
     <div className="d-flex">
       <div className="container">
         <div className="d-flex">
-          <div className="input-group mt-2 col-10">
+          <div className="input-group mt-2 col-10 p-0">
             <input type="search" className="form-control" placeholder="Поиск" value={search} onChange={e => setSearch(e.target.value)}></input>
           </div>
-          <div className="d-flex mt-3 justify-content-end">
-            <div className="m-2">
+          <div className="d-flex mt-2 justify-content-end col-2">
+            <div className="mr-2">
               <ChatDots size={28} className="icon" onClick={e => {
                 setShowChat(!showChat)
                 setShowFilter(false)
               }} />
             </div>
-            <div className="m-2">
+            <div className="mr-2">
               <Sliders size={28} className="icon" onClick={e => {
                 setShowFilter(!showFilter)
                 setShowChat(false)
@@ -125,7 +125,7 @@ export const TaskBoard = () => {
             </div>
           </div>
         </div>
-        {selectedUserId ? <div className="mt-2 col-12"><button type="button" class="btn btn-secondary" onClick={e => setSelectedUserId(null)}>Назад</button></div> : null}
+        {selectedUserId ? <div className="m-2 col-12"><button type="button" class="btn btn-secondary" onClick={e => setSelectedUserId(null)}>Назад</button></div> : null}
         <div className="d-flex flex-wrap justify-content-start">
           {!selectedUserId && users ? <UsersFolders users={users} setSelectedUserId={setSelectedUserId} search={search} /> : null}
           {selectedUserId ? <UserTasks user={[selectedUserId, setSelectedUserId]} tasks={userTasks()} /> : null}
@@ -173,6 +173,13 @@ export const UserTasks = (props) => {
   const [showDetail, setShowDetail] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
+  const statusStyle = (color) => {
+    return {
+      height: "30px",
+      backgroundColor: color,
+    }
+  }
+
   return (
     <>
       {
@@ -180,12 +187,11 @@ export const UserTasks = (props) => {
           return (
             <div className="col-3 p-2" key={task.id} >
               <div className="task" onClick={e => { setSelectedTask(task); setShowDetail(true) }}>
-                <div className="task_header">
-                  <p>{task.taskName}</p>
-                  <p>Статус: {task.status.statusName}</p>
+                <div className="task_header" style={statusStyle(task.status.statusColor)}>
+                  <p className="p-0 m-0">Статус: {task.status.statusName}</p>
                 </div>
                 <div className="task_body">
-
+                  <p>{task.taskName}</p>
                 </div>
                 <div className="task_footer">
 

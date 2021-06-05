@@ -32,7 +32,7 @@ export const DetailSubTaskCreate = (props) => {
           <p className="desc">Дата окончания: {data.endDate}</p>
         </div>
         <div>
-          <p className="desc">Исполнитель: {data.employee.userName}</p>
+          <p className="desc">Исполнитель: {data.employee.firstName} {data.employee.lastName}</p>
         </div>
         <div>
           <p className="desc">Приоритет: {data.priority.priorityName}</p>
@@ -268,6 +268,7 @@ export const DetailTask = (props) => {
               }
             </div>
             <div>
+              {console.log(data)}
               {
                 edit ?
                   <div className="m-1 col-6">
@@ -281,7 +282,11 @@ export const DetailTask = (props) => {
                       placeholder="Назначить на"
                     />
                   </div>
-                  : <p className="desc">Исполнитель: <span>{data.employee.firstName + " " + data.employee.lastName}</span></p>
+                  : <>
+                    {data.employee.map((user) => {
+                      return <p className="desc">Исполнитель: <span>{user.firstName} {user.lastName}</span></p>
+                    })}
+                  </>
               }
             </div>
             <div>
@@ -434,7 +439,7 @@ export const AddSubTask = (props) => {
     const subTask = await request(`${process.env.REACT_APP_API_URL}/addTask`, "POST", JSON.stringify(parseForm))
     const id = await subTask.id;
     if (subTaskFile.length > 0) {
-        sendFile(id);
+      sendFile(id);
     }
   }
 
