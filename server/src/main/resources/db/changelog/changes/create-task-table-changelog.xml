@@ -56,10 +56,6 @@
                 <constraints nullable="true"/>
             </column>
 
-            <column name="closed" type="DATETIME">
-                <constraints nullable="true"/>
-            </column>
-
         </createTable>
         <rollback>
             <dropTable tableName="tasks"/>
