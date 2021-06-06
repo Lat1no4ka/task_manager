@@ -28,6 +28,10 @@
                 <constraints nullable="true"/>
             </column>
 
+            <column name="room" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
             <column name="time" type="DATETIME">
                 <constraints nullable="true"/>
             </column>

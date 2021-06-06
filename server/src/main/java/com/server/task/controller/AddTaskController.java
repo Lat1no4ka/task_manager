@@ -250,21 +250,12 @@ public class AddTaskController {
         return userSet;
     }
 
-    //Получение приватных сообщений
-    @RequestMapping(value = {"/getPrivateMessages"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public List<Message> ListPrivateMessages(@RequestBody Message sample) {
-        String sender = sample.getSender();
-        String receiver = sample.getReceiver();
-        List<Message> messagesList = new ArrayList<>(messageRepository.findBySenderAndReceiver(sender, receiver));
-        List<Message> reverse = messageRepository.findBySenderAndReceiver(receiver, sender);
-        messagesList.addAll(reverse);
-        return messagesList;
-    }
+
 
     //Получение общих сообщений
-    @RequestMapping(value = {"/getPublicMessages"}, method = RequestMethod.GET, headers = {"Content-type=application/json"})
-    public List<Message> ListPublicMessages() {
-        List<Message> messagesList = new ArrayList<>(messageRepository.findByReceiverIsNull());
+    @RequestMapping(value = {"/getMessages"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public List<Message> ListPublicMessages(@RequestBody Message message) {
+        List<Message> messagesList = new ArrayList<>(messageRepository.findByRoom(message.getRoom()));
         return messagesList;
     }
 

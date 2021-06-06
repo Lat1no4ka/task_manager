@@ -25,6 +25,9 @@ public class Message implements Serializable {
     @Column(name = "receiver")
     private String receiver;
 
+    @Column(name = "room")
+    private String room;
+
     @Column(name = "time")
     private LocalDateTime dateTime=LocalDateTime.now();
 
@@ -47,6 +50,10 @@ public class Message implements Serializable {
 
     public String getReceiver() {
         return receiver;
+    }
+
+    public String getRoom() {
+        return room;
     }
 
     public LocalDateTime getDateTime() {
@@ -72,6 +79,8 @@ public class Message implements Serializable {
     public void setReceiver(String receiver) {
         this.receiver = receiver;
     }
+
+    public void setRoom(String room) { this.room = room; }
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;

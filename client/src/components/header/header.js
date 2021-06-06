@@ -24,9 +24,8 @@ const Header = () => {
 
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-      <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
-        <Nav className=" m-auto w-50 justify-content-around">
+        <Nav className=" container d-flex flex-row">
           <Nav.Link href="home">
             <HouseDoor size={28} />
           </Nav.Link>

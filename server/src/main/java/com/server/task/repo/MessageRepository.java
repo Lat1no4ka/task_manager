@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends CrudRepository<Message, String> {
     List<Message> findBySenderAndReceiver(String sender,String receiver);
-    List<Message> findByReceiverIsNull();
+    List<Message> findByRoom(String room);
 }
