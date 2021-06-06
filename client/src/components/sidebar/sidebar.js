@@ -21,7 +21,7 @@ export const SideBar = (props) => {
 
   if (props.showChat) {
     return (
-      < div className="sidebar-show" >
+      < div className="sidebar-show col-6 p-2" >
         <Chat  tasks={props.tasks}/>
       </div>
     )

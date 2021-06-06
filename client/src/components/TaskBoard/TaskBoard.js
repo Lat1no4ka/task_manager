@@ -143,7 +143,7 @@ export const TaskBoard = () => {
           {selectedUserId ? <UserTasks user={[selectedUserId, setSelectedUserId]} tasks={userTasks()} /> : null}
         </div>
       </div>
-      {users.length ? <SideBar showChat={showChat} tasks={getTaskAsRoom()} showFilter={showFilter} /> : null}
+        {users.length ? <SideBar showChat={showChat} tasks={getTaskAsRoom()} showFilter={showFilter} /> : null}
     </div>
   )
 };
@@ -163,13 +163,15 @@ export const UsersFolders = (props) => {
     users.filter(user => serachUser(user)).map((user) => {
       return (
         <div className="folder col-3 m-2" key={user.id} onClick={e => setSelectedUserId(user.id)}>
-          <div className="folder_header">
+          <div className="folder_header p-2">
             <p>
               {user.firstName} {user.lastName}
             </p>
           </div>
-          <div className="folder_body">
-
+          <div className="folder_body p-2">
+            <p>
+              Задач: {user.tasks.length}
+            </p>
           </div>
           <div className="folder_footer">
 

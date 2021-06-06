@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { useHttp } from "../../hooks/http.hook"
 import moment from 'moment'
+import 'moment/locale/ru'
 import 'react-big-calendar/lib/sass/styles.scss';
 const localizer = momentLocalizer(moment)
 
@@ -24,6 +25,7 @@ export const Calendar = (props) => {
                 title: task.taskName,
                 start: task.begDate,
                 end: task.endDate,
+                allDay: true
             }
         })
         eventsList.length ? setEventsList(eventsList) : setEventsList([{}])
@@ -40,6 +42,17 @@ export const Calendar = (props) => {
                     localizer={localizer}
                     events={eventsList}
                     style={{ height: 1000 }}
+                    startAccessor="start"
+                    endAccessor= "end"
+                    messages={{
+                        next: "Следующий",
+                        previous: "Предыдущий",
+                        today: "Сегодня",
+                        month: "Месяц",
+                        week: "Неделя",
+                        day: "День",
+                        agenda: "Повестка дня"
+                      }}
                 />
             </div>
         )

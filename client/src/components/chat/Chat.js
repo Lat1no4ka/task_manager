@@ -46,10 +46,10 @@ export const Chat = (props) => {
 
     const onConnected = () => {
         stompClient.subscribe(`/topic/chat/0`, onMessageReceived);
-        stompClient.send('/app/addUser', {}, JSON.stringify({ sender: user.userId, type: 'JOIN' }))
+        stompClient.send('/app/addUser', {}, JSON.stringify({ sender: "Пользователь", type: 'JOIN' }))
         props.tasks.forEach(room => {
             stompClient.subscribe(`/topic/chat/${room.id}`, onMessageReceived);
-            stompClient.send('/app/addUser', {}, JSON.stringify({ sender: user.userId, type: 'JOIN' }))
+            stompClient.send('/app/addUser', {}, JSON.stringify({ sender: "Пользователь", type: 'JOIN' }))
         });
     }
 
@@ -59,7 +59,7 @@ export const Chat = (props) => {
 
     const sendMessage = (type, value) => {
         var chatMessage = {
-            sender: user.userId,
+            sender: "Пользователь",
             content: value,
             type: type,
             room: selectedRoom,
@@ -97,7 +97,7 @@ export const Chat = (props) => {
 
     return (
         <div className="d-flex">
-            <div className="col-3 d-flex flex-column">
+            <div className="col-3 p-0 mr-1 m-0 d-flex flex-column">
                 <div className="room" onClick={e => changeRoom(0)}> <input type="button" className="btn room-btn" value="Общий чат"></input></div>
                 {
                     props.tasks.length ? props.tasks.map(room => {

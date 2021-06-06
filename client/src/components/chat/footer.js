@@ -12,7 +12,7 @@ export const ChatFooter = (props) => {
 
     return (
         <div className="chat-footer d-flex flex-row">
-            <div className="col-11">
+            <div className="col-9 m-1 p-0">
                 <textarea
                     value={message}
                     onChange={e => { setMesage(e.target.value) }}
@@ -24,8 +24,8 @@ export const ChatFooter = (props) => {
 
                 </textarea>
             </div>
-            <div className="col-1">
-                <input type="button" className="btn" onClick={e => { sendMessage() }} value="Отправить" />
+            <div className="col-3 m-1 p-0">
+                <input type="button" className="btn btn-secondary" onClick={e => { sendMessage() }} value="Отправить" />
             </div>
         </div>
     )

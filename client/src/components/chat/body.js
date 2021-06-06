@@ -10,7 +10,7 @@ export const ChatBody = (props) => {
 
     const prepareMessage = (message, index) => {
         let date = new Date(message.dateTime)
-        date = `${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
+        date = `${date.getHours()}:${date.getMinutes()}`
         if (props.user.userId == message.sender) {
             return (
                 <div key={index} className="my-message m-3">
