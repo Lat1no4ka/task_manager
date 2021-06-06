@@ -15,7 +15,7 @@
 
             <column name="alias" value="new"/>
 
-            <column name="status_color" value="#17cfc9" />
+            <column name="status_color" value="#abfff0" />
 
         </insert>
 
@@ -27,7 +27,7 @@
 
             <column name="alias" value="work"/>
 
-            <column name="status_color" value="#e8d60e"/>
+            <column name="status_color" value="#fff091"/>
 
         </insert>
 
@@ -39,7 +39,7 @@
 
             <column name="alias" value="check"/>
 
-            <column name="status_color" value="#1a47db"/>
+            <column name="status_color" value="#9391ff"/>
 
         </insert>
 
@@ -47,11 +47,11 @@
 
             <column name="id" valueNumeric="4"/>
 
-            <column name="status_name" value="Возврещено на доработку"/>
+            <column name="status_name" value="Возвращено на доработку"/>
 
             <column name="alias" value="revision"/>
 
-            <column name="status_color" value="#db8e1a"/>
+            <column name="status_color" value="#ffc266"/>
 
         </insert>
 
@@ -63,7 +63,7 @@
 
             <column name="alias" value="accepted"/>
 
-            <column name="status_color" value="#4ddb1a"/>
+            <column name="status_color" value="#9cff78"/>
 
         </insert>
 
@@ -75,7 +75,7 @@
 
             <column name="alias" value="closed"/>
 
-            <column name="status_color" value="#9fa19f"/>
+            <column name="status_color" value="#c9c9c9"/>
 
         </insert>
 
@@ -87,7 +87,7 @@
 
             <column name="alias" value="overdue"/>
 
-            <column name="status_color" value="#cf1717"/>
+            <column name="status_color" value="#ff6969"/>
 
         </insert>
 
@@ -99,7 +99,7 @@
 
             <column name="alias" value="archived"/>
 
-            <column name="status_color" value="#8a50b3"/>
+            <column name="status_color" value="#c078ff"/>
 
         </insert>
 
