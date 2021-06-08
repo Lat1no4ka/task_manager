@@ -166,6 +166,7 @@ public class FilesController {
         return this.imageService.getImageWithMediaType(fileName);
     }
 
+    //Загрузка файлов для чата
     @RequestMapping(value = "/uploadChatFiles", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public List<Long> chatFilesUpload(@RequestParam("file") List<MultipartFile> multiPartFiles) throws IOException {
         List<Long> fileIdList = new ArrayList<>();
@@ -180,41 +181,32 @@ public class FilesController {
             fout.write(mPFile.getBytes());
             fout.close();
             file.setFilePath(convertFile.toString());
+            file.setHashName(hashFilename);
             fileList.add(file);
         }
         chatFilesRepository.saveAll(fileList);
+
         for (ChatFiles chatFile : fileList) {
             fileIdList.add(chatFile.getId());
         }
         return fileIdList;
     }
 
-    public void ConnectToMessage(List<Long> idList, Long messageId)
-    {
-        for (Long fileId : idList) {
-            ChatFiles file = chatFilesRepository.findById(fileId);
-            file.setMessageId(messageId);
-        }
-    }
-
-
-
+    //получение ссылки на файл
     @RequestMapping(value = "/getChatFile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public String getFileAsLink(@RequestBody FilesEntity files) throws IOException {
-        FilesEntity link = filesEntityRepository.findById(files.getId());
-        String[] parts = link.getFilePath().split(Pattern.quote("\\"));
-        String filename  = parts[parts.length-1];
-        String lnk = "http://localhost:8080/getFile/"+files.getId();
+    public String getFileAsLink(@RequestBody ChatFiles files) throws IOException {
+        ChatFiles link = chatFilesRepository.findById(files.getId());
+        String lnk = "http://localhost:8080/getFile/"+link.getHashName();
         return "{\"link\": \" "+ lnk +"\"}";
     }
 
-
+    //Скачивание файла по ссылке
     @GetMapping(
-            value = "getFile/{fileId:.+}",
+            value = "getFile/{hashname:.+}",
             produces = {MediaType.ALL_VALUE}
     )
-    public ResponseEntity<Object> getFileByLink(@PathVariable(name = "fileId") Long fileId) throws IOException {
-        Files filepath = filesRepository.findById(fileId);
+    public ResponseEntity<Object> getFileByLink(@PathVariable(name = "hashname") String hashname) throws IOException {
+        ChatFiles filepath = chatFilesRepository.findByHashName(hashname);
         String filename = filepath.getFilePath();
         String[] parts = filepath.getFileName().split(Pattern.quote("."));
         String mediaType = ("application/" + parts[1]);

@@ -12,15 +12,15 @@
                 <constraints primaryKey="true"/>
             </column>
 
-            <column name="message_id" type="INT">
-                <constraints nullable="true"/>
-            </column>
-
             <column name="file_path" type="VARCHAR(255)">
                 <constraints nullable="true"/>
             </column>
 
             <column name="file_name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="hash_name" type="VARCHAR(255)">
                 <constraints nullable="true"/>
             </column>
 

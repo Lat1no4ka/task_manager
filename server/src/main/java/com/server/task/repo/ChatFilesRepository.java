@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface ChatFilesRepository extends CrudRepository<ChatFiles, String> {
     ChatFiles findById(Long id);
-    List<ChatFiles> findByMessageId(Long id);
     List<ChatFiles> findAll();
+    ChatFiles findByHashName(String hashname);
 }

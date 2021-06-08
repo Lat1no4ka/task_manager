@@ -12,21 +12,21 @@ public class ChatFiles implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "message_id")
-    private Long messageId;
-
     @Column(name = "file_path")
     private String filePath;
 
     @Column(name = "file_name")
     private String fileName;
 
-    public Long getMessageId() {
-        return messageId;
+    @Column(name = "hash_name")
+    private String hashName;
+
+    public String getHashName() {
+        return hashName;
     }
 
-    public void setMessageId(Long messageId) {
-        this.messageId = messageId;
+    public void setHashName(String hashName) {
+        this.hashName = hashName;
     }
 
     public Long getId() {
