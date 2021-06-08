@@ -118,7 +118,6 @@ public class FilesController {
         ResponseEntity<Object>
                 responseEntity = ResponseEntity.ok().headers(headers).contentLength(file.length()).contentType(
                 MediaType.parseMediaType(mediaType)).body(resource);
-
         return responseEntity;
     }
 
@@ -167,7 +166,6 @@ public class FilesController {
         return this.imageService.getImageWithMediaType(fileName);
     }
 
-
     @RequestMapping(value = "/uploadChatFiles", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public List<Long> chatFilesUpload(@RequestParam("file") List<MultipartFile> multiPartFiles) throws IOException {
         List<Long> fileIdList = new ArrayList<>();
@@ -197,6 +195,40 @@ public class FilesController {
             ChatFiles file = chatFilesRepository.findById(fileId);
             file.setMessageId(messageId);
         }
+    }
+
+
+
+    @RequestMapping(value = "/getChatFile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public String getFileAsLink(@RequestBody FilesEntity files) throws IOException {
+        FilesEntity link = filesEntityRepository.findById(files.getId());
+        String[] parts = link.getFilePath().split(Pattern.quote("\\"));
+        String filename  = parts[parts.length-1];
+        String lnk = "http://localhost:8080/getFile/"+files.getId();
+        return "{\"link\": \" "+ lnk +"\"}";
+    }
+
+
+    @GetMapping(
+            value = "getFile/{fileId:.+}",
+            produces = {MediaType.ALL_VALUE}
+    )
+    public ResponseEntity<Object> getFileByLink(@PathVariable(name = "fileId") Long fileId) throws IOException {
+        Files filepath = filesRepository.findById(fileId);
+        String filename = filepath.getFilePath();
+        String[] parts = filepath.getFileName().split(Pattern.quote("."));
+        String mediaType = ("application/" + parts[1]);
+        File file = new File(filename);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", filepath.getFileName()));
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+        ResponseEntity<Object>
+                responseEntity = ResponseEntity.ok().headers(headers).contentLength(file.length()).contentType(
+                MediaType.parseMediaType(mediaType)).body(resource);
+        return responseEntity;
     }
 
 
