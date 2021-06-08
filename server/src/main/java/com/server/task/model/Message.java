@@ -3,6 +3,8 @@ package com.server.task.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "messages")
@@ -31,6 +33,18 @@ public class Message implements Serializable {
     @Column(name = "time")
     private LocalDateTime dateTime=LocalDateTime.now();
 
+    @OneToMany
+    @JoinColumn(name = "message_id")
+    private List<ChatFiles> files = new ArrayList<>();
+
+
+    public List<ChatFiles> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<ChatFiles> files) {
+        this.files = files;
+    }
 
     public Long getId() {
         return id;
