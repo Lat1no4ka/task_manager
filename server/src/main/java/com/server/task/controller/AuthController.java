@@ -33,7 +33,7 @@ public class AuthController {
     public Map<String, String> auth(@RequestBody User data) {
         String name = data.getUserName();
         User user = userRepository.findByUserName(name);
-        if (bCryptPasswordEncoder.matches(data.getPassword(), user.getPassword())) {
+        if (bCryptPasswordEncoder.matches(data.getPassword(), user.getPassword()) && user.getBlocked()==null) {
             String token = tokenService.getJWTToken(name);
             String key = user.getId().toString();
 
