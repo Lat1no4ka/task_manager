@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import com.server.task.model.Task;
-import com.server.task.model.User;
+import com.server.task.model.*;
 import com.server.task.model.entity.FilesEntity;
 import com.server.task.model.entity.UserEntity;
+import com.server.task.repo.ChatFilesRepository;
 import com.server.task.repo.FilesRepository;
 import com.server.task.repo.FilesEntityRepository;
-import com.server.task.model.Files;
 
 import com.server.task.repo.UserEntityRepository;
 import com.server.task.services.FilesService;
@@ -41,6 +40,8 @@ public class FilesController {
     public FilesService imageService;
     @Autowired
     FilesRepository filesRepository;
+    @Autowired
+    ChatFilesRepository chatFilesRepository;
     @Autowired
     FilesEntityRepository filesEntityRepository;
     @Autowired
@@ -164,6 +165,38 @@ public class FilesController {
     )
     public @ResponseBody byte[] getImageWithMediaType(@PathVariable(name = "imageName") String fileName) throws IOException {
         return this.imageService.getImageWithMediaType(fileName);
+    }
+
+
+    @RequestMapping(value = "/uploadChatFiles", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public List<Long> chatFilesUpload(@RequestParam("file") List<MultipartFile> multiPartFiles) throws IOException {
+        List<Long> fileIdList = new ArrayList<>();
+        List<ChatFiles> fileList = new ArrayList<>();
+        for (MultipartFile mPFile : multiPartFiles) {
+            ChatFiles file = new ChatFiles();
+            file.setFileName(mPFile.getOriginalFilename());
+            String hashFilename = (UUID.randomUUID()).toString();
+            File convertFile = new File("src/main/resources/static/documents/" + hashFilename);
+            convertFile.createNewFile();
+            FileOutputStream fout = new FileOutputStream(convertFile);
+            fout.write(mPFile.getBytes());
+            fout.close();
+            file.setFilePath(convertFile.toString());
+            fileList.add(file);
+        }
+        chatFilesRepository.saveAll(fileList);
+        for (ChatFiles chatFile : fileList) {
+            fileIdList.add(chatFile.getId());
+        }
+        return fileIdList;
+    }
+
+    public void ConnectToMessage(List<Long> idList, Long messageId)
+    {
+        for (Long fileId : idList) {
+            ChatFiles file = chatFilesRepository.findById(fileId);
+            file.setMessageId(messageId);
+        }
     }
 
 

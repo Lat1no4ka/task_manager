@@ -73,5 +73,11 @@
                                   referencedColumnNames="id"
                                   referencedTableName="users"/>
 
+        <addForeignKeyConstraint  baseColumnNames="message_id"
+                                  baseTableName="chatfiles"
+                                  constraintName="fk_chatfiles_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="messages"/>
+
     </changeSet>
 </databaseChangeLog>

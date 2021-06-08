@@ -10,4 +10,5 @@ import java.util.List;
 public interface MessageRepository extends CrudRepository<Message, String> {
     List<Message> findBySenderAndReceiver(String sender,String receiver);
     List<Message> findByRoom(String room);
+    List<Message> findAll();
 }
