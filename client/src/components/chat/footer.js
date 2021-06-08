@@ -10,12 +10,9 @@ export const ChatFooter = (props) => {
         setMesage("")
     }
 
-    useEffect(()=>{
-    },[])
-
     return (
         <div className="chat-footer d-flex flex-row">
-            <div className="col-11">
+            <div className="col-9 m-1 p-0">
                 <textarea
                     value={message}
                     onChange={e => { setMesage(e.target.value) }}
@@ -27,8 +24,8 @@ export const ChatFooter = (props) => {
 
                 </textarea>
             </div>
-            <div className="col-1 align-middle">
-                <TriangleFill size={40} onClick={e => { sendMessage() }} />
+            <div className="col-3 m-1 p-0">
+                <input type="button" className="btn btn-secondary" onClick={e => { sendMessage() }} value="Отправить" />
             </div>
         </div>
     )

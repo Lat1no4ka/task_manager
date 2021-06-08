@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PublicChat } from "../chat/publicChat"
+import { Chat } from "../chat/Chat"
 import "./sidebar.scss";
 
 export const SideBar = (props) => {
@@ -21,10 +21,9 @@ export const SideBar = (props) => {
 
   if (props.showChat) {
     return (
-      < div className="sidebar-show" >
-        <PublicChat private={false} />
+      < div className="sidebar-show col-6 p-2" >
+        <Chat  tasks={props.tasks}/>
       </div>
-
     )
   } else if (props.showFilter) {
     return (
@@ -46,7 +45,8 @@ export const SideBar = (props) => {
     )
   } else {
     return (
-      <div>
+      <div className="d-none">
+        <Chat  tasks={props.tasks}/>
       </div>
     )
   }

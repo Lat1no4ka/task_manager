@@ -268,7 +268,6 @@ export const DetailTask = (props) => {
               }
             </div>
             <div>
-              {console.log(data)}
               {
                 edit ?
                   <div className="m-1 col-6">

@@ -13,7 +13,17 @@ $borderGrayColor: rgb(153, 152, 152);
     user-select: none;
     border-radius: 10px;
     cursor: pointer;
-    .folder_header,
+    .folder_header{
+        min-height: 40px;
+        min-width: 150px;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 5px;
+        border-radius: 10px 10px 0 0;
+        border-top: 1px solid $borderGrayColor;
+        border-right: 1px solid $borderGrayColor;
+        border-left: 1px solid $borderGrayColor;
+    }
     .task_header {
         min-height: 40px;
         min-width: 150px;
@@ -22,6 +32,7 @@ $borderGrayColor: rgb(153, 152, 152);
         padding: 5px;
         border-radius: 10px 10px 0 0;
     }
+    .folder_body,
     .task_body {
         min-height: 40px;
         min-width: 150px;
@@ -31,6 +42,7 @@ $borderGrayColor: rgb(153, 152, 152);
         border-right: 1px solid $borderGrayColor;
         border-left: 1px solid $borderGrayColor;
     }
+    .folder_footer,
     .task_footer {
         min-height: 20px;
         min-width: 150px;
@@ -40,7 +52,7 @@ $borderGrayColor: rgb(153, 152, 152);
         border-bottom: 1px solid $borderGrayColor;
         border-right: 1px solid $borderGrayColor;
         border-left: 1px solid $borderGrayColor;
-        border-radius:0 0 10px 10px;
+        border-radius: 0 0 10px 10px;
     }
     &:active,
     &:hover {

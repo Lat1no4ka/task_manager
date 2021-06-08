@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 
 
 export const ChatBody = (props) => {
-    useState(() => {
+    const [messages, setMessages] = useState([]);
 
-    }, [])
+    useEffect(() => {
+        setMessages(props.messages)
+    }, [props.messages.length])
 
     const prepareMessage = (message, index) => {
         let date = new Date(message.dateTime)
-        date = `${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
+        date = `${date.getHours()}:${date.getMinutes()}`
         if (props.user.userId == message.sender) {
             return (
                 <div key={index} className="my-message m-3">
@@ -30,11 +32,13 @@ export const ChatBody = (props) => {
 
     return (
         <div className="chat-body">
-            {
-                props.messages.map((message, index) => {
-                    return prepareMessage(message, index)
-                })
-            }
+            <div className="chat-body-scroll">
+                {
+                    messages.map((message, index) => {
+                        return prepareMessage(message, index)
+                    })
+                }
+            </div>
         </div>
     )
 }

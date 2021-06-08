@@ -64,7 +64,7 @@ const ModalCreateUser = () => {
 
           <form className="d-flex row">
             <div className="form-group col-6">
-              <label>Никнейм</label>
+              <label>Логин</label>
               <input type="value" className="form-control" id="userName" placeholder="" value={form.userName} onChange={(e) => setForm({ ...form, userName: e.target.value })}></input>            </div>
             <div className="form-group col-6">
               <label>Email</label>
@@ -73,7 +73,7 @@ const ModalCreateUser = () => {
               <label>Фамилия</label>
               <input type="value" className="form-control" id="lastName" placeholder="" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })}></input>            </div>
             <div className="form-group col-6">
-              <label>Пароль: {form.password}</label>
+              <label>Пароль</label>
               <input type="password" className="form-control" id="password" placeholder="" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}></input>            </div>
             <div className="form-group col-6">
               <label>Имя</label>

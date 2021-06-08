@@ -5,6 +5,7 @@ import com.server.task.model.Message;
 import com.server.task.repo.FilesRepository;
 import com.server.task.repo.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -27,15 +28,15 @@ public class ChatController {
     MessageRepository messageRepository;
 
     /*-------------------- Group (Public) chat--------------------*/
-    @MessageMapping("/sendMessage")
-    @SendTo("/topic/public")
-    public Message sendMessage(@Payload Message message) {
+    @MessageMapping("/sendMessage/{room}")
+    public Message sendMessage(@DestinationVariable String room, Message message) {
         messageRepository.save(message);
+        simpMessagingTemplate.convertAndSend("/topic/chat/"+room, message);
         return message;
     }
 
     @MessageMapping("/addUser")
-    @SendTo("/topic/public")
+    @SendTo("/topic/chat")
     public Message addUser(@Payload Message message,
                            SimpMessageHeaderAccessor headerAccessor) {
         headerAccessor.getSessionAttributes().put("username", message.getSender());
