@@ -21,13 +21,16 @@ public class ChatFiles implements Serializable {
     @Column(name = "hash_name")
     private String hashName;
 
-    public String getHashName() {
-        return hashName;
-    }
+    @Column(name = "connected")
+    private String connected;
 
-    public void setHashName(String hashName) {
-        this.hashName = hashName;
-    }
+    public String getConnected() { return connected; }
+
+    public void setConnected(String connected) { this.connected = connected; }
+
+    public String getHashName() { return hashName; }
+
+    public void setHashName(String hashName) { this.hashName = hashName; }
 
     public Long getId() {
         return id;

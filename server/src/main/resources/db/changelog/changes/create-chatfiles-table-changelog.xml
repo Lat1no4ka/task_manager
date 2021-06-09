@@ -24,6 +24,10 @@
                 <constraints nullable="true"/>
             </column>
 
+            <column name="connected" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
         </createTable>
         <rollback>
             <dropTable tableName="chatfiles"/>

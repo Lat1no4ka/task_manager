@@ -36,18 +36,73 @@ public class Message implements Serializable {
     @Column(name = "file1")
     private String fileLink1;
 
+    @Column(name = "file1name")
+    private String fileName1;
+
     @Column(name = "file2")
     private String fileLink2;
+
+    @Column(name = "file2name")
+    private String fileName2;
 
     @Column(name = "file3")
     private String fileLink3;
 
+    @Column(name = "file3name")
+    private String fileName3;
+
     @Column(name = "file4")
     private String fileLink4;
+
+    @Column(name = "file4name")
+    private String fileName4;
 
     @Column(name = "file5")
     private String fileLink5;
 
+    @Column(name = "file5name")
+    private String fileName5;
+
+
+    public String getFileName1() {
+        return fileName1;
+    }
+
+    public String getFileName2() {
+        return fileName2;
+    }
+
+    public String getFileName3() {
+        return fileName3;
+    }
+
+    public String getFileName4() {
+        return fileName4;
+    }
+
+    public String getFileName5() {
+        return fileName5;
+    }
+
+    public void setFileName1(String fileName1) {
+        this.fileName1 = fileName1;
+    }
+
+    public void setFileName2(String fileName2) {
+        this.fileName2 = fileName2;
+    }
+
+    public void setFileName3(String fileName3) {
+        this.fileName3 = fileName3;
+    }
+
+    public void setFileName4(String fileName4) {
+        this.fileName4 = fileName4;
+    }
+
+    public void setFileName5(String fileName5) {
+        this.fileName5 = fileName5;
+    }
 
     public String getFileLink1() { return fileLink1; }
 
