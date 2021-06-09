@@ -33,18 +33,41 @@ public class Message implements Serializable {
     @Column(name = "time")
     private LocalDateTime dateTime=LocalDateTime.now();
 
-    @OneToMany
-    @JoinColumn(name = "message_id")
-    private List<ChatFiles> files = new ArrayList<>();
+    @Column(name = "file1")
+    private String fileLink1;
+
+    @Column(name = "file2")
+    private String fileLink2;
+
+    @Column(name = "file3")
+    private String fileLink3;
+
+    @Column(name = "file4")
+    private String fileLink4;
+
+    @Column(name = "file5")
+    private String fileLink5;
 
 
-    public List<ChatFiles> getFiles() {
-        return files;
-    }
+    public String getFileLink1() { return fileLink1; }
 
-    public void setFiles(List<ChatFiles> files) {
-        this.files = files;
-    }
+    public String getFileLink2() { return fileLink2; }
+
+    public String getFileLink3() { return fileLink3; }
+
+    public String getFileLink4() { return fileLink4; }
+
+    public String getFileLink5() { return fileLink5; }
+
+    public void setFileLink1(String fileLink1) { this.fileLink1 = fileLink1; }
+
+    public void setFileLink2(String fileLink2) { this.fileLink2 = fileLink2; }
+
+    public void setFileLink3(String fileLink3) { this.fileLink3 = fileLink3; }
+
+    public void setFileLink4(String fileLink4) { this.fileLink4 = fileLink4; }
+
+    public void setFileLink5(String fileLink5) { this.fileLink5 = fileLink5; }
 
     public Long getId() {
         return id;

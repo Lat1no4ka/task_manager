@@ -10,11 +10,8 @@ import java.util.regex.Pattern;
 import com.server.task.model.*;
 import com.server.task.model.entity.FilesEntity;
 import com.server.task.model.entity.UserEntity;
-import com.server.task.repo.ChatFilesRepository;
-import com.server.task.repo.FilesRepository;
-import com.server.task.repo.FilesEntityRepository;
+import com.server.task.repo.*;
 
-import com.server.task.repo.UserEntityRepository;
 import com.server.task.services.FilesService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.InputStreamResource;
@@ -46,6 +43,8 @@ public class FilesController {
     FilesEntityRepository filesEntityRepository;
     @Autowired
     UserEntityRepository userEntityRepository;
+    @Autowired
+    MessageRepository messageRepository;
 
     //загрузка картинки пользователя с проверкой на изображение
     @RequestMapping(value = "/uploadProfilePic", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -175,7 +174,7 @@ public class FilesController {
             ChatFiles file = new ChatFiles();
             file.setFileName(mPFile.getOriginalFilename());
             String hashFilename = (UUID.randomUUID()).toString();
-            File convertFile = new File("src/main/resources/static/documents/" + hashFilename);
+            File convertFile = new File("src/main/resources/static/chat/" + hashFilename);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(mPFile.getBytes());
@@ -196,6 +195,12 @@ public class FilesController {
     @RequestMapping(value = "/getChatFile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public String getFileAsLink(@RequestBody ChatFiles files) throws IOException {
         ChatFiles link = chatFilesRepository.findById(files.getId());
+        String lnk = "http://localhost:8080/getFile/"+link.getHashName();
+        return "{\"link\": \" "+ lnk +"\"}";
+    }
+
+    public String fileToLink(Long fileId) throws IOException {
+        ChatFiles link = chatFilesRepository.findById(fileId);
         String lnk = "http://localhost:8080/getFile/"+link.getHashName();
         return "{\"link\": \" "+ lnk +"\"}";
     }
@@ -222,6 +227,42 @@ public class FilesController {
                 MediaType.parseMediaType(mediaType)).body(resource);
         return responseEntity;
     }
+
+    @RequestMapping(value = "/ConnectChatFile", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Message chatFileConnect(@RequestParam("fileId") List<Long> idList, @RequestParam("message") Long messageId) throws IOException {
+        Message msg = messageRepository.findById(messageId);
+        if (idList.size() == 1) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+        }
+        if (idList.size() == 2) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+        }
+        if (idList.size() == 3) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileLink3(fileToLink(idList.get(2)));
+        }
+        if (idList.size() == 4) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileLink3(fileToLink(idList.get(2)));
+            msg.setFileLink4(fileToLink(idList.get(3)));
+        }
+        if (idList.size() == 5) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileLink3(fileToLink(idList.get(2)));
+            msg.setFileLink4(fileToLink(idList.get(3)));
+            msg.setFileLink5(fileToLink(idList.get(4)));
+        }
+        else{
+            return msg;
+        }
+        messageRepository.save(msg);
+        return msg;
+    }
+
 
 
 }
