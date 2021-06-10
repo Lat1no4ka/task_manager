@@ -2,7 +2,7 @@ package com.server.task.controller;
 
 import com.server.task.model.ChatMessage;
 import com.server.task.model.Message;
-import com.server.task.repo.FilesRepository;
+import com.server.task.controller.FilesController;
 import com.server.task.repo.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -26,11 +26,18 @@ public class ChatController {
 
     @Autowired
     MessageRepository messageRepository;
+    @Autowired
+    FilesController filesController;
 
     /*-------------------- Group (Public) chat--------------------*/
     @MessageMapping("/sendMessage/{room}")
     public Message sendMessage(@DestinationVariable String room, Message message) {
         messageRepository.save(message);
+        /*
+        if(!idList.isEmpty()){
+            filesController.ConnectToMessage(idList, message.getId());
+        }
+         */
         simpMessagingTemplate.convertAndSend("/topic/chat/"+room, message);
         return message;
     }

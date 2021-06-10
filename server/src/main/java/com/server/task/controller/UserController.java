@@ -141,5 +141,27 @@ public class UserController {
         settingsRepository.save(setting);
     }
 
+    //блокировка пользователя
+    @RequestMapping(value={"/blockUser"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public UserEntity BlockUser(@RequestBody User user)
+    {
+        User blocked = userRepository.findById(user.getId());
+        blocked.setBlocked(new Long(1));
+        userRepository.save(blocked);
+        UserEntity blkusr = userEntityRepository.findById(user.getId());
+        return blkusr;
+    }
+
+    //  Ахуеешь, разблокировка пользователоя
+    @RequestMapping(value={"/unblockUser"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public UserEntity UnblockUser(@RequestBody User user)
+    {
+        User blocked = userRepository.findById(user.getId());
+        blocked.setBlocked(null);
+        userRepository.save(blocked);
+        UserEntity blkusr = userEntityRepository.findById(user.getId());
+        return blkusr;
+    }
+
 
 }

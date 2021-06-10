@@ -43,6 +43,9 @@ public class User implements Serializable {
     )
     List<TaskEntity> tasks = new ArrayList<>();
 
+    @Column(name = "blocked")
+    private Long blocked;
+
     public User() {
         this.userName = null;
         this.password = null;
@@ -68,6 +71,11 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    public Long getBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(Long blocked) { this.blocked = blocked; }
 
     public Role getRole() {
         return role;

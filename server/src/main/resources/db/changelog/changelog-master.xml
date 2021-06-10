@@ -8,6 +8,7 @@
     <include file="/db/changelog/changes/create-user-table-changelog-1.xml"/>
     <include file="/db/changelog/changes/insert-user-table-changelog-2.xml"/>
     <include file="/db/changelog/changes/create-task-table-changelog.xml"/>
+    <include file="/db/changelog/changes/create-chatfiles-table-changelog.xml"/>
     <include file="/db/changelog/changes/create-files-table-changelog.xml"/>
     <include file="/db/changelog/changes/create-chatroom-table-changelog.xml"/>
     <include file="/db/changelog/changes/create-messages-table-changelog.xml"/>
