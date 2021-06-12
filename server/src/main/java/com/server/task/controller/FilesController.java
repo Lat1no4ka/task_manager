@@ -228,6 +228,7 @@ public class FilesController {
         return responseEntity;
     }
 
+    /*
     @RequestMapping(value = "/ConnectChatFile", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Message chatFileConnect(@RequestParam("fileId") List<Long> idList, @RequestParam("message") Long messageId) throws IOException {
         Message msg = messageRepository.findById(messageId);
@@ -286,6 +287,84 @@ public class FilesController {
             return msg;
         }
         messageRepository.save(msg);
+        return msg;
+    }
+
+     */
+
+
+    public Message ConvertIdToLinks (Message msg) throws IOException {
+        List<String> fileNames = new ArrayList<>();
+        List<ChatFiles> chatFiles = new ArrayList<>();
+        List<Long> idList = new ArrayList<>();
+
+      if (msg.getFileLink1() != null) {
+          idList.add(Long.parseLong(msg.getFileLink1()));
+      }
+      if (msg.getFileLink2() != null) {
+            idList.add(Long.parseLong(msg.getFileLink2()));
+      }
+      if (msg.getFileLink3() != null) {
+          idList.add(Long.parseLong(msg.getFileLink3()));
+      }
+      if (msg.getFileLink4() != null) {
+          idList.add(Long.parseLong(msg.getFileLink4()));
+      }
+      if (msg.getFileLink5() != null) {
+          idList.add(Long.parseLong(msg.getFileLink5()));
+      }
+
+        for (Long fileId : idList) {
+            ChatFiles chatFile = chatFilesRepository.findById(fileId);
+            chatFile.setConnected("Yes");
+            chatFiles.add(chatFile);
+            fileNames.add(chatFile.getFileName());
+        }
+        chatFilesRepository.saveAll(chatFiles);
+
+        if (idList.size() == 1) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+        }
+        if (idList.size() == 2) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileName2(fileNames.get(1));
+        }
+        if (idList.size() == 3) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileName2(fileNames.get(1));
+            msg.setFileLink3(fileToLink(idList.get(2)));
+            msg.setFileName3(fileNames.get(2));
+        }
+        if (idList.size() == 4) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileName2(fileNames.get(1));
+            msg.setFileLink3(fileToLink(idList.get(2)));
+            msg.setFileName3(fileNames.get(2));
+            msg.setFileLink4(fileToLink(idList.get(3)));
+            msg.setFileName4(fileNames.get(3));
+        }
+        if (idList.size() == 5) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileName2(fileNames.get(1));
+            msg.setFileLink3(fileToLink(idList.get(2)));
+            msg.setFileName3(fileNames.get(2));
+            msg.setFileLink4(fileToLink(idList.get(3)));
+            msg.setFileName4(fileNames.get(3));
+            msg.setFileLink5(fileToLink(idList.get(4)));
+            msg.setFileName5(fileNames.get(4));
+        }
+        else{
+            return msg;
+        }
         return msg;
     }
 
