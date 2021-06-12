@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +32,9 @@ public class ChatController {
 
     /*-------------------- Group (Public) chat--------------------*/
     @MessageMapping("/sendMessage/{room}")
-    public Message sendMessage(@DestinationVariable String room, Message message) {
+    public Message sendMessage(@DestinationVariable String room, Message message) throws IOException {
+        message = filesController.ConvertIdToLinks(message);
         messageRepository.save(message);
-        /*
-        if(!idList.isEmpty()){
-            filesController.ConnectToMessage(idList, message.getId());
-        }
-         */
         simpMessagingTemplate.convertAndSend("/topic/chat/"+room, message);
         return message;
     }
