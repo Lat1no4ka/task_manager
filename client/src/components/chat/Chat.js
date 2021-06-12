@@ -8,11 +8,14 @@ import { useHttp } from "../../hooks/http.hook";
 
 var stompClient = null;
 export const Chat = (props) => {
+    const [files, setFiles] = useState([])
     const user = useSelector(auth => auth.auth)
     const { request } = useHttp();
     const [selectedRoom, setSelectedRoom] = useState(0);
     const [broadcastMessage, setBroadcastMessage] = useState([]);
+    const [messages, setMessages] = useState([]);
     const [sendTime, setSendTime] = useState(new Date());
+    const [filesId, setFilesId] = useState([])
 
     const connect = () => {
         const Stomp = require("stompjs");
@@ -33,13 +36,12 @@ export const Chat = (props) => {
         else if (message.type === 'TYPING') {
         }
         else if (message.type === 'CHAT') {
-            let allMessages = broadcastMessage;
-            allMessages.push({
+            const prepareMessage = {
                 message: message.content,
                 sender: message.sender,
                 dateTime: message.dateTime
-            })
-            setBroadcastMessage(allMessages);
+            }
+            setBroadcastMessage(prepareMessage);
             setSendTime(message.dateTime);
         }
     }
@@ -63,37 +65,72 @@ export const Chat = (props) => {
             content: value,
             type: type,
             room: selectedRoom,
+            file1: 30,
+            file2: null,
+            file3: null,
+            file4: null,
+            file5: null,
+            fileName1: "null",
+            fileName2: null,
+            fileName3: null,
+            fileName4: null,
+            fileName5: null,
         };
         stompClient.send('/app/sendMessage/0', {}, JSON.stringify(chatMessage));
     }
 
-    // const getMessages = async () => {
-    //     const messages = await request(`${process.env.REACT_APP_API_URL}/getMessages`, 'POST', JSON.stringify({ room: selectedRoom }))
-    //     messages.forEach(message => {
-    //         let date = new Date(...message.dateTime)
-    //         date = `${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
-    //         history.push({
-    //             message: message.content,
-    //             sender: message.sender,
-    //             dateTime: date
-    //         })
-    //     });
-    //     setBroadcastMessage(history)
-    //     setMessagesCounter(history.length)
-    // }
+    const getMessages = async (id) => {
+        const messages = await request(`${process.env.REACT_APP_API_URL}/getMessages`, 'POST', JSON.stringify({ room: id }))
+        let history = []
+        messages.forEach(message => {
+            let date = new Date(...message.dateTime)
+            date = `${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
+            history.push({
+                message: message.content,
+                sender: message.sender,
+                dateTime: date
+            })
+        });
+
+        setMessages(prev => prev = [...history])
+        setSendTime(new Date())
+    }
 
     const changeRoom = (id) => {
+        setBroadcastMessage([])
+        setMessages([])
         setSelectedRoom(id);
+        getMessages(id)
     }
 
     useEffect(() => {
         if (!stompClient) {
             connect()
         }
+        getMessages(selectedRoom)
     }, [])
 
     useEffect(() => {
-    }, [sendTime])
+        messages.push(broadcastMessage)
+    }, [broadcastMessage])
+    useEffect(() => {
+        if (files.length)
+            uploadFile()
+    }, [files.length])
+
+
+    const uploadFile = async () => {
+        const formData = new FormData();
+        files.forEach(file => {
+            formData.append('file', file)
+        });
+        const headers = { 'Access-Control-Allow-Credentials': 'true' }
+        const data = await request(`${process.env.REACT_APP_API_URL}/uploadChatFiles`, "POST", formData, headers)
+        const prepareData = data.length ? data.map((file) => {
+            return { id: file.id, name: file.fileName }
+        }) : null
+        setFilesId(prepareData)
+    }
 
     return (
         <div className="d-flex">
@@ -107,8 +144,8 @@ export const Chat = (props) => {
             </div>
             <div className="chat col-9">
                 <ChatHeader />
-                <ChatBody messages={broadcastMessage} user={user} />
-                <ChatFooter sendMessage={sendMessage} />
+                <ChatBody messages={messages} user={user} />
+                <ChatFooter sendMessage={sendMessage} files={files} setFiles={setFiles} />
             </div >
         </div>
     )

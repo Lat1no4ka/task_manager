@@ -6,7 +6,7 @@ export const SideBar = (props) => {
   const [asc, setAsc] = useState(false)
 
   const sortedByDate = () => {
-    const tasks = props.tasks.sort((a,b) => {
+    const tasks = props.tasks.sort((a, b) => {
       return -1
     })
     props.setSorted(!props.sorted)
@@ -21,8 +21,8 @@ export const SideBar = (props) => {
 
   if (props.showChat) {
     return (
-      < div className="sidebar-show col-6 p-2" >
-        <Chat  tasks={props.tasks}/>
+      <div className="sidebar-show col-6 p-2" >
+        <Chat tasks={props.tasks} />
       </div>
     )
   } else if (props.showFilter) {
@@ -33,20 +33,26 @@ export const SideBar = (props) => {
           <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => sortedByDate()}>Дате</button>
           <button type="button" className="btn btn-secondary col-6 m-1">Исполнителям</button>
           <button type="button" className="btn btn-secondary col-6 m-1">Статусу</button>
+          <button type="button" className="btn btn-secondary col-6 m-1">Приоритету</button>
+          <button type="button" className="btn btn-secondary col-6 m-1">Количеству задач</button>
         </div>
 
         <div className="d-flex flex-column">
           <label className="m-1 col-6">Выбрать только:</label>
           <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('new')}>Новые</button>
           <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('work')}>В работе</button>
-          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('closed')}>Закрытые</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('closed')}>На проверке</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('new')}>На доработке</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('new')}>Принятые</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('work')}>Закрытые</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('closed')}>В архиве</button>
         </div>
       </div>
     )
   } else {
     return (
       <div className="d-none">
-        <Chat  tasks={props.tasks}/>
+        <Chat tasks={props.tasks} />
       </div>
     )
   }

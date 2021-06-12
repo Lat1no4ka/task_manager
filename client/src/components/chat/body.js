@@ -3,10 +3,9 @@ import { useState, useEffect } from "react";
 
 export const ChatBody = (props) => {
     const [messages, setMessages] = useState([]);
-
     useEffect(() => {
         setMessages(props.messages)
-    }, [props.messages.length])
+    }, [props.messages])
 
     const prepareMessage = (message, index) => {
         let date = new Date(message.dateTime)
