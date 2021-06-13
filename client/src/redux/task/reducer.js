@@ -13,7 +13,7 @@ const initialState = {
         employee: [],
         files: [],
         status: 1,
-        author: JSON.parse(localStorage.getItem("userData")) ? JSON.parse(localStorage.getItem("userData")).userId : null,
+        author: JSON.parse(localStorage.getItem("userData")) ? JSON.parse(localStorage.getItem("userData"))?.data.id : null,
         parentId: null
     },
     subTask: [],

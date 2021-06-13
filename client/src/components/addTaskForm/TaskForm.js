@@ -30,7 +30,7 @@ export const TaskForm = (props) => {
         employee: { id: "", userName: "" },
         files: [],
         status: 1,
-        author: userId,
+        authorId: userId,
         parentId: null
     }
 
@@ -60,6 +60,7 @@ export const TaskForm = (props) => {
     }
 
     const sendForm = async () => {
+        console.log(task.task)
         const parenTask = { ...task.task };
         parenTask.priority = task.task.priority.id;
         parenTask.employee = task.task.employee;
