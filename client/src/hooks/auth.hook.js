@@ -5,23 +5,23 @@ import { authAtions } from "../redux/auth/action";
 
 export const useAuth = () => {
   const { loading, error, request } = useHttp();
-  const [token, setToken] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [token, setToken] = useState(null);
   const dispatch = useDispatch();
 
-  const login = useCallback((fToken, id) => {
-    setUserId(id);
-    setToken(fToken);
+  const login = useCallback((data) => {
+    setUserId(data.id);
+    setToken(data.token);    
     localStorage.setItem(
       "userData",
-      JSON.stringify({ userId: id, token: fToken })
+      JSON.stringify({ data })
     );
-    dispatch(authAtions.setLogin(id,fToken,true));
+    dispatch(authAtions.setLogin(data.id,data.token,true));
   }, []);
 
   const logout = useCallback(() => {
     setToken(null);
-    setUserId(null);
+    setUserId(null)
     localStorage.removeItem("userData");
     dispatch(authAtions.setLogout(null,null,false));
   }, []);
@@ -29,9 +29,8 @@ export const useAuth = () => {
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("userData"));
-
-    if (data && data.token) {
-      login(data.token, data.userId);
+    if (data && data?.data?.token) {
+      login(data.data);
     }
   }, [login]);
 

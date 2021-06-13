@@ -167,8 +167,7 @@ public class FilesController {
 
     //Загрузка файлов для чата
     @RequestMapping(value = "/uploadChatFiles", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public List<Long> chatFilesUpload(@RequestParam("file") List<MultipartFile> multiPartFiles) throws IOException {
-        List<Long> fileIdList = new ArrayList<>();
+    public List<ChatFiles> chatFilesUpload(@RequestParam("file") List<MultipartFile> multiPartFiles) throws IOException {
         List<ChatFiles> fileList = new ArrayList<>();
         for (MultipartFile mPFile : multiPartFiles) {
             ChatFiles file = new ChatFiles();
@@ -185,10 +184,7 @@ public class FilesController {
         }
         chatFilesRepository.saveAll(fileList);
 
-        for (ChatFiles chatFile : fileList) {
-            fileIdList.add(chatFile.getId());
-        }
-        return fileIdList;
+        return fileList;
     }
 
     //получение ссылки на файл

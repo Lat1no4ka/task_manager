@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Paperclip } from 'react-bootstrap-icons';
+import { Paperclip, FileCheck } from 'react-bootstrap-icons';
 
 export const ChatFooter = (props) => {
     const [message, setMesage] = useState("")
@@ -12,14 +12,6 @@ export const ChatFooter = (props) => {
 
     return (
         <div>
-            <div className="d-flex">
-                {props.files.length &&
-                    props.files.map(file => {
-                        console.log(file)
-                        return <div className="m-1 mb-0"><p>{file.name}</p></div>
-                    })
-                }
-            </div>
             <div>
                 <div className="chat-footer d-flex flex-row">
                     <div className="col-8 m-1 p-0">
@@ -46,6 +38,13 @@ export const ChatFooter = (props) => {
 
                     </div>
                 </div>
+            </div>
+            <div className="d-flex flex-column">
+                {props.files.length ?
+                    props.files.map(file => {
+                        return <div className="m-1 mb-0 file-added d-flex "> <FileCheck size={20} className="mr-2"/> <div>{file.name}</div></div>
+                    }) : null
+                }
             </div>
         </div>
     )

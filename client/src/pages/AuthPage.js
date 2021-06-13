@@ -16,7 +16,7 @@ const AuthPage = () => {
       try {
         const body = { userName: email, password: password };
         const data = await request(`${process.env.REACT_APP_API_URL}/auth`, "POST", JSON.stringify(body));
-        login(data.token, data.userId);
+        login(data);
       } catch (error) {
         console.log(error);
       }

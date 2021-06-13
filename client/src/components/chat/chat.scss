@@ -27,7 +27,7 @@ $borderdarkGrayColor: rgb(90, 89, 89);
         max-height: 400px;
         display: block;
         position: relative;
-        
+
         .chat-body-scroll {
             z-index: 1;
             &::-webkit-scrollbar {
@@ -39,15 +39,35 @@ $borderdarkGrayColor: rgb(90, 89, 89);
             height: 400px;
             padding: 20px 20px 0;
             .my-message {
+                border-radius: 10px;
+                background-color: #b6b8b9;
+                padding: 5px 10px;
+                text-align: left;
+                word-wrap: break-word;
                 text-align: right;
+                font-size: 16px;
+                font-weight: 500;
                 p {
                     margin: 0 !important;
                 }
+                a {
+                    color: black;
+                }
             }
             .other-message {
+                border-radius: 10px;
+                background-color: #b6b8b9;
+                padding: 5px 10px;
                 text-align: left;
+                word-wrap: break-word;
+                text-align: left;
+                font-size: 16px;
+                font-weight: 500;
                 p {
                     margin: 0 !important;
+                }
+                a {
+                    color: black;
                 }
             }
 
@@ -88,6 +108,12 @@ $borderdarkGrayColor: rgb(90, 89, 89);
         .image-upload > input {
             display: none;
         }
+    }
+    .file-added {
+        align-items: center;
+        border-radius: 10px;
+        background-color: #b6b8b9;
+        padding: 5px;
     }
 }
 
