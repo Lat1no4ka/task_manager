@@ -7,7 +7,7 @@ import { DetailTask as DetailSubTask } from "./detailTask"
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { useForm } from "react-hook-form";
-
+import { FileCheck } from 'react-bootstrap-icons';
 export const DetailSubTaskCreate = (props) => {
   const data = props.data;
   return (
@@ -542,7 +542,7 @@ export const AddSubTask = (props) => {
             </div>
             <div>
               {form.files.map((file, index) => {
-                return <p className="m-2" key={index}>{file.name}</p>
+                return <p className="m-2 file" key={index}><FileCheck size={25} className="mr-1" /> {file.name}</p>
               })}
             </div>
           </div>

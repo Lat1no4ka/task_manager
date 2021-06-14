@@ -4,6 +4,7 @@ import { useHttp } from "../../hooks/http.hook";
 import { useDispatch, useSelector } from "react-redux";
 import { taskAtions } from "../../redux/task/action";
 import { DetailSubTaskCreate } from "../detailTask/detailTask"
+import { FileCheck } from 'react-bootstrap-icons';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { useForm } from "react-hook-form";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
@@ -75,7 +76,7 @@ export const TaskForm = (props) => {
         request(`${process.env.REACT_APP_API_URL}/sendMessage`, "POST", JSON.stringify({ id: newTask.id }))
         task.subTask.forEach(subTask => {
             subTask.parent = newTask.id;
-            subTask.parentId =  newTask.id;
+            subTask.parentId = newTask.id;
             subTask.priority = subTask.priority.id;
             subTask.employee = subTask.employee.map((sub) => {
                 return { id: sub.id, userName: sub.name }
@@ -255,7 +256,7 @@ export const TaskForm = (props) => {
                     </div>
                     <div>
                         {task.task.files.map((file, index) => {
-                            return <p className="m-2" key={index}>{file.name}</p>
+                            return <p className="m-2 file" key={index}> <FileCheck size={25} className="mr-1" />{file.name}</p>
                         })}
                     </div>
                 </div>
