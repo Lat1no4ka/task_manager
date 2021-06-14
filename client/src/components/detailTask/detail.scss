@@ -121,3 +121,11 @@
   margin-top: 150px;
   width: 800px;
 }
+
+$grayColor: rgb(233, 229, 229);
+.file {
+  min-width: 400px;
+  background-color: $grayColor;
+  padding: 10px;
+  border-radius: 10px;
+}

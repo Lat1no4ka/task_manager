@@ -4,6 +4,7 @@ import { useHttp } from "../../hooks/http.hook";
 import { useDispatch, useSelector } from "react-redux";
 import { taskAtions } from "../../redux/task/action";
 import { useForm, Controller } from "react-hook-form";
+import { FileCheck } from 'react-bootstrap-icons';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./form.scss";
 
@@ -157,7 +158,7 @@ export const SubTask = () => {
                     </div>
                     <div>
                         {form.files.map((file, index) => {
-                            return <p className="m-2" key={index}>{file.name}</p>
+                            return <p className="m-2 file" key={index}><FileCheck size={25} className="mr-1" />{file.name}</p>
                         })}
                     </div>
                 </div>
