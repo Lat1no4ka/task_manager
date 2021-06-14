@@ -58,6 +58,10 @@ $borderGrayColor: rgb(153, 152, 152);
         border-right: 1px solid $borderGrayColor;
         border-left: 1px solid $borderGrayColor;
         border-radius: 0 0 10px 10px;
+        p {
+            padding: 0;
+            margin: 0;
+        }
     }
     &:active,
     &:hover {
