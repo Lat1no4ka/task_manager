@@ -12,9 +12,13 @@ export const StatisticInfo = () => {
     const [statistic, setStatistic] = useState([])
     const [statisticShow, setStatisticShow] = useState(false)
     const [users, setUsers] = useState([])
+    const dateStart = new Date('01-01-1900');
+    const dateEnd = new Date();
+    const [from, setFrom] = useState(`${dateStart.getFullYear()}-${("0" + (dateStart.getMonth() + 1)).slice(-2)}-${("0" + dateStart.getDate()).slice(-2)}`);
+    const [to, setTo] = useState(`${dateEnd.getFullYear() + 1}-${("0" + (dateEnd.getMonth() + 1)).slice(-2)}-${("0" + dateEnd.getDate()).slice(-2)}`);
 
-    const getUserStatistic = async () => {
-        const userStatistic = await request(`${process.env.REACT_APP_API_URL}/getUserStat`, "POST", JSON.stringify({ id }));
+    const getUserStatistic = async (userId = id) => {
+        const userStatistic = await request(`${process.env.REACT_APP_API_URL}/getDateTasks?userId=${userId}&beginDate=${from}&endDate=${to}`, "GET")
         setUserStatistic(userStatistic)
     }
 
@@ -50,7 +54,15 @@ export const StatisticInfo = () => {
     if (userStatistic && !statisticShow) {
         return (
             <div className="container">
-                <h1>Статистика</h1>
+                <div className="d-flex">
+                    <h1 className="col-5">Статистика</h1>
+                    <div className="form-group col-7 d-flex mt-2">
+                        <input type="date" className="form-control col-3" onChange={e => setFrom(e.target.value)}></input>
+                        <p className="m-1">&mdash;</p>
+                        <input type="date" className="form-control  col-3" onChange={e => setTo(e.target.value)}></input>
+                        <input type="button" className="form-control  col-2 ml-2" value="Поиск" onClick={e => getUserStatistic()}></input>
+                    </div>
+                </div>
                 <div className="d-flex flex-wrap">
                     <div className="col-12 col-xl-4">
                         <StatisticTable userStatistic={userStatistic} />
@@ -69,22 +81,31 @@ export const StatisticInfo = () => {
                         <h1>Статистика</h1>
                     </div>
                     <div className="col-8">
-                        <select className="custom-select" id="inputGroupSelect01"
-                            onClick={e => getCurrentStatistic(e.target.value)}>
-                            {
-                                users.map((user) => {
-                                    return <option key={user.id} value={user.id}>{user.userName}</option>
-                                })
-                            }
-                        </select>
+                        <div>
+                            <select className="custom-select" id="inputGroupSelect01"
+                                onClick={e => getUserStatistic(e.target.value)}>
+                                {
+                                    users.map((user) => {
+                                        return <option key={user.id} value={user.id}>{user.userName}</option>
+                                    })
+                                }
+                            </select>
+                        </div>
+                        <div className="form-group d-flex mt-1">
+                            <input type="date" className="form-control col-3" onChange={e => setFrom(e.target.value)}></input>
+                            <p className="m-1">&mdash;</p>
+                            <input type="date" className="form-control  col-3" onChange={e => setTo(e.target.value)}></input>
+                            <input type="button" className="form-control  col-2 ml-2" value="Поиск" onClick={e => getUserStatistic()}></input>
+                        </div>
                     </div>
                 </div>
                 <div className="d-flex flex-wrap">
                     <div className="col-12 col-xl-4">
-                        <StatisticTable userStatistic={Object.entries(currentStatistic).length ? currentStatistic : userStatistic} />
+                        <StatisticTable userStatistic={userStatistic} />
                     </div>
                     <div className="col-12 col-xl-8 chart">
-                        <StatisticChart userStatistic={Object.entries(currentStatistic).length ? currentStatistic : userStatistic} />
+                        {console.log(currentStatistic)}
+                        <StatisticChart userStatistic={userStatistic} />
                     </div>
                 </div>
             </div>
@@ -150,7 +171,7 @@ export const StatisticChart = (props) => {
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data}>
                     <XAxis dataKey="name" />
-                    <YAxis />
+                    <YAxis interval={1} fontSize={15} />
                     <Bar dataKey="uv" barSize={30} fill="#8884d8" />
                 </BarChart>
             </ResponsiveContainer>

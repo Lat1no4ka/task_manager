@@ -35,12 +35,6 @@ const Header = () => {
           <Nav.Link href="profile">
             <PersonSquare size={28} />
           </Nav.Link>
-          {/* <Nav.Link href="list">
-            <CardChecklist size={28} />
-          </Nav.Link> */}
-          <Nav.Link href="bell">
-            <Bell size={28} />
-          </Nav.Link>
           <Nav.Link href="statistic">
             <Table size={28} />
           </Nav.Link>

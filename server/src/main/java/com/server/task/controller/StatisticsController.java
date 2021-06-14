@@ -117,13 +117,15 @@ public class StatisticsController {
     }
 
     //получает статистику для конкретного пользователя
-    @RequestMapping(value={"/getDateTasks"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Statistics DateUserStat(@RequestParam("beginDate") Date begin, @RequestParam("endDate") Date end, @RequestParam("userId") Long userId) throws ParseException {
+    @RequestMapping(value={"/getDateTasks"}, method=RequestMethod.GET, headers = {"Content-type=application/json"})
+    public Statistics DateUserStat(@RequestParam("beginDate") String beginString,
+                                   @RequestParam("endDate") String endString,
+                                   @RequestParam("userId") Long userId) throws ParseException {
         List<TaskEntity> allTasks = taskEntityRepository.findByEmployee(userEntityRepository.findById(userId));
         List<TaskEntity> dateTasks = new ArrayList<>();
+        Date begin = new SimpleDateFormat("yyyy-MM-dd").parse(beginString);
+        Date end = new SimpleDateFormat("yyyy-MM-dd").parse(endString);
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        //Date beginBorder = format.parse(begin);
-       // Date endBorder = format.parse(end);
         for (TaskEntity task : allTasks){
             Date taskBegDate = format.parse(task.getBegDate());
             Date taskEndDate = format.parse(task.getEndDate());
