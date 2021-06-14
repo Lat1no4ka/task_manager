@@ -74,8 +74,8 @@ export const TaskForm = (props) => {
 
         request(`${process.env.REACT_APP_API_URL}/sendMessage`, "POST", JSON.stringify({ id: newTask.id }))
         task.subTask.forEach(subTask => {
-            // subTask.parent = newTask.id;
-            subTask.parentId = null;
+            subTask.parent = newTask.id;
+            subTask.parentId =  newTask.id;
             subTask.priority = subTask.priority.id;
             subTask.employee = subTask.employee.map((sub) => {
                 return { id: sub.id, userName: sub.name }
