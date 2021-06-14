@@ -125,9 +125,9 @@ public class FilesController {
     @RequestMapping(value = "/getProfilePic", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public String getImageAsLink(@RequestBody FilesEntity files) throws IOException {
         FilesEntity link = filesEntityRepository.findById(files.getId());
-        String[] parts = link.getFilePath().split(Pattern.quote("/"));
+        String[] parts = link.getFilePath().split(Pattern.quote("\\"));
         String filename  = parts[parts.length-1];
-        String lnk = "http://82.179.12.183:8080/getImage/"+filename;
+        String lnk = "http://localhost:8080/getImage/"+filename;
         return "{\"link\": \" "+ lnk +"\"}";
     }
 
