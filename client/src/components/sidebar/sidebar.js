@@ -12,13 +12,7 @@ export const SideBar = (props) => {
     props.setSorted(!props.sorted)
     props.setTasks(tasks)
   }
-  const filterByStatus = (status) => {
-    const tasks = props.tasks.filter((task) => {
-      return task.status.alias == status ? task : null
-    })
-    props.setTasks(tasks)
-  }
-
+  
   if (props.showChat) {
     return (
       <div className="sidebar-show col-6 p-2" >
@@ -29,23 +23,16 @@ export const SideBar = (props) => {
     return (
       <div className="sidebar-show" >
         <div className="d-flex flex-column">
-          <label className="m-1 col-6">Сортировать по:</label>
-          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => sortedByDate()}>Дате</button>
-          <button type="button" className="btn btn-secondary col-6 m-1">Исполнителям</button>
-          <button type="button" className="btn btn-secondary col-6 m-1">Статусу</button>
-          <button type="button" className="btn btn-secondary col-6 m-1">Приоритету</button>
-          <button type="button" className="btn btn-secondary col-6 m-1">Количеству задач</button>
-        </div>
-
-        <div className="d-flex flex-column">
           <label className="m-1 col-6">Выбрать только:</label>
-          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('new')}>Новые</button>
-          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('work')}>В работе</button>
-          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('closed')}>На проверке</button>
-          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('new')}>На доработке</button>
-          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('new')}>Принятые</button>
-          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('work')}>Закрытые</button>
-          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => filterByStatus('closed')}>В архиве</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('new')}>Новые</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('work')}>В работе</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('check')}>На проверке</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('revision')}>На доработке</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('accepted')}>Принятые</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('closed')}>Закрытые</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('overdue')}>Просроченные</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('archived')}>В архиве</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('return')}>Сброс</button>
         </div>
       </div>
     )

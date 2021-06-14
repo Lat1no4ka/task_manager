@@ -69,16 +69,17 @@ export const DetailTask = (props) => {
   })
 
   useEffect(() => {
+    setData(props.data)
+    setForm({ ...props.data })
     getSubTasks();
-    selectNextStatus();
-  }, [form.status, file])
+    selectNextStatus(props.data.status);
+    getUsers()
+    getPriority()
+  }, [props.data])
 
   useEffect(() => {
-    if (!users.length)
-      getUsers()
-    if (!priority.length)
-      getPriority()
-  }, [users, priority])
+    props.setDateTime(new Date())
+  }, [edit, showAddSubTask])
 
   const getFile = async (index, fileName) => {
 
@@ -120,7 +121,6 @@ export const DetailTask = (props) => {
   };
   const saveEdit = async (status) => {
     let update = { ...form };
-    console.log(status)
     update.priority = update.priority.id
     status ? update.status = status.id : update.status = update.status.id
     update.author = update.author.id
@@ -149,10 +149,10 @@ export const DetailTask = (props) => {
     )
   }
 
-  const selectNextStatus = async () => {
+  const selectNextStatus = async (formStatus) => {
     const status = await request(`${process.env.REACT_APP_API_URL}/getStatus`, "GET");
     let next = null;
-    switch (form.status.alias) {
+    switch (formStatus.alias) {
       case "new":
         next = status.filter(item => {
           return item.alias === 'work' || item.alias == "closed" ? item : null;
@@ -183,7 +183,12 @@ export const DetailTask = (props) => {
         })
         setNextStatus(next)
         break
-
+      case "closed":
+        next = status.filter(item => {
+          return item.alias == 'archived' ? item : null;
+        })
+        setNextStatus(next)
+        break
       default:
         next = status.filter(item => {
           return null;
@@ -218,13 +223,13 @@ export const DetailTask = (props) => {
                     <div>
                       {nextStatus[0] ?
                         <button type="button" className="btn btn-secondary m-1"
-                          onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[0]) }}>
+                          onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[0]); props.setDateTime(new Date()) }}>
                           {nextStatus[0]?.statusName}
                         </button> : null
                       }
                       {nextStatus[1] ?
                         <button type="button" className="btn btn-secondary m-1"
-                          onClick={(e) => { setForm({ ...form, status: nextStatus[1] }); saveEdit(nextStatus[1]) }}
+                          onClick={(e) => { setForm({ ...form, status: nextStatus[1] }); saveEdit(nextStatus[1]); props.setDateTime(new Date()) }}
                         >
                           {nextStatus[1]?.statusName}
                         </button> : null
@@ -340,7 +345,7 @@ export const DetailTask = (props) => {
                   edit ?
                     <div className="d-flex justify-content-between">
                       <div className="">
-                        <button type="button" className="btn btn-secondary" onClick={e => saveEdit()} >Сохранить</button>
+                        <button type="button" className="btn btn-secondary" onClick={e => { saveEdit(); setEdit(!edit) }} >Сохранить</button>
                       </div>
                       <div className="">
                         <button type="button" className="btn btn-secondary" onClick={e => setEdit(!edit)} >Отмена</button>
@@ -350,7 +355,7 @@ export const DetailTask = (props) => {
                     <div className="d-flex justify-content-between">
                       <div>
                         <button type="button" className="btn btn-secondary mr-2" onClick={e => setEdit(!edit)} >Редактировать</button>
-                        {!edit ? <button type="button" className="btn btn-secondary" onClick={e => { setShowAddSubTask(true); console.log(showAddSubTask) }}>Добавить подзадачу</button> : null}
+                        {!edit ? <button type="button" className="btn btn-secondary" onClick={e => { setShowAddSubTask(true); }}>Добавить подзадачу</button> : null}
                       </div>
                       <div>
 
@@ -377,6 +382,7 @@ export const DetailTask = (props) => {
         <DetailSubTask
           data={subTasks[selectedSubTaskId]}
           show={showDetail} onHide={() => setShowDetail(false)}
+          setDateTime={props.setDateTime}
         />
       </div>
     )
@@ -440,6 +446,7 @@ export const AddSubTask = (props) => {
     if (subTaskFile.length > 0) {
       sendFile(id);
     }
+    props.onHide(false)
   }
 
   const sendFile = async (taskId) => {
