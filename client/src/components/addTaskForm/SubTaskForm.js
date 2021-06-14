@@ -116,10 +116,11 @@ export const SubTask = () => {
                         className={errors.subEmployerRequired && "error-input"}
                         clearButton
                         labelKey="name"
+                        multiple
                         id="selections-example"
                         {...register("subEmployerRequired", { required: true })}
                         onChange={(user) => {
-                            setForm({ ...form, employee: { id: user[0]?.id, userName: user[0]?.userName } });
+                            setForm({ ...form, employee: user });
                             setValue('subEmployerRequired', user[0]?.id);
                             clearErrors("subEmployerRequired")
                         }}
@@ -128,6 +129,7 @@ export const SubTask = () => {
                     />
                     {errors.subEmployerRequired && <span className="error">Назначьте исполнителя</span>}
                 </div>
+                {console.log(form)}
                 <div className="form-group col-6 other_inputs" >
                     <label>Приоритет</label>
                     <select className={errors.subPriorityRequired ? "custom-select error" : "custom-select"} id="inputGroupSelect01"

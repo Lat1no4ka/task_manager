@@ -60,23 +60,26 @@ export const TaskForm = (props) => {
     }
 
     const sendForm = async () => {
-        console.log(task.task)
         const parenTask = { ...task.task };
         parenTask.priority = task.task.priority.id;
         parenTask.employee = task.task.employee;
 
-        const id = await request(`${process.env.REACT_APP_API_URL}/addTask`, "POST", JSON.stringify({ ...parenTask }))
+        const newTask = await request(`${process.env.REACT_APP_API_URL}/addTask`, "POST", JSON.stringify({ ...parenTask }))
 
         if (task.task.files.length > 0) {
-            sendFile(id, task.task.files)
+            sendFile(newTask.id, task.task.files)
         }
 
         dispatch(taskAtions.setTask(form));
 
+        console.log(task.subTask)
         task.subTask.forEach(subTask => {
-            subTask.parent = id;
+            // subTask.parent = newTask.id;
+            subTask.parentId = null;
             subTask.priority = subTask.priority.id;
-            subTask.employee = subTask.employee.id;
+            subTask.employee = subTask.employee.map((sub) => {
+                return { id: sub.id, userName: sub.name }
+            });
         });
 
         const subTask = await request(`${process.env.REACT_APP_API_URL}/addSubtask`, "POST", JSON.stringify(task.subTask))
@@ -148,8 +151,8 @@ export const TaskForm = (props) => {
                         </button>
                     </div>
                     <div>
-                        <button onClick={e => deleteSubTask(props.id)}>
-                            <XCircleFill />
+                        <button className="p-0" onClick={e => deleteSubTask(props.id)}>
+                            <XCircleFill className="p-0" />
                         </button>
                     </div>
                 </div>
@@ -194,12 +197,13 @@ export const TaskForm = (props) => {
                 </div>
                 <div className="form-group col-6 other_inputs">
                     <label>Назначена:</label>
+                    {task.task.employee[0]?.id ? setValue('employerRequired', task.task.employee[0].id) : null}
                     <Typeahead
                         className={errors.employerRequired ? "error-input" : ""}
                         {...register("employerRequired", { required: true })}
                         clearButton
                         labelKey="name"
-                        multiple
+                        defaultSelected={task.task.employee[0]?.id ? [{ id: task.task.employee[0].id, name: task.task.employee[0].userName }] : []}
                         id="selections-example"
                         onChange={(user, e) => {
                             cacheTaskForm(e, { ...task.task, employee: [{ id: user[0]?.id, userName: user[0]?.name }] });
