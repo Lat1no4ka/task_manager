@@ -91,6 +91,8 @@ public class TaskEntity implements Serializable {
         this.parentId = null;
     }
 
+    public List<UserEntity> getEmployee() { return employee; }
+
     public void setEmployee(List<UserEntity> employee) { this.employee = employee; }
 
     public String getOverdue() {return overdue;}
@@ -161,7 +163,7 @@ public class TaskEntity implements Serializable {
         return author;
     }
 
-    public List<UserEntity> getEmployee() { return employee; }
+
 
     public Long getParentId() {
         return parentId;
