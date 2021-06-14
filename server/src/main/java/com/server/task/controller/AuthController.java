@@ -3,7 +3,11 @@ package com.server.task.controller;
 
 import com.server.task.interfaces.TokenService;
 import com.server.task.model.User;
+import com.server.task.model.UserAuth;
+import com.server.task.model.entity.UserEntity;
+import com.server.task.repo.UserAuthRepository;
 import com.server.task.repo.UserRepository;
+import com.server.task.controller.UserController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -19,24 +23,26 @@ public class AuthController {
     @Autowired
     UserRepository userRepository;
     @Autowired
+    UserAuthRepository userAuthRepository;
+    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     TokenService tokenService;
+    @Autowired
+    UserController userController;
 
 
     @RequestMapping(value = {"/auth"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     @ResponseBody
-    public Map<String, String> auth(@RequestBody User data) {
+    public UserAuth auth(@RequestBody UserAuth data) {
         String name = data.getUserName();
-        User user = userRepository.findByUserName(name);
-        if (bCryptPasswordEncoder.matches(data.getPassword(), user.getPassword())) {
-            String token = tokenService.getJWTToken(name);
-            String key = user.getId().toString();
-
-            Map<String, String> userData = new HashMap<String, String>();
-            userData.put("userId", key);
-            userData.put("token", token);
-            return userData;
+        UserAuth user = userAuthRepository.findByUserName(name);
+        if(Objects.isNull(user)){
+            return  null;
+        }
+        if (bCryptPasswordEncoder.matches(data.getPassword(), user.getPassword()) && user.getBlocked()==null) {
+            user.setToken(tokenService.getJWTToken(name));
+            return user;
         }
         return null;
     }
@@ -53,6 +59,7 @@ public class AuthController {
                 String password = bCryptPasswordEncoder.encode(user.getPassword());
                 user.setPassword(password);
                 userRepository.save(user);
+                userController.newUserSettings(user);
                 return "successful";
             } catch (Exception e) {
                 return "reg error";

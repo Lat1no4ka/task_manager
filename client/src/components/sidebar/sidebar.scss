@@ -1,6 +1,7 @@
-.sidebar {
+.sidebar-show {
   background: #f2f2f2;
   height: 100%;
+  width: 1000px;
   animation: option-show 0.5s forwards;
 }
 .sidebar-close {
@@ -18,14 +19,14 @@
     max-width: 0;
   }
   100% {
-    flex: 0 0 25%;
-    max-width: 25%;
+    flex: 0 0 40%;
+    max-width: 40%;
   }
 }
 @keyframes option-close {
   0% {
-    flex: 0 0 25%;
-    max-width: 25%;
+    flex: 0 0 40%;
+    max-width: 40%;
   }
   100% {
     flex: 0 0 0;

@@ -18,6 +18,9 @@ public class Status implements Serializable {
     @Column(name = "alias", unique = true, nullable = false)
     private String alias;
 
+    @Column(name = "status_color", unique = true, nullable = false)
+    private String statusColor;
+
     public Status() {
         this.id = null;
         this.statusName = null;
@@ -28,6 +31,10 @@ public class Status implements Serializable {
         this.id = id;
         this.statusName = statusName;
     }
+
+    public String getStatusColor() { return statusColor; }
+
+    public void setStatusColor(String statusColor) { this.statusColor = statusColor; }
 
     public String getAlias() {
         return alias;

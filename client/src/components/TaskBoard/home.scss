@@ -1,3 +1,71 @@
-.icon{
+.icon {
     cursor: pointer;
+}
+
+$grayColor: rgb(233, 229, 229);
+$borderdarkGrayColor: rgb(90, 89, 89);
+$borderGrayColor: rgb(153, 152, 152);
+
+.folder {
+    border-radius: 10px 10px 0 0;
+    border: 1px solid $borderGrayColor;
+}
+
+.folder,
+.task {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+    border-radius: 10px;
+    cursor: pointer;
+    .folder_header {
+        min-height: 40px;
+        min-width: 150px;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    .task_header {
+        min-height: 40px;
+        min-width: 150px;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 5px;
+        border-radius: 10px 10px 0 0;
+    }
+    .folder_body,
+    .task_body {
+        min-height: 40px;
+        min-width: 150px;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    .task_body {
+        border-right: 1px solid $borderGrayColor;
+        border-left: 1px solid $borderGrayColor;
+    }
+    .folder_footer,
+    .task_footer {
+        min-height: 20px;
+        min-width: 150px;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 5px;
+    }
+    .task_footer {
+        border-bottom: 1px solid $borderGrayColor;
+        border-right: 1px solid $borderGrayColor;
+        border-left: 1px solid $borderGrayColor;
+        border-radius: 0 0 10px 10px;
+    }
+    &:active,
+    &:hover {
+        background-color: $grayColor;
+    }
+}
+
+.button {
+    color: black !important;
+    background-color: black !important;
 }

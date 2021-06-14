@@ -6,7 +6,7 @@ import { useAuth } from "../hooks/auth.hook";
 const AuthPage = () => {
 
   const { loading, error, request } = useHttp();
-  const {login} = useAuth();
+  const { login } = useAuth();
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const handleSubmit = async (e) => {
@@ -15,37 +15,43 @@ const AuthPage = () => {
     if (email || password) {
       try {
         const body = { userName: email, password: password };
-        const data = await request("http://127.0.0.1:8080/auth", "POST", JSON.stringify(body));
-        login(data.token, data.userId);
+        const data = await request(`${process.env.REACT_APP_API_URL}/auth`, "POST", JSON.stringify(body));
+        login(data);
       } catch (error) {
         console.log(error);
       }
     } else return null;
   };
 
+  const style = {
+    marginTop: "150px",
+    maxWidth: "500px",
+    maxHeigth: "400px",
+    padding:"40px",
+    borderRadius:"20px",
+    boxShadow: "0 0 20px 2px gray"
+  }
+
   return (
-    <div className="container col-4">
+    <div className="container col-4" style={style}>
       <Form>
         <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
+          <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Enter email"
+            placeholder="Введите Email"
             defaultValue={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
-          </Form.Text>
         </Form.Group>
 
         <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Пароль</Form.Label>
           <Form.Control
             type="password"
             defaultValue={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
+            placeholder="Введите пароль"
           />
         </Form.Group>
         <Button
@@ -54,7 +60,7 @@ const AuthPage = () => {
           type="submit"
           onClick={(e) => handleSubmit(e)}
         >
-          Enter
+          Войти
         </Button>
       </Form>
     </div>

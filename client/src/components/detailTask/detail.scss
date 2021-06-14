@@ -3,12 +3,37 @@
   display: block;
   min-height: 400px;
   height: auto;
-  position:absolute;
+  position: absolute;
   z-index: 2;
   background-color: white;
   border: 2px solid black;
   border-radius: 10px;
   margin: auto;
+}
+
+.desc {
+  font-weight: bold;
+  font-size: 16px;
+  span {
+    font-weight: normal;
+  }
+}
+
+.files {
+  padding: 5px 0;
+  margin: 5px 0;
+  max-width: 250px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 50%;
+  width: auto;
+  a,
+  a:hover {
+    color: black;
+    font-size: 18px;
+    white-space: nowrap;
+    font-weight: bold;
+  }
 }
 
 .taskForm {
@@ -37,12 +62,12 @@
   }
 }
 
-.subTaskHide {
-  display: none;
+.modal-foter {
+  justify-content: unset !important;
 }
 
-input:read-only {
-  background-color: white !important;
+.subTaskHide {
+  display: none;
 }
 
 .toggle-arrow {
@@ -96,4 +121,3 @@ input:read-only {
   margin-top: 150px;
   width: 800px;
 }
-

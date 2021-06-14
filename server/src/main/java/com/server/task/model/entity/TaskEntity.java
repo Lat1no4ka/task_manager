@@ -7,7 +7,9 @@ import com.server.task.model.dictionary.Status;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -36,9 +38,8 @@ public class TaskEntity implements Serializable {
     @JoinColumn(name ="head_id", nullable = false)
     private UserEntity author;
 
-    @ManyToOne
-    @JoinColumn(name ="emp_id", nullable = false)
-    private UserEntity employee;
+    @ManyToMany(mappedBy = "tasksEntity")
+    private List<UserEntity> employee = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name ="task_priority_id")
@@ -48,9 +49,6 @@ public class TaskEntity implements Serializable {
     @JoinColumn(name = "task_status_id")
     private Status status;
 
-    @ManyToMany(mappedBy = "tasks")
-    private List<User> users = new ArrayList<>();
-
     @Column(name = "par_task_id")
     private Long parentId;
 
@@ -58,7 +56,13 @@ public class TaskEntity implements Serializable {
     @JoinColumn(name = "task_id")
     private List<Files> files = new ArrayList<>();
 
-    public TaskEntity(Long id, String taskName, String begDate, String endDate, String taskDesc, UserEntity author, UserEntity employee, Long parentId) {
+    @Column(name = "overdue")
+    private String overdue;
+
+    @Column(name = "stat_change")
+    private Date lastChange;
+
+    public TaskEntity(Long id, String taskName, String begDate, String endDate, String taskDesc, UserEntity author, List<UserEntity> employee, Long parentId) {
         this.id = id;
         this.taskName = taskName;
         this.taskDesc = taskDesc;
@@ -70,7 +74,7 @@ public class TaskEntity implements Serializable {
 
     }
 
-    public TaskEntity(Long id, UserEntity author, UserEntity employee) {
+    public TaskEntity(Long id, UserEntity author, List<UserEntity> employee) {
         this.id = id;
         this.author = author;
         this.employee = employee;
@@ -86,6 +90,18 @@ public class TaskEntity implements Serializable {
         this.employee = null;
         this.parentId = null;
     }
+
+    public List<UserEntity> getEmployee() { return employee; }
+
+    public void setEmployee(List<UserEntity> employee) { this.employee = employee; }
+
+    public String getOverdue() {return overdue;}
+
+    public void setOverdue(String overdue) {this.overdue = overdue;}
+
+    public Date getLastChange() {return lastChange;}
+
+    public void setLastChange(Date lastChange) {this.lastChange = lastChange;}
 
     public List<Files> getFiles() {return files;}
 
@@ -147,9 +163,7 @@ public class TaskEntity implements Serializable {
         return author;
     }
 
-    public UserEntity getEmployee() {
-        return employee;
-    }
+
 
     public Long getParentId() {
         return parentId;

@@ -7,15 +7,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import com.server.task.model.Task;
-import com.server.task.model.User;
+import com.server.task.model.*;
 import com.server.task.model.entity.FilesEntity;
 import com.server.task.model.entity.UserEntity;
-import com.server.task.repo.FilesRepository;
-import com.server.task.repo.FilesEntityRepository;
-import com.server.task.model.Files;
+import com.server.task.repo.*;
 
-import com.server.task.repo.UserEntityRepository;
 import com.server.task.services.FilesService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.InputStreamResource;
@@ -42,9 +38,13 @@ public class FilesController {
     @Autowired
     FilesRepository filesRepository;
     @Autowired
+    ChatFilesRepository chatFilesRepository;
+    @Autowired
     FilesEntityRepository filesEntityRepository;
     @Autowired
     UserEntityRepository userEntityRepository;
+    @Autowired
+    MessageRepository messageRepository;
 
     //загрузка картинки пользователя с проверкой на изображение
     @RequestMapping(value = "/uploadProfilePic", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -56,7 +56,7 @@ public class FilesController {
             FilesEntity files = new FilesEntity();
             files.setFileName(file.getOriginalFilename());
             String hashFilename = (UUID.randomUUID()).toString();
-            File convertFile = new File("src\\main\\resources\\static\\profile\\" + hashFilename);
+            File convertFile = new File("src/main/resources/static/profile/" + hashFilename);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(file.getBytes());
@@ -83,7 +83,7 @@ public class FilesController {
             Files file = new Files();
             file.setFileName(mPFile.getOriginalFilename());
             String hashFilename = (UUID.randomUUID()).toString();
-            File convertFile = new File("src\\main\\resources\\static\\documents\\" + hashFilename);
+            File convertFile = new File("src/main/resources/static/documents/" + hashFilename);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(mPFile.getBytes());
@@ -117,7 +117,6 @@ public class FilesController {
         ResponseEntity<Object>
                 responseEntity = ResponseEntity.ok().headers(headers).contentLength(file.length()).contentType(
                 MediaType.parseMediaType(mediaType)).body(resource);
-
         return responseEntity;
     }
 
@@ -128,8 +127,8 @@ public class FilesController {
         FilesEntity link = filesEntityRepository.findById(files.getId());
         String[] parts = link.getFilePath().split(Pattern.quote("\\"));
         String filename  = parts[parts.length-1];
-        String lnk = "http://127.0.0.1:8080/getImage/"+filename;
-        return lnk;
+        String lnk = "http://localhost:8080/getImage/"+filename;
+        return "{\"link\": \" "+ lnk +"\"}";
     }
 
 
@@ -137,14 +136,24 @@ public class FilesController {
     //Удаление файла - ловит id, удаляет файл из БД и сервера
     @RequestMapping(value = "/deleteFile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public File deleteFile(@RequestBody Files files) throws IOException  {
-
         Files dbFile = filesRepository.findById(files.getId());
         File storageFile = new File(dbFile.getFilePath());
         filesRepository.delete(dbFile);
         storageFile.delete();
-
         return storageFile;
+    }
 
+    //Удаление картинки - ловит id, удаляет файл из БД и сервера
+    @RequestMapping(value = "/deletePicture", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public String deleteProfilePic(@RequestBody Files picture) throws IOException  {
+        Files dbFile = filesRepository.findById(picture.getId());
+        File storageFile = new File(dbFile.getFilePath());
+        UserEntity user = userEntityRepository.findByPictureId(picture.getId());
+        user.setPicture(null);
+        userEntityRepository.save(user);
+        filesRepository.delete(dbFile);
+        storageFile.delete();
+        return "Изображение удалено";
     }
 
 
@@ -155,6 +164,206 @@ public class FilesController {
     public @ResponseBody byte[] getImageWithMediaType(@PathVariable(name = "imageName") String fileName) throws IOException {
         return this.imageService.getImageWithMediaType(fileName);
     }
+
+    //Загрузка файлов для чата
+    @RequestMapping(value = "/uploadChatFiles", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public List<ChatFiles> chatFilesUpload(@RequestParam("file") List<MultipartFile> multiPartFiles) throws IOException {
+        List<ChatFiles> fileList = new ArrayList<>();
+        for (MultipartFile mPFile : multiPartFiles) {
+            ChatFiles file = new ChatFiles();
+            file.setFileName(mPFile.getOriginalFilename());
+            String hashFilename = (UUID.randomUUID()).toString();
+            File convertFile = new File("src/main/resources/static/chat/" + hashFilename);
+            convertFile.createNewFile();
+            FileOutputStream fout = new FileOutputStream(convertFile);
+            fout.write(mPFile.getBytes());
+            fout.close();
+            file.setFilePath(convertFile.toString());
+            file.setHashName(hashFilename);
+            fileList.add(file);
+        }
+        chatFilesRepository.saveAll(fileList);
+
+        return fileList;
+    }
+
+    //получение ссылки на файл
+    @RequestMapping(value = "/getChatFile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public String getFileAsLink(@RequestBody ChatFiles files) throws IOException {
+        ChatFiles link = chatFilesRepository.findById(files.getId());
+        String lnk = "http://localhost:8080/getFile/"+link.getHashName();
+        return "{\"link\": \" "+ lnk +"\"}";
+    }
+
+    public String fileToLink(Long fileId) throws IOException {
+        ChatFiles link = chatFilesRepository.findById(fileId);
+        String lnk = "http://localhost:8080/getFile/"+link.getHashName();
+        return "{\"link\": \" "+ lnk +"\"}";
+    }
+
+    //Скачивание файла по ссылке
+    @GetMapping(
+            value = "getFile/{hashname:.+}",
+            produces = {MediaType.ALL_VALUE}
+    )
+    public ResponseEntity<Object> getFileByLink(@PathVariable(name = "hashname") String hashname) throws IOException {
+        ChatFiles filepath = chatFilesRepository.findByHashName(hashname);
+        String filename = filepath.getFilePath();
+        String[] parts = filepath.getFileName().split(Pattern.quote("."));
+        String mediaType = ("application/" + parts[1]);
+        File file = new File(filename);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", filepath.getFileName()));
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+        ResponseEntity<Object>
+                responseEntity = ResponseEntity.ok().headers(headers).contentLength(file.length()).contentType(
+                MediaType.parseMediaType(mediaType)).body(resource);
+        return responseEntity;
+    }
+
+    /*
+    @RequestMapping(value = "/ConnectChatFile", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Message chatFileConnect(@RequestParam("fileId") List<Long> idList, @RequestParam("message") Long messageId) throws IOException {
+        Message msg = messageRepository.findById(messageId);
+        List<String> fileNames = new ArrayList<>();
+        List<ChatFiles> chatFiles = new ArrayList<>();
+
+        for (Long fileId : idList) {
+            ChatFiles chatFile = chatFilesRepository.findById(fileId);
+            chatFile.setConnected("Yes");
+            chatFiles.add(chatFile);
+            fileNames.add(chatFile.getFileName());
+        }
+        chatFilesRepository.saveAll(chatFiles);
+
+        if (idList.size() == 1) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+        }
+        if (idList.size() == 2) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileName2(fileNames.get(1));
+        }
+        if (idList.size() == 3) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileName2(fileNames.get(1));
+            msg.setFileLink3(fileToLink(idList.get(2)));
+            msg.setFileName3(fileNames.get(2));
+        }
+        if (idList.size() == 4) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileName2(fileNames.get(1));
+            msg.setFileLink3(fileToLink(idList.get(2)));
+            msg.setFileName3(fileNames.get(2));
+            msg.setFileLink4(fileToLink(idList.get(3)));
+            msg.setFileName4(fileNames.get(3));
+        }
+        if (idList.size() == 5) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileName2(fileNames.get(1));
+            msg.setFileLink3(fileToLink(idList.get(2)));
+            msg.setFileName3(fileNames.get(2));
+            msg.setFileLink4(fileToLink(idList.get(3)));
+            msg.setFileName4(fileNames.get(3));
+            msg.setFileLink5(fileToLink(idList.get(4)));
+            msg.setFileName5(fileNames.get(4));
+        }
+        else{
+            return msg;
+        }
+        messageRepository.save(msg);
+        return msg;
+    }
+
+     */
+
+
+    public Message ConvertIdToLinks (Message msg) throws IOException {
+        List<String> fileNames = new ArrayList<>();
+        List<ChatFiles> chatFiles = new ArrayList<>();
+        List<Long> idList = new ArrayList<>();
+
+      if (msg.getFileLink1() != null) {
+          idList.add(Long.parseLong(msg.getFileLink1()));
+      }
+      if (msg.getFileLink2() != null) {
+            idList.add(Long.parseLong(msg.getFileLink2()));
+      }
+      if (msg.getFileLink3() != null) {
+          idList.add(Long.parseLong(msg.getFileLink3()));
+      }
+      if (msg.getFileLink4() != null) {
+          idList.add(Long.parseLong(msg.getFileLink4()));
+      }
+      if (msg.getFileLink5() != null) {
+          idList.add(Long.parseLong(msg.getFileLink5()));
+      }
+
+        for (Long fileId : idList) {
+            ChatFiles chatFile = chatFilesRepository.findById(fileId);
+            chatFile.setConnected("Yes");
+            chatFiles.add(chatFile);
+            fileNames.add(chatFile.getFileName());
+        }
+        chatFilesRepository.saveAll(chatFiles);
+
+        if (idList.size() == 1) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+        }
+        if (idList.size() == 2) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileName2(fileNames.get(1));
+        }
+        if (idList.size() == 3) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileName2(fileNames.get(1));
+            msg.setFileLink3(fileToLink(idList.get(2)));
+            msg.setFileName3(fileNames.get(2));
+        }
+        if (idList.size() == 4) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileName2(fileNames.get(1));
+            msg.setFileLink3(fileToLink(idList.get(2)));
+            msg.setFileName3(fileNames.get(2));
+            msg.setFileLink4(fileToLink(idList.get(3)));
+            msg.setFileName4(fileNames.get(3));
+        }
+        if (idList.size() == 5) {
+            msg.setFileLink1(fileToLink(idList.get(0)));
+            msg.setFileName1(fileNames.get(0));
+            msg.setFileLink2(fileToLink(idList.get(1)));
+            msg.setFileName2(fileNames.get(1));
+            msg.setFileLink3(fileToLink(idList.get(2)));
+            msg.setFileName3(fileNames.get(2));
+            msg.setFileLink4(fileToLink(idList.get(3)));
+            msg.setFileName4(fileNames.get(3));
+            msg.setFileLink5(fileToLink(idList.get(4)));
+            msg.setFileName5(fileNames.get(4));
+        }
+        else{
+            return msg;
+        }
+        return msg;
+    }
+
 
 
 }

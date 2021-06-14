@@ -28,11 +28,55 @@
                 <constraints nullable="true"/>
             </column>
 
+            <column name="room" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
             <column name="time" type="DATETIME">
                 <constraints nullable="true"/>
             </column>
 
             <column name="chatroom_id" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="file1" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="file1name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="file2" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="file2name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="file3" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="file3name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="file4" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="file4name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="file5" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="file5name" type="VARCHAR(255)">
                 <constraints nullable="true"/>
             </column>
 

@@ -1,60 +1,46 @@
-import React from "react";
-import { Form, ListGroup } from "react-bootstrap";
-
+import { useState, useEffect } from "react";
+import { Chat } from "../chat/Chat"
 import "./sidebar.scss";
 
-class SideBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      active: false,
-      show: "",
-      close: "",
-      block: "",
-    };
-  }
-  static getDerivedStateFromProps(props, state) {
-    if (props.display !== state.active || props.block !== state.block) {
-      return {
-        close: "sidebar-close",
-        active: props.display,
-        show: "sidebar",
-        block: props.block,
-      };
-    }
-    return null;
-  }
+export const SideBar = (props) => {
+  const [asc, setAsc] = useState(false)
 
-  render() {
-    if (this.state.block === "history") {
-      return (
-        <div className={this.state.active ? this.state.show : this.state.close}>
-          <div>
-            <ListGroup className="list-item">
-              <ListGroup.Item>No style</ListGroup.Item>
-              <ListGroup.Item variant="primary">Primary</ListGroup.Item>
-            </ListGroup>
-          </div>
+  const sortedByDate = () => {
+    const tasks = props.tasks.sort((a, b) => {
+      return -1
+    })
+    props.setSorted(!props.sorted)
+    props.setTasks(tasks)
+  }
+  
+  if (props.showChat) {
+    return (
+      <div className="sidebar-show col-6 p-2" >
+        <Chat tasks={props.tasks} />
+      </div>
+    )
+  } else if (props.showFilter) {
+    return (
+      <div className="sidebar-show" >
+        <div className="d-flex flex-column">
+          <label className="m-1 col-6">Выбрать только:</label>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('new')}>Новые</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('work')}>В работе</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('check')}>На проверке</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('revision')}>На доработке</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('accepted')}>Принятые</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('closed')}>Закрытые</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('overdue')}>Просроченные</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('archived')}>В архиве</button>
+          <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('return')}>Сброс</button>
         </div>
-      );
-    } else if (this.state.block === "filter") {
-      return (
-        <div className={this.state.active ? this.state.show : this.state.close}>
-          <Form.Group>
-            <Form.Control as="select">
-              <option>Default select 1</option>
-              <option>Default select 2</option>
-              <option>Default select 3</option>
-              <option>Default select 4</option>
-              <option>Default select 5</option>
-            </Form.Control>
-          </Form.Group>
-        </div>
-      );
-    } else {
-      return <div></div>;
-    }
+      </div>
+    )
+  } else {
+    return (
+      <div className="d-none">
+        <Chat tasks={props.tasks} />
+      </div>
+    )
   }
 }
-
-export default SideBar;

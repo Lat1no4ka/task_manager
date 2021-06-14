@@ -1,26 +1,26 @@
-import { useState } from "react";
-import "./form.scss";
+import { useState, useEffect } from "react";
+import { Typeahead } from 'react-bootstrap-typeahead';
 import { useHttp } from "../../hooks/http.hook";
 import { useDispatch, useSelector } from "react-redux";
 import { taskAtions } from "../../redux/task/action";
-import { CaretDownFill } from 'react-bootstrap-icons';
+import { useForm, Controller } from "react-hook-form";
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import "./form.scss";
+
 export const SubTask = () => {
     const dispatch = useDispatch();
     const { request } = useHttp();
     const task = useSelector((state) => state.task);
     const userId = useSelector((state) => state.auth.userId);
-    const [toggle, setToggle] = useState(false);
     const [users, setUsers] = useState([]);
     const [priority, setPriority] = useState([]);
-    const [usersFilter, setUsersFilter] = useState([]);
-    const [searchListUser, setSearchListUser] = useState(false);
-    const [listPriority, setListPriority] = useState(false);
+    const date = new Date();
     const [form, setForm] = useState(
         {
             taskName: "",
             taskDesc: "",
-            begDate: "",
-            endDate: "",
+            begDate: `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`,
+            endDate: `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`,
             priority: { id: "", priorityName: "" },
             employee: { id: "", userName: "" },
             files: [],
@@ -30,20 +30,18 @@ export const SubTask = () => {
         }
     );
 
-    const [files, setFiles] = useState([]);
+    const { register, handleSubmit, formState: { errors }, setValue, clearErrors } = useForm();
 
-    const sendFile = async (taskId, propFiles) => {
-        const formData = new FormData();
-        propFiles.forEach(file => {
-            formData.append('file', file)
-        });
-        formData.append('taskId', taskId)
-        const headers = { 'Access-Control-Allow-Credentials': 'true' }
-        await request("http://127.0.0.1:8080/uploadFiles", "POST", formData, headers)
-    }
 
-    const addSubTask = (e) => {
-        e.preventDefault();
+    useEffect(() => {
+        if (!users.length)
+            getUsers()
+        if (!priority.length)
+            getPriority()
+    }, [users, priority])
+
+
+    const addSubTask = (e, data) => {
         setSubTaskFile();
         task.subTask.push(form)
         dispatch(taskAtions.setSubTask(task.subTask));
@@ -55,30 +53,24 @@ export const SubTask = () => {
     }
 
     const getUsers = async () => {
-        const users = await request("http://127.0.0.1:8080/allUsers", "GET");
+        const response = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
+        const users = await response.map(user => {
+            return { id: user.id, name: user.userName }
+        })
         setUsers(users);
     }
 
     const getPriority = async () => {
-        const priority = await request("http://127.0.0.1:8080/getPriority", "GET");
+        const priority = await request(`${process.env.REACT_APP_API_URL}/getPriority`, "GET");
         setPriority(priority);
     }
 
-    const searchListUserVisible = (searchText, visible) => {
-        setSearchListUser(visible);
-        if (searchText.length > 1) {
-            let filterUser = users.filter((user) => {
-                return user ? !user.userName.indexOf(searchText) : null;
-            })
-            setUsersFilter(filterUser);
-        } else {
-            setUsersFilter(users);
-        }
-    }
-
     const setSubTaskFile = () => {
-        task.subTaskFile.push(form.files)
-        dispatch(taskAtions.setSubTaskFile(task.subTaskFile));
+
+        if (form.files.length) {
+            task.subTaskFile.push(form.files)
+            dispatch(taskAtions.setSubTaskFile(task.subTaskFile));
+        }
     }
 
     const prepareSubTaskFiles = (e) => {
@@ -92,111 +84,76 @@ export const SubTask = () => {
                 <h1>Дополнительная задача</h1>
             </div>
 
-            <form className="d-flex row">
-                <div className="form-group col-6">
+            <form className="d-flex row" onSubmit={handleSubmit(addSubTask)}>
+                <div className="form-group col-6 title">
                     <label>Название</label>
-                    <input type="value" className="form-control" id="nameOfTask" placeholder="" value={form.taskName} onChange={(e) => setForm({ ...form, taskName: e.target.value })}></input>
+                    <input type="value" className={errors.subTitleRequired ? "form-control error" : "form-control"} id="nameOfTask" placeholder=""
+                        {...register("subTitleRequired", { required: true })}
+                        value={form.taskName} onChange={(e) => { setForm({ ...form, taskName: e.target.value }); clearErrors("subTitleRequired") }}></input>
+                    {errors.subTitleRequired && <span className="error">Введите название</span>}
                 </div>
-                <div className="form-group col-12">
+                <div className="form-group col-12 desc_task">
                     <label>Описание</label>
                     <textarea className="form-control" id="descOfTask" value={form.taskDesc} onChange={e => setForm({ ...form, taskDesc: e.target.value })}></textarea>
                 </div>
-                <div className="form-group col-6">
+                <div className="form-group col-6 other_inputs">
                     <label>Дата начала:</label>
-                    <input type="date" className="form-control" id="begdate" value={form.begDate} onChange={(e) => setForm({ ...form, begDate: e.target.value })}></input>
+                    <input type="date" className={errors.subStartDateRequired ? "form-control error" : "form-control"}
+                        {...register("subStartDateRequired", { required: true })}
+                        id="begdate" value={form.begDate} onChange={(e) => { setForm({ ...form, begDate: e.target.value }); clearErrors("subStartDateRequired") }}></input>
+                    {errors.subStartDateRequired && <span className="error">Введите дату начала</span>}
                 </div>
-                <div className="form-group col-6">
+                <div className="form-group col-6 other_inputs">
                     <label>Дата окончания:</label>
-                    <input type="date" className="form-control" id="expdate" value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })}></input>
+                    <input type="date" className={errors.subEndDateRequired ? "form-control error" : "form-control"} id="expdate"
+                        {...register("subEndDateRequired", { required: true })}
+                        value={form.endDate} onChange={(e) => { setForm({ ...form, endDate: e.target.value }); clearErrors("subEndDateRequired") }}></input>
+                    {errors.subEndDateRequired && <span className="error">Введите дату окончания</span>}
                 </div>
-                <div className="form-group col-6">
+                <div className="form-group col-6 other_inputs">
                     <label>Назначена:</label>
-                    <input type="input" className="form-control" id="expdate"
-                        value={form.employee.userName}
-                        onFocus={
-                            (e) => {
-                                searchListUserVisible(e.target.value, true);
-                                console.log(form)
-                            }
-
-                        }
-                        onChange={(e) => {
-                            if (users.length < 1) { getUsers(); }
-                            setForm({ ...form, employee: { id: "", userName: e.target.value } });
-                            searchListUserVisible(e.target.value, true);
-                        }}>
-                    </input>
-                    {searchListUser ?
-                        <div className="list-group  list-group-pos col-12">
-                            {usersFilter.map((user) => {
-                                return (
-                                    <button
-                                        type="button"
-                                        className="list-group-item list-group-item-action"
-                                        id={user.id}
-                                        key={user.id}
-                                        onClick={(e) => {
-                                            setForm({ ...form, employee: { id: user.id, userName: user.userName } })
-                                            setSearchListUser(false)
-                                        }}
-                                    >
-                                        {user.userName}
-                                    </button>
-                                )
-                            })}
-                        </div>
-                        : ""
-                    }
+                    <Typeahead
+                        className={errors.subEmployerRequired && "error-input"}
+                        clearButton
+                        labelKey="name"
+                        multiple
+                        id="selections-example"
+                        {...register("subEmployerRequired", { required: true })}
+                        onChange={(user) => {
+                            setForm({ ...form, employee: user });
+                            setValue('subEmployerRequired', user[0]?.id);
+                            clearErrors("subEmployerRequired")
+                        }}
+                        options={users.length ? users : []}
+                        placeholder="Назначить на"
+                    />
+                    {errors.subEmployerRequired && <span className="error">Назначьте исполнителя</span>}
                 </div>
-                <div className="form-group col-6">
+                {console.log(form)}
+                <div className="form-group col-6 other_inputs" >
                     <label>Приоритет</label>
-                    <div className="d-flex">
-                        <input type="input" className="form-control" id="prioDir" readOnly={true}
-                            value={form.priority.priorityName}
-                            onFocus={(e) => {
-                                if (priority.length < 1) { getPriority(); }
-                            }}
-                            onClick={e => {
-                                setListPriority(!listPriority);
-                                setToggle(!toggle)
-                            }}
-                            onChange={(e) => {
-                                setForm({ ...form, priority: { id: "", priorityName: e.target.value } });
-                            }}>
-                        </input>
-                        <CaretDownFill className={toggle ? "toggle-arrow" : "toggle-arrow-active"} />
-                    </div>
-                    {listPriority ?
-                        <div className="list-group list-group-pos col-12">
-                            {priority.map((item) => {
-                                return (
-                                    <button
-                                        type="button"
-                                        className="list-group-item list-group-item-action"
-                                        id={item.id}
-                                        key={item.id}
-                                        onClick={(e) => {
-                                            setForm({ ...form, priority: { id: item.id, priorityName: item.priorityName } })
-                                            setListPriority(false)
-                                        }}
-                                    >
-                                        {item.priorityName}
-                                    </button>
-                                )
-                            })}
-                        </div>
-                        : ""
-                    }
+                    <select className={errors.subPriorityRequired ? "custom-select error" : "custom-select"} id="inputGroupSelect01"
+                        {...register("subPriorityRequired", { required: true })}
+                        onClick={e => setForm({ ...form, priority: { id: e.target.value, priorityName: e.target.options[e.target.options.selectedIndex]?.text } })}>
+                        <option hidden value={null}></option>
+                        {
+                            priority.length ?
+                                priority.map((item) => {
+                                    return <option key={item.id} value={item.id}>{item.priorityName}</option>
+                                }) : null
+                        }
+                    </select>
+                    {errors.subPriorityRequired && <span className="error">Выбирите приоритет</span>}
                 </div>
                 <div className="form-group col-5">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFile" multiple={true}
+                    <div className="custom-file">
+                        <input type="file" className="custom-file-input" id="customFile" multiple={true}
                             onChange={e => {
                                 setForm({ ...form, files: prepareSubTaskFiles(e) })
                             }}
                         >
                         </input>
-                        <label class="custom-file-label" for="customFile">Выбирите файл</label>
+                        <label className="custom-file-label">Выбирите файл</label>
                     </div>
                     <div>
                         {form.files.map((file, index) => {
@@ -205,7 +162,7 @@ export const SubTask = () => {
                     </div>
                 </div>
                 <div className="form-group col-2">
-                    <button type="button" className="btn btn-secondary" onClick={(e) => addSubTask(e)}>Добавить</button>
+                    <input type="submit" className="btn btn-secondary" value="Добавить" />
                 </div>
                 <div className="form-group col-2">
                     <button type="button" className="btn btn-secondary" onClick={(e) => cancel(e)}>Отмена</button>

@@ -11,4 +11,5 @@ import java.util.List;
 public interface FilesRepository extends CrudRepository<Files, String> {
     Files findById(Long id);
     List<Files> findByTaskId(Long id);
+    Files findByFileName(String filename);
 }

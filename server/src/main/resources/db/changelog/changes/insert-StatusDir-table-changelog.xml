@@ -7,7 +7,7 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet author="admin" id="10">
 
-        <insert tableName="StatusDir">
+        <insert tableName="statusdir">
 
             <column name="id" valueNumeric="1"/>
 
@@ -15,9 +15,11 @@
 
             <column name="alias" value="new"/>
 
+            <column name="status_color" value="#abfff0" />
+
         </insert>
 
-        <insert tableName="StatusDir">
+        <insert tableName="statusdir">
 
             <column name="id" valueNumeric="2"/>
 
@@ -25,9 +27,11 @@
 
             <column name="alias" value="work"/>
 
+            <column name="status_color" value="#fff091"/>
+
         </insert>
 
-        <insert tableName="StatusDir">
+        <insert tableName="statusdir">
 
             <column name="id" valueNumeric="3"/>
 
@@ -35,19 +39,23 @@
 
             <column name="alias" value="check"/>
 
+            <column name="status_color" value="#9391ff"/>
+
         </insert>
 
-        <insert tableName="StatusDir">
+        <insert tableName="statusdir">
 
             <column name="id" valueNumeric="4"/>
 
-            <column name="status_name" value="Возврещено на доработку"/>
+            <column name="status_name" value="Возвращено на доработку"/>
 
             <column name="alias" value="revision"/>
 
+            <column name="status_color" value="#ffc266"/>
+
         </insert>
 
-        <insert tableName="StatusDir">
+        <insert tableName="statusdir">
 
             <column name="id" valueNumeric="5"/>
 
@@ -55,9 +63,11 @@
 
             <column name="alias" value="accepted"/>
 
+            <column name="status_color" value="#9cff78"/>
+
         </insert>
 
-        <insert tableName="StatusDir">
+        <insert tableName="statusdir">
 
             <column name="id" valueNumeric="6"/>
 
@@ -65,6 +75,33 @@
 
             <column name="alias" value="closed"/>
 
+            <column name="status_color" value="#c9c9c9"/>
+
         </insert>
+
+        <insert tableName="statusdir">
+
+            <column name="id" valueNumeric="7"/>
+
+            <column name="status_name" value="Просрочено"/>
+
+            <column name="alias" value="overdue"/>
+
+            <column name="status_color" value="#ff6969"/>
+
+        </insert>
+
+        <insert tableName="statusdir">
+
+            <column name="id" valueNumeric="8"/>
+
+            <column name="status_name" value="В архиве"/>
+
+            <column name="alias" value="archived"/>
+
+            <column name="status_color" value="#c078ff"/>
+
+        </insert>
+
     </changeSet>
 </databaseChangeLog>

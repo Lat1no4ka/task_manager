@@ -12,11 +12,11 @@
                 <constraints primaryKey="true"/>
             </column>
 
-            <column name="task_name" type="VARCHAR(255)">
+            <column name="task_name" type="TEXT">
                 <constraints nullable="true"/>
             </column>
 
-            <column name="task_desc" type="VARCHAR(255)">
+            <column name="task_desc" type="TEXT">
                 <constraints nullable="true"/>
             </column>
 
@@ -24,7 +24,7 @@
                 <constraints nullable="true"/>
             </column>
 
-            <column name="exp_date" type="VARCHAR(255)">
+            <column name="exp_date" type="DATE">
                 <constraints nullable="true"/>
             </column>
 
@@ -33,7 +33,7 @@
             </column>
 
             <column name="emp_id" type="INT">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="task_priority_id" type="INT">
@@ -45,6 +45,14 @@
             </column>
 
             <column name="par_task_id" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="overdue" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="stat_change" type="DATETIME">
                 <constraints nullable="true"/>
             </column>
 
