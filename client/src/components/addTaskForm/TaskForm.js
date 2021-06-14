@@ -72,7 +72,7 @@ export const TaskForm = (props) => {
 
         dispatch(taskAtions.setTask(form));
 
-        console.log(task.subTask)
+        request(`${process.env.REACT_APP_API_URL}/sendMessage`, "POST", JSON.stringify({ id: newTask.id }))
         task.subTask.forEach(subTask => {
             // subTask.parent = newTask.id;
             subTask.parentId = null;
