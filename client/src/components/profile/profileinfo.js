@@ -40,7 +40,7 @@ const ProfileInfo = () => {
     };
 
     const handleSubmission = async (userId) => {
-
+        setSelectedFile(null)
         if (imageId != null) {
             await request(
                 `${process.env.REACT_APP_API_URL}/deletePicture`, 'POST', JSON.stringify(imageId)
@@ -147,8 +147,8 @@ const ProfileInfo = () => {
                         <div className="form-group" >
                             <div className="custom-file col-5">
                                 <input type="file" className="custom-file-input" id="customFile" onChange={changeHandler} />
-                                <label className="custom-file-label">Изменить фото</label>
-                                {selectedFile ? <p>{selectedFile.name}</p> : null}
+                                <label className="custom-file-label" style={{ minWidth: "230px" }} >Изменить фото</label>
+                                {selectedFile ? <p style={{ minWidth: " 230px" }}>{selectedFile.name}</p> : null}
                             </div>
                             {isSelected ?
                                 <div>
@@ -180,7 +180,7 @@ const ProfileInfo = () => {
 
                     <div className="container p-5 ">
                         <div>
-                            <h3>Никнейм: {userNameinf}</h3>
+                            <h3>Логин: {userNameinf}</h3>
                         </div>
                         <div>
                             <h4>ФИО: {firstNameinf} {lastnameinf}</h4>
@@ -197,19 +197,17 @@ const ProfileInfo = () => {
 
                         </div>
 
-                        <div>
-                            <br />
-                            <h4>Изменить фото:</h4>
-                            <input type="file" name="file" onChange={changeHandler} />
-                            {isSelected ? (
+                        <div className="form-group" >
+                            <div className="custom-file col-5">
+                                <input type="file" className="custom-file-input" id="customFile" onChange={changeHandler} />
+                                <label className="custom-file-label" style={{ minWidth: " 230px" }}>Изменить фото</label>
+                                {selectedFile ? <p style={{ minWidth: " 230px" }}>{selectedFile.name}</p> : null}
+                            </div>
+                            {isSelected ?
                                 <div>
-                                    <button type="button" className="btn btn-secondary" onClick={() => handleSubmission(userId)}>Подтвердить</button>
-                                </div>
-                            ) : (
-                                <p></p>
-                            )}
-
-
+                                    <button type="button" className="btn btn-secondary mt-2" onClick={() => handleSubmission(userId)}>Подтвердить</button>
+                                </div> : null
+                            }
                         </div>
 
 
