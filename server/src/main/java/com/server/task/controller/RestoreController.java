@@ -3,9 +3,11 @@ package com.server.task.controller;
 import java.io.IOException;
 import java.security.SecureRandom;
 import com.server.task.model.Files;
+import com.server.task.model.Settings;
 import com.server.task.model.User;
 import com.server.task.model.entity.TaskEntity;
 import com.server.task.model.entity.UserEntity;
+import com.server.task.repo.SettingsRepository;
 import com.server.task.repo.TaskEntityRepository;
 import com.server.task.repo.UserEntityRepository;
 import com.server.task.repo.UserRepository;
@@ -19,6 +21,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -39,6 +42,8 @@ public class RestoreController {
     UserRepository userRepository;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    SettingsRepository settingsRepository;
 
     //Отправка временного пароля
     @RequestMapping(value={"/sendCode"}, method= RequestMethod.POST, headers = {"Content-type=application/json"})
@@ -76,7 +81,14 @@ public class RestoreController {
     public String SendMessage (@RequestBody TaskEntity task) throws IOException {
 
         TaskEntity tsk = taskEntityRepository.findById(task.getId());
-        List<UserEntity> userList = tsk.getEmployee();
+        List<UserEntity> allUsers = tsk.getEmployee();
+        List<UserEntity> userList = new ArrayList<>();
+        for (UserEntity user : allUsers) {
+            Settings setting = settingsRepository.findByUser(user);
+            if (setting.getNotificationSet()!=null){
+                userList.add(user);
+            }
+        }
         UserEntity author = tsk.getAuthor();
         for (UserEntity user : userList) {
             String userMail = (userEntityRepository.findById(user.getId())).getEmail();
@@ -128,7 +140,14 @@ public class RestoreController {
     */
 
     public void StatusCheck (TaskEntity task) throws IOException {
-        List<UserEntity> userList = task.getEmployee();
+        List<UserEntity> allUsers = task.getEmployee();
+        List<UserEntity> userList = new ArrayList<>();
+        for (UserEntity user : allUsers) {
+            Settings setting = settingsRepository.findByUser(user);
+            if (setting.getNotificationSet()!=null){
+                userList.add(user);
+            }
+        }
         UserEntity author = task.getAuthor();
         for (UserEntity user : userList) {
             String userMail = (userEntityRepository.findById(user.getId())).getEmail();
@@ -148,10 +167,5 @@ public class RestoreController {
             }
         }
     }
-
-
-
-
-
 
 }

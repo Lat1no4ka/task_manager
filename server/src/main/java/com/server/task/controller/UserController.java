@@ -163,5 +163,29 @@ public class UserController {
         return blkusr;
     }
 
+    //Врубаем оповещения
+    @RequestMapping(value={"/notificationOn"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Settings UserNotificationOn(@RequestBody UserEntity user)
+    {
+        UserEntity usr = userEntityRepository.findById(user.getId());
+        Settings settings = settingsRepository.findByUser(usr);
+        settings.setNotificationSet(new Long(1));
+        settingsRepository.save(settings);
+        return settings;
+    }
+
+
+    //Вырубаем оповещения
+    @RequestMapping(value={"/notificationOff"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public Settings UserNotificationOff(@RequestBody User user)
+    {
+        UserEntity usr = userEntityRepository.findById(user.getId());
+        Settings settings = settingsRepository.findByUser(usr);
+        settings.setNotificationSet(null);
+        settingsRepository.save(settings);
+        return settings;
+    }
+
+
 
 }
