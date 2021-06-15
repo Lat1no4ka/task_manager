@@ -17,4 +17,5 @@ public interface TaskEntityRepository extends CrudRepository<TaskEntity, String>
     List<TaskEntity> findByEmployee(UserEntity emp);
     List<TaskEntity> findByEmployeeAndParentIdIsNull(UserEntity emp);
     List<TaskEntity> findByEmployeeAndAuthorAndParentIdIsNull(UserEntity employee, UserEntity author);
+    List<TaskEntity> findByEmployeeAndParentIdIsNotNull(UserEntity employee);
 }
