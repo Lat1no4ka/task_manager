@@ -130,7 +130,6 @@ export const SubTask = () => {
                     />
                     {errors.subEmployerRequired && <span className="error">Назначьте исполнителя</span>}
                 </div>
-                {console.log(form)}
                 <div className="form-group col-6 other_inputs" >
                     <label>Приоритет</label>
                     <select className={errors.subPriorityRequired ? "custom-select error" : "custom-select"} id="inputGroupSelect01"

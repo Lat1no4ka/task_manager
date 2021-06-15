@@ -75,7 +75,6 @@ const ModalCreateUser = () => {
                 <input required type={showPass ? "text" : "password"} pattern=".{8,}" className="form-control" id="password" placeholder="" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })}></input>
                 <span className="input-group-text" style={{ cursor: "pointer" }} id="basic-addon2"
                   onMouseUp={e => setShowPass(false)} onMouseDown={e => setShowPass(true)}><Eye size={20} /></span>
-                {console.log(showPass)}
               </div>
             </div>
             <div className="form-group col-6">

@@ -12,6 +12,7 @@ export const Chat = (props) => {
     const user = useSelector(auth => auth.auth)
     const { request } = useHttp();
     const [selectedRoom, setSelectedRoom] = useState(0);
+    const [roomName, setRoomName] = useState('Общий чат')
     const [broadcastMessage, setBroadcastMessage] = useState([]);
     const [messages, setMessages] = useState([]);
     const [sendTime, setSendTime] = useState(new Date());
@@ -52,7 +53,6 @@ export const Chat = (props) => {
                 file4: { name: message?.fileName4, link: fileLink4?.link },
                 file5: { name: message?.fileName5, link: fileLink5?.link },
             }
-            console.log(prepareMessage)
             setBroadcastMessage(prepareMessage);
             setSendTime(message.dateTime);
         }
@@ -60,10 +60,10 @@ export const Chat = (props) => {
 
     const onConnected = () => {
         stompClient.subscribe(`/topic/chat/0`, onMessageReceived);
-        stompClient.send('/app/addUser', {}, JSON.stringify({ sender: data.data.firstName +' '+data.data.lastName, type: 'JOIN' }))
+        stompClient.send('/app/addUser', {}, JSON.stringify({ sender: data.data.firstName + ' ' + data.data.lastName, type: 'JOIN' }))
         props.tasks.forEach(room => {
             stompClient.subscribe(`/topic/chat/${room.id}`, onMessageReceived);
-            stompClient.send('/app/addUser', {}, JSON.stringify({ sender: data.data.firstName +' '+data.data.lastName, type: 'JOIN' }))
+            stompClient.send('/app/addUser', {}, JSON.stringify({ sender: data.data.firstName + ' ' + data.data.lastName, type: 'JOIN' }))
         });
     }
 
@@ -73,7 +73,7 @@ export const Chat = (props) => {
 
     const sendMessage = (type, value) => {
         var chatMessage = {
-            sender: data.data.firstName +' '+data.data.lastName,
+            sender: data.data.firstName + ' ' + data.data.lastName,
             content: value,
             type: type,
             room: selectedRoom,
@@ -119,10 +119,11 @@ export const Chat = (props) => {
         setSendTime(new Date())
     }
 
-    const changeRoom = (id) => {
+    const changeRoom = (id, taskName) => {
         setBroadcastMessage([])
         setMessages([])
         setSelectedRoom(id);
+        setRoomName(taskName)
         getMessages(id)
         setFiles([])
     }
@@ -159,12 +160,12 @@ export const Chat = (props) => {
                 <div className="room" onClick={e => changeRoom(0)}> <input type="button" className="btn room-btn" value="Общий чат"></input></div>
                 {
                     props.tasks.length ? props.tasks.map(room => {
-                        return <div key={room.id} className="room" onClick={e => changeRoom(room.id)}> <input type="button" className="btn room-btn" value={room.taskName}></input></div>
+                        return <div key={room.id} className="room" onClick={e => changeRoom(room.id, room.taskName)}> <input type="button" className="btn room-btn" value={room.taskName}></input></div>
                     }) : null
                 }
             </div>
             <div className="chat col-9 m-0 p-0">
-                <ChatHeader />
+                <ChatHeader roomName={roomName} />
                 <ChatBody messages={messages} user={user} />
                 <ChatFooter sendMessage={sendMessage} files={files} setFiles={setFiles} />
             </div >

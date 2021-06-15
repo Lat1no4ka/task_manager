@@ -104,7 +104,6 @@ export const StatisticInfo = () => {
                         <StatisticTable userStatistic={userStatistic} />
                     </div>
                     <div className="col-12 col-xl-8 chart">
-                        {console.log(currentStatistic)}
                         <StatisticChart userStatistic={userStatistic} />
                     </div>
                 </div>

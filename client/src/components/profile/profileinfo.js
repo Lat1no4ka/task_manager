@@ -60,7 +60,6 @@ const ProfileInfo = () => {
 
         formData.append('file', selectedFile);
         formData.append('userId', userId)
-        console.log(formData);
         await fetch(
             `${process.env.REACT_APP_API_URL}/uploadProfilePic`,
             {

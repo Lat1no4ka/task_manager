@@ -95,7 +95,7 @@ export const TaskForm = (props) => {
     };
 
     const showSuccess = () => {
-        // window.location.reload();
+        window.location.reload();
         setSuccess(false)
     }
 
