@@ -123,9 +123,9 @@ public class FilesController {
     @RequestMapping(value = "/getProfilePic", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public String getImageAsLink(@RequestBody FilesEntity files) throws IOException {
         FilesEntity link = filesEntityRepository.findById(files.getId());
-        String[] parts = link.getFilePath().split(Pattern.quote("\\"));
+        String[] parts = link.getFilePath().split(Pattern.quote("/"));
         String filename  = parts[parts.length-1];
-        String lnk = "http://localhost:8080/getImage/"+filename;
+        String lnk = "http://82.179.12.115:8080/getImage/"+filename;
         return "{\"link\": \" "+ lnk +"\"}";
     }
 
@@ -186,13 +186,13 @@ public class FilesController {
     @RequestMapping(value = "/getChatFile", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public String getFileAsLink(@RequestBody ChatFiles files) throws IOException {
         ChatFiles link = chatFilesRepository.findById(files.getId());
-        String lnk = "http://localhost:8080/getFile/"+link.getHashName();
+        String lnk = "http://82.179.12.115:8080/getFile/"+link.getHashName();
         return "{\"link\": \" "+ lnk +"\"}";
     }
 
     public String fileToLink(Long fileId) throws IOException {
         ChatFiles link = chatFilesRepository.findById(fileId);
-        String lnk = "http://localhost:8080/getFile/"+link.getHashName();
+        String lnk = "http://82.179.12.115:8080/getFile/"+link.getHashName();
         return "{\"link\": \" "+ lnk +"\"}";
     }
 
