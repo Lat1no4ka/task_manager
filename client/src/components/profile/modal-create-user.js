@@ -31,7 +31,8 @@ const ModalCreateUser = () => {
   const [form, setForm] = useState(defaultUserData);
   const [showPass, setShowPass] = useState(false);
 
-  const sendForm = async () => {
+  const sendForm = async (e) => {
+    e.preventDefault();
     try {
       const data = await request(`${process.env.REACT_APP_API_URL}/registerUser`, "POST", JSON.stringify({ ...form }));
     } catch (error) {
@@ -59,10 +60,10 @@ const ModalCreateUser = () => {
         </Modal.Header>
         <Modal.Body>
 
-          <form className="d-flex row needs-validation" onSubmit={() => sendForm()}>
+          <form className="d-flex row needs-validation" onSubmit={(e) => sendForm(e)}>
             <div className="form-group col-6">
               <label >Логин</label>
-              <input required type="value" className="form-control" id="userName" placeholder="" value={form.userName} onChange={(e) => setForm({ ...form, userName: e.target.value })}></input>            </div>
+              <input required type="value"  pattern=".{5,}" className="form-control" id="userName" placeholder="" value={form.userName} onChange={(e) => setForm({ ...form, userName: e.target.value })}></input>            </div>
             <div className="form-group col-6">
               <label>Email</label>
               <input required type="value" className="form-control" id="email" placeholder="" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}></input>            </div>
@@ -88,7 +89,7 @@ const ModalCreateUser = () => {
               </select>
             </div>
             <div className="d-flex justify-content-end col-12">
-              <input className="btn btn-secondary m-1" type="submit" value="Создать" ></input>
+              <input className="btn btn-secondary m-1" type="submit"  value="Создать" ></input>
               <input className="btn btn-secondary m-1" type="button" value="Отмена" onClick={() => handleClose()}></input>
             </div>
           </form>

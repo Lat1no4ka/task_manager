@@ -23,7 +23,7 @@ const Header = () => {
   };
 
   return (
-    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+    <Navbar collapseOnSelect bg="dark" variant="dark">
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className=" container d-flex flex-row">
           <Nav.Link href="home">
