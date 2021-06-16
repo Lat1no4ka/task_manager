@@ -46,7 +46,6 @@ public class UserController {
     public List<UserEntity> ListUsersById(@RequestBody List<User> user)
     {
         List<UserEntity> usrList = new ArrayList<>();
-
         for (int i=0; i<user.size(); i++)
         {
             User usr = user.get(i);
@@ -54,7 +53,6 @@ public class UserController {
             UserEntity ousr = userEntityRepository.findById(idu);
             usrList.add(ousr);
         }
-
         return usrList;
     }
 
@@ -82,10 +80,6 @@ public class UserController {
                 }
                 else{return user.getPassword() + " ___ " + " ___ " + newusr.getPassword();}
         }
-
-        //Старое изменение - просто заменяет пароль
-        //if (user.getPassword()!=null){newusr.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));}
-
         userRepository.save(newusr);
         return "Информация обновлена";
     }
@@ -111,20 +105,6 @@ public class UserController {
             currentSet.setBackgroundImageSet(settings.getBackgroundImageSet());
         }
         return settings;
-    }
-
-    //Сброс настроек
-    @RequestMapping(value={"/newSettings"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
-    public Settings ListUsersById(@RequestBody UserEntity user)
-    {
-        Settings setting =  settingsRepository.findByUser(userEntityRepository.findById(user.getId()));
-        setting.setEmpViewSet(new Long(1));
-        setting.setNotificationSet(new Long(1));
-        setting.setTaskViewSet(new Long(1));
-        setting.setFontSizeSet(new Long(1));
-        setting.setBackgroundImageSet("https://assets.awwwards.com/awards/images/2015/04/pattern.jpg");
-        settingsRepository.save(setting);
-        return setting;
     }
 
     //Настройки для новых пользователей, запускаются при создании нового пользователя

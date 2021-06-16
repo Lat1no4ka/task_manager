@@ -47,7 +47,6 @@ public class ChatController {
         return message;
     }
 
-
     /*--------------------Private chat--------------------*/
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;

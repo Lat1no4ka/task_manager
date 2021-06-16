@@ -96,7 +96,6 @@ public class AddTaskController {
         return task.getId();
     }
 
-
     //создание подзадачи, ловит List тел и записывет их.
     @RequestMapping(value = {"/addSubtask"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public List addSubtask(@RequestBody List<Task> tasks) {
@@ -269,17 +268,23 @@ public class AddTaskController {
         for (UserFolderEntity usr : userList)
         {
             if(usr.getId() == authId){
-                UserEntity myUser = userEntityRepository.findById(authId);
-                usr.setTasks(taskEntityRepository.findByEmployeeAndParentIdIsNull(myUser));
-            }
-            else {
                 UserEntity myUsr = userEntityRepository.findById(usr.getId());
-                usr.setTasks(taskEntityRepository.findByEmployeeAndAuthorAndParentIdIsNull(myUsr,author));
+                List<TaskEntity> tasksList = taskEntityRepository.findByEmployeeAndParentIdIsNullOrderByBegDateAsc(author);
+                Set<TaskEntity> taskSet = new LinkedHashSet<>(tasksList);
+                List<TaskEntity> subtasksList = taskEntityRepository.findByEmployeeAndParentIdIsNotNullOrderByBegDateAsc(author);
+                for (TaskEntity subtsk : subtasksList){
+                    taskSet.add(taskEntityRepository.findById(subtsk.getParentId()));
+                }
+                List<TaskEntity> finalList = new ArrayList<>(taskSet);
+                usr.setTasks(finalList);
+            }
+            else{
+                UserEntity myUsr = userEntityRepository.findById(usr.getId());
+                usr.setTasks(taskEntityRepository.findByEmployeeAndAuthorAndParentIdIsNullOrderByBegDateAsc(myUsr,author));
             }
         }
         return userList;
     }
-
 
     //Автоматическая поебень™ смотрит дату и ебашит задачи в просроченные
     @Scheduled(cron ="50 59 23 * * *")
@@ -313,18 +318,6 @@ public class AddTaskController {
             taskEntityRepository.save(tsk);
             restoreController.StatusCheck(tsk);
         }
-    }
-
-    @RequestMapping(value = {"/testFunc"}, method = RequestMethod.GET, headers = {"Content-type=application/json"})
-    public List testFunc() {
-        List<TaskEntity> bruh = taskEntityRepository.findAll();
-        return bruh;
-    }
-
-    @RequestMapping(value = {"/testFuncUser"}, method = RequestMethod.GET, headers = {"Content-type=application/json"})
-    public List testFuncUser() {
-        List<UserEntity> bruh = userEntityRepository.findAll();
-        return bruh;
     }
 
 }
