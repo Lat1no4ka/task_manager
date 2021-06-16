@@ -269,9 +269,9 @@ public class AddTaskController {
         {
             if(usr.getId() == authId){
                 UserEntity myUsr = userEntityRepository.findById(usr.getId());
-                List<TaskEntity> tasksList = taskEntityRepository.findByEmployeeAndParentIdIsNull(author);
-                Set<TaskEntity> taskSet = new HashSet<>(tasksList);
-                List<TaskEntity> subtasksList = taskEntityRepository.findByEmployeeAndParentIdIsNotNull(author);
+                List<TaskEntity> tasksList = taskEntityRepository.findByEmployeeAndParentIdIsNullOrderByBegDateAsc(author);
+                Set<TaskEntity> taskSet = new LinkedHashSet<>(tasksList);
+                List<TaskEntity> subtasksList = taskEntityRepository.findByEmployeeAndParentIdIsNotNullOrderByBegDateAsc(author);
                 for (TaskEntity subtsk : subtasksList){
                     taskSet.add(taskEntityRepository.findById(subtsk.getParentId()));
                 }
@@ -280,7 +280,7 @@ public class AddTaskController {
             }
             else{
                 UserEntity myUsr = userEntityRepository.findById(usr.getId());
-                usr.setTasks(taskEntityRepository.findByEmployeeAndAuthorAndParentIdIsNull(myUsr,author));
+                usr.setTasks(taskEntityRepository.findByEmployeeAndAuthorAndParentIdIsNullOrderByBegDateAsc(myUsr,author));
             }
         }
         return userList;
