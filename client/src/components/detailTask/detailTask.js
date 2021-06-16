@@ -55,17 +55,18 @@ export const DetailTask = (props) => {
   const userId = useSelector((state) => state.auth.userId);
   const [file, setFile] = useState(null)
   const [showAddSubTask, setShowAddSubTask] = useState(false);
+  const [updated, setUpdated] = useState(false);
   const [form, setForm] = useState({
-    id: data.id,
-    taskName: data.taskName,
-    taskDesc: data.taskDesc,
-    begDate: data.begDate,
-    endDate: data.endDate,
-    priority: data.priority,
-    employee: data.employee,
-    files: data.files,
-    status: data.status,
-    author: data.author,
+    id: props.data.id,
+    taskName: props.data.taskName,
+    taskDesc: props.data.taskDesc,
+    begDate: props.data.begDate,
+    endDate: props.data.endDate,
+    priority: props.data.priority,
+    employee: props.data.employee,
+    files: props.data.files,
+    status: props.data.status,
+    author: props.data.author,
   })
 
   useEffect(() => {
@@ -79,7 +80,7 @@ export const DetailTask = (props) => {
 
   useEffect(() => {
     props.setDateTime(new Date())
-  }, [edit, showAddSubTask])
+  }, [edit, showAddSubTask, updated])
 
   const getFile = async (index, fileName) => {
 
@@ -125,9 +126,13 @@ export const DetailTask = (props) => {
     status ? update.status = status.id : update.status = update.status.id
     update.author = update.author.id
     update.employee = update.employee.id
-    await request(`${process.env.REACT_APP_API_URL}/alterTask`, "POST", JSON.stringify({ ...update }))
+    try {
+      await request(`${process.env.REACT_APP_API_URL}/alterTask`, "POST", JSON.stringify(update))
+    } catch (err) {
+    }
     setData({ ...form })
     setEdit(false)
+    setUpdated(!updated)
   }
 
   const SubTask = (props) => {
@@ -223,13 +228,13 @@ export const DetailTask = (props) => {
                     <div>
                       {nextStatus[0] ?
                         <button type="button" className="btn btn-secondary m-1"
-                          onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[0]); props.setDateTime(new Date()) }}>
+                          onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[0]); }}>
                           {nextStatus[0]?.statusName}
                         </button> : null
                       }
                       {nextStatus[1] ?
                         <button type="button" className="btn btn-secondary m-1"
-                          onClick={(e) => { setForm({ ...form, status: nextStatus[1] }); saveEdit(nextStatus[1]); props.setDateTime(new Date()) }}
+                          onClick={(e) => { setForm({ ...form, status: nextStatus[1] }); saveEdit(nextStatus[1]); }}
                         >
                           {nextStatus[1]?.statusName}
                         </button> : null

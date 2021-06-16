@@ -17,7 +17,7 @@ export const ChatFooter = (props) => {
                     <div className="col-8 m-1 p-0">
                         <textarea
                             value={message}
-                            onChange={e => { setMesage(e.target.value) }}
+                            onChange={e => { setMesage(e.target.value.replace (/[\n\r]/g, '')) }}
                             onKeyPress={e => {
                                 if (e.key === 'Enter') {
                                     sendMessage();

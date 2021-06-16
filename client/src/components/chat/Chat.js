@@ -88,8 +88,10 @@ export const Chat = (props) => {
             fileName4: filesField[3]?.fileName,
             fileName5: filesField[4]?.fileName,
         };
-        stompClient.send('/app/sendMessage/0', {}, JSON.stringify(chatMessage));
+        if (value.trim() != '' || files)
+            stompClient.send('/app/sendMessage/0', {}, JSON.stringify(chatMessage));
         setFiles([])
+        setFilesField([])
     }
 
     const getMessages = async (id) => {
@@ -154,10 +156,11 @@ export const Chat = (props) => {
         setFilesField(data)
     }
 
+
     return (
         <div className="d-flex">
-            <div className="col-3 p-0 mr-1 m-0 d-flex flex-column">
-                <div className="room" onClick={e => changeRoom(0)}> <input type="button" className="btn room-btn" value="Общий чат"></input></div>
+            <div className="col-3 p-0 mr-1 m-0 d-flex flex-column scroll-room">
+                <div className="room" onClick={e => changeRoom(0, "Общий чат")}> <input type="button" className="btn room-btn" value="Общий чат"></input></div>
                 {
                     props.tasks.length ? props.tasks.map(room => {
                         return <div key={room.id} className="room" onClick={e => changeRoom(room.id, room.taskName)}> <input type="button" className="btn room-btn" value={room.taskName}></input></div>
@@ -166,7 +169,7 @@ export const Chat = (props) => {
             </div>
             <div className="chat col-9 m-0 p-0">
                 <ChatHeader roomName={roomName} />
-                <ChatBody messages={messages} user={user} />
+                <ChatBody messages={messages} user={user} time={new Date()} />
                 <ChatFooter sendMessage={sendMessage} files={files} setFiles={setFiles} />
             </div >
         </div>

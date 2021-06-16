@@ -1,6 +1,12 @@
 $borderGrayColor: rgb(153, 152, 152);
 $borderdarkGrayColor: rgb(90, 89, 89);
 
+.scroll-room{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 600px;
+}
+
 .chat {
     width: 100%;
     min-height: 600px;

@@ -3,7 +3,7 @@ import { SideBar } from "../sidebar/sidebar";
 import { Chat } from "../chat/Chat";
 import { DetailTask } from "../detailTask/detailTask";
 import { useHttp } from "../../hooks/http.hook";
-import { ChatDots, Sliders } from "react-bootstrap-icons";
+import { Archive, ChatDots, Sliders } from "react-bootstrap-icons";
 import { useSelector } from "react-redux"
 import "./home.scss";
 
@@ -23,6 +23,7 @@ export const TaskBoard = () => {
 
   const getUsers = async () => {
     const users = await request(`${process.env.REACT_APP_API_URL}/getParentTasks`, "POST", JSON.stringify({ id: userId }))
+
     setUsers(users)
   }
 
@@ -46,7 +47,9 @@ export const TaskBoard = () => {
       return task.status.alias == status ? task : null
     })
     if (status == 'return') {
-      return currentUser.tasks;
+      return currentUser.tasks.filter((task) => {
+        return task.status.alias != "archived" ? task : null
+      })
     }
     return tasks
   }
@@ -134,7 +137,7 @@ export const UsersFolders = (props) => {
           </div>
           <div className="folder_body p-2">
             <p>
-              Задач: {user.tasks.length}
+              Задач: {user.tasks.filter((task) => { return task.status.alias != 'archived' ? task : null }).length}
             </p>
           </div>
           <div className="folder_footer">

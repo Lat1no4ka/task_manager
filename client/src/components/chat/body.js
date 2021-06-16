@@ -1,13 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FileArrowDown } from 'react-bootstrap-icons';
 
 export const ChatBody = (props) => {
     const [messages, setMessages] = useState([]);
     const data = JSON.parse(localStorage.getItem("userData"));
     const name = data.data.firstName + ' ' + data.data.lastName;
+    const messagesEndRef = useRef(null)
     useEffect(() => {
         setMessages(props.messages)
     }, [props.messages])
+
+    
+    useEffect(() => {
+        scrollToBottom()
+    }, [messages,messages.length, props.time])
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
 
     const prepareMessage = (message, index) => {
         let date = new Date(message.dateTime)
@@ -76,6 +86,7 @@ export const ChatBody = (props) => {
                         return prepareMessage(message, index)
                     })
                 }
+                <div ref={messagesEndRef}></div>
             </div>
         </div>
     )
