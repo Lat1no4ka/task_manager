@@ -5,6 +5,7 @@ import { DetailTask } from "../detailTask/detailTask";
 import { useHttp } from "../../hooks/http.hook";
 import { Archive, ChatDots, Sliders } from "react-bootstrap-icons";
 import { useSelector } from "react-redux"
+import BgImage from "../../SparkMain.jpg";
 import "./home.scss";
 
 export const TaskBoard = () => {
@@ -75,7 +76,7 @@ export const TaskBoard = () => {
 
 
   return (
-    <div className="d-flex">
+    <div className="d-flex" style={{backgroundImage: `url(${BgImage})`, position: 'absolute',width:'100%', height:'100%'}}>
       <div className="container">
         <div className="d-flex">
           <div className="col-2 mt-2 mr-2">
@@ -95,13 +96,13 @@ export const TaskBoard = () => {
               <ChatDots size={28} className="icon" onClick={e => {
                 setShowChat(!showChat)
                 setShowFilter(false)
-              }} />
+              }} style={{background:'white', borderRadius:'10px'}}/>
             </div>
             <div className="mr-2">
               <Sliders size={28} className="icon" onClick={e => {
                 setShowFilter(!showFilter)
                 setShowChat(false)
-              }} />
+              }} style={{background:'white', borderRadius:'10px'}}/>
             </div>
           </div>
         </div>
@@ -129,7 +130,7 @@ export const UsersFolders = (props) => {
   return (
     users.filter(user => serachUser(user)).map((user) => {
       return (
-        <div className="folder col-3 m-2" key={user.id} onClick={e => setSelectedUserId(user.id)}>
+        <div className="folder col-3 m-2" key={user.id} onClick={e => setSelectedUserId(user.id)} style={{background: 'white'}}>
           <div className="folder_header p-2">
             <p>
               {user.firstName} {user.lastName}
@@ -189,7 +190,7 @@ export const UserTasks = (props) => {
         tasks.filter((task) => serachTask(task)).map((task) => {
           return (
             <div className="col-3 p-2" key={task.id} onClick={e => { setSelectedTask(task); setShowDetail(true); }} >
-              <div className="task">
+              <div className="task" style={{background: 'white'}}>
                 <div className="task_header" style={statusStyle(task.status.statusColor)}>
                   <p className="p-0 m-0">Статус: {task.status.statusName}</p>
                 </div>

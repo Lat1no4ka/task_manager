@@ -23,7 +23,7 @@ export const SideBar = (props) => {
     return (
       <div className="sidebar-show" >
         <div className="d-flex flex-column">
-          <label className="m-1 col-6">Выбрать только:</label>
+          <label className="m-1 col-6" style={{background:'white',borderRadius:'10px'}}>Выбрать только:</label>
           <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('new')}>Новые</button>
           <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('work')}>В работе</button>
           <button type="button" className="btn btn-secondary col-6 m-1" onClick={e => props.setStatus('check')}>На проверке</button>

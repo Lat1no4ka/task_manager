@@ -15,15 +15,5 @@
             <column name="role_id" value="2"/>
             <column name="email" value="dashkovtemk@mail.ru"/>
         </insert>
-
-        <insert tableName="users">
-            <column name="id" valueNumeric="2"/>
-            <column name="user_name" value="user"/>
-            <column name="first_name" value="user"/>
-            <column name="last_name" value="user"/>
-            <column name="password" value="1234"/>
-            <column name="role_id" value="1"/>
-        </insert>
-
     </changeSet>
 </databaseChangeLog>
