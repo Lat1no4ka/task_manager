@@ -65,6 +65,7 @@ public class FilesController {
             UserEntity usr = userEntityRepository.findById(id);
             filesEntityRepository.save(files);
             usr.setPicture(files);
+            usr.setPictureLink(ImgToLink(files));
             userEntityRepository.save(usr);
             return "Изображение успешно добавлено";
         }
@@ -122,6 +123,14 @@ public class FilesController {
     //Получение картинки пользователя по id файла
     @RequestMapping(value = "/getProfilePic", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public String getImageAsLink(@RequestBody FilesEntity files) throws IOException {
+        FilesEntity link = filesEntityRepository.findById(files.getId());
+        String[] parts = link.getFilePath().split(Pattern.quote("/"));
+        String filename  = parts[parts.length-1];
+        String lnk = "http://82.179.12.115:8080/getImage/"+filename;
+        return "{\"link\": \" "+ lnk +"\"}";
+    }
+
+    public String ImgToLink(FilesEntity files){
         FilesEntity link = filesEntityRepository.findById(files.getId());
         String[] parts = link.getFilePath().split(Pattern.quote("/"));
         String filename  = parts[parts.length-1];
@@ -195,6 +204,7 @@ public class FilesController {
         String lnk = "http://82.179.12.115:8080/getFile/"+link.getHashName();
         return "{\"link\": \" "+ lnk +"\"}";
     }
+
 
     //Скачивание файла по ссылке
     @GetMapping(
