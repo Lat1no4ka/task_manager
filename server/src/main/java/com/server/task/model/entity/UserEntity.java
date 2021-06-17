@@ -31,6 +31,9 @@ public class UserEntity implements Serializable {
     @JoinColumn(name = "picture_id", referencedColumnName = "id")
     private FilesEntity picture = new FilesEntity();
 
+    @Column(name = "picture_link")
+    private String pictureLink;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
@@ -62,6 +65,14 @@ public class UserEntity implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+    }
+
+    public String getPictureLink() {
+        return pictureLink;
+    }
+
+    public void setPictureLink(String pictureLink) {
+        this.pictureLink = pictureLink;
     }
 
     public Role getRole() {
