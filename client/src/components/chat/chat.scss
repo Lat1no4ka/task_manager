@@ -6,6 +6,9 @@ $borderdarkGrayColor: rgb(90, 89, 89);
     overflow-x: hidden;
     max-height: 600px;
 }
+.scroll-room::-webkit-scrollbar{
+    width: 0;
+}
 
 .chat {
     width: 100%;
@@ -143,6 +146,7 @@ $borderdarkGrayColor: rgb(90, 89, 89);
     margin: 2px 0;
     border-radius: 10px;
     cursor: pointer;
+    background: white;
     .room-btn {
         outline: none;
         &:hover,
