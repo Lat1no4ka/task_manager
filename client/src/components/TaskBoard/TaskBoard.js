@@ -3,7 +3,7 @@ import { SideBar } from "../sidebar/sidebar";
 import { Chat } from "../chat/Chat";
 import { DetailTask } from "../detailTask/detailTask";
 import { useHttp } from "../../hooks/http.hook";
-import { Archive, ChatDots, Sliders } from "react-bootstrap-icons";
+import { ChatText, Sliders } from "react-bootstrap-icons";
 import { useSelector } from "react-redux"
 import BgImage from "../../SparkMain.jpg";
 import "./home.scss";
@@ -79,13 +79,13 @@ export const TaskBoard = () => {
     <div className="d-flex" style={{backgroundImage: `url(${BgImage})`, position: 'absolute',width:'100%', height:'100%'}}>
       <div className="container">
         <div className="d-flex">
-          <div className="col-2 mt-2 mr-2">
+          <div className="col-3 mt-2 mr-2">
             {!selectedUserId ? <input type="button" onClick={e => setMytask(!myTask)}
-              className="btn btn-secondary" value={myTask ? "Поставленные мной" : "Мои задачи"}></input>
+              className="btn btn-secondary" value={myTask ? "Поставленные мной" : "Назначенные для меня"}></input>
               : <input type="button" class="btn btn-secondary" onClick={e => setSelectedUserId(null)} value="Назад"></input>
             }
           </div>
-          <div className="input-group mt-2 col-8 p-0">
+          <div className="input-group mt-2 col-6 p-0">
             <input type="search" className="form-control" placeholder="Поиск" value={!selectedUserId ? search : taskSearch}
               onChange={e => { !selectedUserId ? setSearch(e.target.value) : setTaskSearch(e.target.value) }}
             >
@@ -93,16 +93,16 @@ export const TaskBoard = () => {
           </div>
           <div className="d-flex mt-2 justify-content-end col-2">
             <div className="mr-2">
-              <ChatDots size={28} className="icon" onClick={e => {
+              <ChatText size={42} className="icon" onClick={e => {
                 setShowChat(!showChat)
                 setShowFilter(false)
-              }} style={{background:'white', borderRadius:'10px'}}/>
+              }} style={{background:'white', borderRadius:'50% 50% 10px 6px '}}/>
             </div>
             <div className="mr-2">
-              <Sliders size={28} className="icon" onClick={e => {
+              <Sliders size={42} className="icon" onClick={e => {
                 setShowFilter(!showFilter)
                 setShowChat(false)
-              }} style={{background:'white', borderRadius:'10px'}}/>
+              }} style={{background:'white', borderRadius:'0px'}}/>
             </div>
           </div>
         </div>

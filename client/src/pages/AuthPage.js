@@ -36,10 +36,10 @@ const AuthPage = () => {
     <div className="container col-4" style={style}>
       <Form>
         <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email</Form.Label>
+          <Form.Label>Login</Form.Label>
           <Form.Control
-            type="email"
-            placeholder="Введите Email"
+            type="login"
+            placeholder="Введите login"
             defaultValue={email}
             onChange={(e) => setEmail(e.target.value)}
           />
