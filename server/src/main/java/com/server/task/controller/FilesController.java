@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import com.server.task.model.*;
 import com.server.task.model.entity.FilesEntity;
+import com.server.task.model.entity.TaskEntity;
 import com.server.task.model.entity.UserEntity;
 import com.server.task.repo.*;
 
@@ -45,6 +46,10 @@ public class FilesController {
     UserEntityRepository userEntityRepository;
     @Autowired
     MessageRepository messageRepository;
+    @Autowired
+    TaskEntityRepository taskEntityRepository;
+    @Autowired
+    StatusDirRepository statusDirRepository;
 
     //загрузка картинки пользователя с проверкой на изображение
     @RequestMapping(value = "/uploadProfilePic", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -304,6 +309,45 @@ public class FilesController {
         return msg;
     }
 
+    //Загрузка ответов
+    @RequestMapping(value = "/uploadAnswer", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public List<Files>uploadAnswer(@RequestParam("file") List<MultipartFile> multiPartFiles, @RequestParam("taskId") Long id) throws IOException {
+        List<Files> fileList = new ArrayList<>();
+        TaskEntity task = taskEntityRepository.findById(id);
+        for (MultipartFile mPFile : multiPartFiles) {
+            Files file = new Files();
+            file.setFileName(mPFile.getOriginalFilename());
+            String hashFilename = (UUID.randomUUID()).toString();
+            File convertFile = new File("src/main/resources/static/documents/" + hashFilename);
+            convertFile.createNewFile();
+            FileOutputStream fout = new FileOutputStream(convertFile);
+            fout.write(mPFile.getBytes());
+            fout.close();
+            file.setFilePath(convertFile.toString());
+            file.setAnswer(id);
+            fileList.add(file);
+        }
+        task.setStatus(statusDirRepository.findById(new Long(3)));
+        filesRepository.saveAll(fileList);
+        taskEntityRepository.save(task);
+        return fileList;
+    }
+
+    //удаление ответа
+    @RequestMapping(value = "/deleteAnswer", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public TaskEntity deleteAnswer(@RequestBody TaskEntity task) throws IOException  {
+        TaskEntity tsk = taskEntityRepository.findById(task.getId());
+        List<Files> answer = tsk.getAnswer();
+        for (Files file : answer) {
+            Files dbFile = filesRepository.findById(file.getId());
+            File storageFile = new File(dbFile.getFilePath());
+            filesRepository.delete(dbFile);
+            storageFile.delete();
+        }
+        tsk.setAnswer(null);
+        taskEntityRepository.save(tsk);
+        return tsk;
+    }
 
 
 }
