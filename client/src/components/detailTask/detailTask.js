@@ -257,13 +257,13 @@ export const DetailTask = (props) => {
                         {nextStatus[0] ?
                           <button type="button" className="btn btn-secondary m-1"
                             onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[0]); }}
-                            disabled={nextStatus[0]?.statusName == 'check' && userId == form.author.id ? true : false}
+                            disabled={form.status?.alias == 'check' && userId == form.author.id ? false : form.status?.alias != 'check' ? false : true}
                           >
                             {nextStatus[0]?.statusName}
                           </button> : null
                         }
                         {nextStatus[1] ?
-                          <button type="button" className="btn btn-secondary m-1" disabled={nextStatus[1]?.statusName == 'check' && userId == form.author.id ? true : false}
+                          <button type="button" className="btn btn-secondary m-1" disabled={form.status?.alias == 'check' && userId == form.author.id ? false : form.status?.alias != 'check' ? false : true}
                             onClick={(e) => { setForm({ ...form, status: nextStatus[1] }); saveEdit(nextStatus[1]); }}
                           >
                             {nextStatus[1]?.statusName}
