@@ -159,7 +159,7 @@ export const Chat = (props) => {
 
     return (
         <div className="d-flex">
-            <div className="col-3 p-0 mr-1 m-0 d-flex flex-column scroll-room" style={{background:'#b6b8b9', borderRadius:'10px' }}>
+            <div className="col-3 p-0 mr-1 m-0 d-flex flex-column scroll-room">
                 <div className="room" onClick={e => changeRoom(0, "Общий чат")}> <input type="button" className="btn room-btn" value="Общий чат"></input></div>
                 {
                     props.tasks.length ? props.tasks.map(room => {

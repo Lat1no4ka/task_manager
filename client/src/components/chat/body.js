@@ -10,10 +10,16 @@ export const ChatBody = (props) => {
         setMessages(props.messages)
     }, [props.messages])
 
-    
+
     useEffect(() => {
         scrollToBottom()
-    }, [messages,messages.length, props.time])
+    }, [messages, messages.length, props.time])
+    
+    useEffect(() => {
+        return () => {
+            messagesEndRef.current = false
+        }
+    }, [messagesEndRef])
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })

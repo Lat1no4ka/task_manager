@@ -67,6 +67,7 @@ export const DetailTask = (props) => {
     files: props.data.files,
     status: props.data.status,
     author: props.data.author,
+    answer: props.data.answer
   })
 
   useEffect(() => {
@@ -178,7 +179,7 @@ export const DetailTask = (props) => {
         break
       case "revision":
         next = status.filter(item => {
-          return item.alias === "accepted" || item.alias == 'closed' ? item : null;
+          return item.alias === "work" || item.alias == 'closed' ? item : null;
         })
         setNextStatus(next)
         break
@@ -203,6 +204,18 @@ export const DetailTask = (props) => {
     }
   }
 
+  const addFile = async (files) => {
+    console.log(files)
+    const formData = new FormData();
+    Array.from(files).forEach(file => {
+      formData.append('file', file)
+    });
+    formData.append('taskId', props.data.id)
+    const headers = { 'Access-Control-Allow-Credentials': 'true' }
+    await request(`${process.env.REACT_APP_API_URL}/uploadAnswer`, "POST", formData, headers)
+    setUpdated(!updated)
+  }
+
   if (!showDetail && !showAddSubTask) {
     return (
       <Modal
@@ -223,24 +236,41 @@ export const DetailTask = (props) => {
             </Modal.Title>
             <Modal.Title className="col-6">
               {
-                edit ? "" :
-                  nextStatus ?
-                    <div>
-                      {nextStatus[0] ?
-                        <button type="button" className="btn btn-secondary m-1"
-                          onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[0]); }}>
-                          {nextStatus[0]?.statusName}
-                        </button> : null
+                edit ? null :
+                  form.status.alias == 'work' || form.status.alias == 'revision' ?
+                    <div className="d-flex">
+                      <div>
+                        <input type="file" class="custom-file-input d-none" multiple id="validatedCustomFile" onChange={e => addFile(e.target.files)}></input>
+                        <label class="btn btn-secondary m-1" for="validatedCustomFile">Прикрепить файл</label>
+                      </div>
+                      {nextStatus && nextStatus[1] ?
+                        <div>
+                          <button type="button" className="btn btn-secondary m-1"
+                            onClick={(e) => { setForm({ ...form, status: nextStatus[1] }); saveEdit(nextStatus[1]); }}
+                          >
+                            {nextStatus[1]?.statusName}
+                          </button> </div> : null
                       }
-                      {nextStatus[1] ?
-                        <button type="button" className="btn btn-secondary m-1"
-                          onClick={(e) => { setForm({ ...form, status: nextStatus[1] }); saveEdit(nextStatus[1]); }}
-                        >
-                          {nextStatus[1]?.statusName}
-                        </button> : null
-                      }
-                    </div>
-                    : ""
+                    </div> :
+                    nextStatus ?
+                      <div>
+                        {nextStatus[0] ?
+                          <button type="button" className="btn btn-secondary m-1"
+                            onClick={(e) => { setForm({ ...form, status: nextStatus[0] }); saveEdit(nextStatus[0]); }}
+                            disabled={nextStatus[0]?.statusName == 'check' && userId == form.author.id ? true : false}
+                          >
+                            {nextStatus[0]?.statusName}
+                          </button> : null
+                        }
+                        {nextStatus[1] ?
+                          <button type="button" className="btn btn-secondary m-1" disabled={nextStatus[1]?.statusName == 'check' && userId == form.author.id ? true : false}
+                            onClick={(e) => { setForm({ ...form, status: nextStatus[1] }); saveEdit(nextStatus[1]); }}
+                          >
+                            {nextStatus[1]?.statusName}
+                          </button> : null
+                        }
+                      </div>
+                      : ""
               }
             </Modal.Title>
           </div>
@@ -249,6 +279,17 @@ export const DetailTask = (props) => {
           <div className="d-flex flex-column w-100">
             <div>
               {edit ? "" : <p className="desc">Статус: <span>{form.status.statusName}</span></p>}
+            </div>
+            <div>
+              {edit ? null :
+                form.answer.length ? <div className="d-flex">
+                  <div> <p style={{ fontWeight: "600" }} className="mr-1">Ответ к задаче:</p></div><div className="d-flex flex-column">
+                    {form.answer.map(file => {
+                      return <a style={{ color: "black" }} href={file.filePath}>{file.fileName}</a>
+                    })}
+                  </div>
+                </div> : null
+              }
             </div>
             <div>
               {
