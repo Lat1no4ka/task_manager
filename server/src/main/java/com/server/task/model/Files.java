@@ -21,6 +21,12 @@ public class Files implements Serializable {
     @Column(name = "file_name")
     private String fileName;
 
+    @Column(name = "task_answer_id")
+    private Long answer;
+
+    public Long getAnswer() { return answer; }
+
+    public void setAnswer(Long answer) { this.answer = answer; }
 
     public Long getId() {
         return id;

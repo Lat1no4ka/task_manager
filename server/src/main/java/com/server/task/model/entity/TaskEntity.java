@@ -62,6 +62,10 @@ public class TaskEntity implements Serializable {
     @Column(name = "stat_change")
     private Date lastChange;
 
+    @OneToMany
+    @JoinColumn(name = "task_answer_id")
+    private List<Files> answer = new ArrayList<>();
+
     public TaskEntity(Long id, String taskName, String begDate, String endDate, String taskDesc, UserEntity author, List<UserEntity> employee, Long parentId) {
         this.id = id;
         this.taskName = taskName;
@@ -90,6 +94,14 @@ public class TaskEntity implements Serializable {
         this.employee = null;
         this.parentId = null;
     }
+
+    public List<Files> getAnswer() { return answer; }
+
+    public void setBegDate(String begDate) { this.begDate = begDate; }
+
+    public void setAuthor(UserEntity author) { this.author = author; }
+
+    public void setAnswer(List<Files> answer) { this.answer = answer; }
 
     public List<UserEntity> getEmployee() { return employee; }
 

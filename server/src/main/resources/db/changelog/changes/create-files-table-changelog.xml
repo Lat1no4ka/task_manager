@@ -24,6 +24,10 @@
                 <constraints nullable="true"/>
             </column>
 
+            <column name="task_answer_id" type="INT">
+                <constraints nullable="true"/>
+            </column>
+
         </createTable>
         <rollback>
             <dropTable tableName="files"/>
