@@ -333,16 +333,6 @@ public class FilesController {
         return fileList;
     }
 
-    //отправка на доработку
-    @RequestMapping(value = "/returnTask", method = RequestMethod.POST, headers = {"Content-type=application/json"})
-    public TaskEntity returnTask(@RequestBody TaskEntity task) throws IOException  {
-        TaskEntity tsk = taskEntityRepository.findById(task.getId());
-        tsk.setStatus(statusDirRepository.findById(new Long(4)));
-        taskEntityRepository.save(tsk);
-        return tsk;
-    }
-
-
     //удаление ответа
     @RequestMapping(value = "/deleteAnswer", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public TaskEntity deleteAnswer(@RequestBody TaskEntity task) throws IOException  {

@@ -51,6 +51,8 @@ public class AddTaskController {
     StatusDirRepository statusRepository;
     @Autowired
     RestoreController restoreController;
+    @Autowired
+    StatusDirRepository statusController;
 
     @RequestMapping(value = {"/addTaskOld"}, method = RequestMethod.POST, headers = {"Content-type=application/json"})
     public Task addNewTaskPiece(@RequestBody Task task) {
@@ -319,5 +321,43 @@ public class AddTaskController {
             restoreController.StatusCheck(tsk);
         }
     }
+
+    //отправка на доработку
+    @RequestMapping(value = "/returnTask", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public TaskEntity returnTask(@RequestBody TaskEntity task) throws IOException  {
+        TaskEntity tsk = taskEntityRepository.findById(task.getId());
+        tsk.setStatus(statusRepository.findById(new Long(4)));
+        taskEntityRepository.save(tsk);
+        return tsk;
+    }
+
+    //принятие задачи
+    @RequestMapping(value = "/acceptTask", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public TaskEntity acceptTask(@RequestBody TaskEntity task) throws IOException  {
+        TaskEntity tsk = taskEntityRepository.findById(task.getId());
+        tsk.setStatus(statusRepository.findById(new Long(5)));
+        taskEntityRepository.save(tsk);
+        return tsk;
+    }
+
+    //отправка на доработку
+    @RequestMapping(value = "/archiveTask", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public TaskEntity archiveTask(@RequestBody TaskEntity task) throws IOException  {
+        TaskEntity tsk = taskEntityRepository.findById(task.getId());
+        tsk.setStatus(statusRepository.findById(new Long(8)));
+        taskEntityRepository.save(tsk);
+        return tsk;
+    }
+
+    //принятие задачи
+    @RequestMapping(value = "/closeTask", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    public TaskEntity closeTask(@RequestBody TaskEntity task) throws IOException  {
+        TaskEntity tsk = taskEntityRepository.findById(task.getId());
+        tsk.setStatus(statusRepository.findById(new Long(6)));
+        taskEntityRepository.save(tsk);
+        return tsk;
+    }
+
+
 
 }
