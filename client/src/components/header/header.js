@@ -20,6 +20,7 @@ const Header = () => {
     e.preventDefault();
     logout();
     history.push("/");
+    window.location.reload();
   };
 
   return (
