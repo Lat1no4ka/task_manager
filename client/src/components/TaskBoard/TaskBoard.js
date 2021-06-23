@@ -5,7 +5,6 @@ import { DetailTask } from "../detailTask/detailTask";
 import { useHttp } from "../../hooks/http.hook";
 import { ChatText, Sliders } from "react-bootstrap-icons";
 import { useSelector } from "react-redux"
-import BgImage from "../../SparkMain.jpg";
 import "./home.scss";
 
 export const TaskBoard = () => {

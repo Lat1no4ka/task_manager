@@ -349,5 +349,11 @@ public class FilesController {
         return tsk;
     }
 
+    public String answerToLink(Long fileId) throws IOException {
+        ChatFiles link = chatFilesRepository.findById(fileId);
+        String lnk = "http://82.179.12.115:8080/getAnswer/"+link.getHashName();
+        return "{\"link\": \" "+ lnk +"\"}";
+    }
+
 
 }
