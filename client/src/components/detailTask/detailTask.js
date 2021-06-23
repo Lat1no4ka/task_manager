@@ -285,7 +285,7 @@ export const DetailTask = (props) => {
                 form.answer.length ? <div className="d-flex">
                   <div> <p style={{ fontWeight: "600" }} className="mr-1">Ответ к задаче:</p></div><div className="d-flex flex-column">
                     {form.answer.map(file => {
-                      return <a style={{ color: "black" }} href={file.filePath}>{file.fileName}</a>
+                      return <a style={{ color: "black" }} href={file.fileLink}>{file.fileName}</a>
                     })}
                   </div>
                 </div> : null

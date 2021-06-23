@@ -28,6 +28,14 @@
                 <constraints nullable="true"/>
             </column>
 
+            <column name="file_link" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="hashname" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
         </createTable>
         <rollback>
             <dropTable tableName="files"/>
