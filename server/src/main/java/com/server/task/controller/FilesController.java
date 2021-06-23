@@ -325,11 +325,16 @@ public class FilesController {
             fout.close();
             file.setFilePath(convertFile.toString());
             file.setAnswer(id);
+            file.setHashname(hashFilename);
             fileList.add(file);
         }
         task.setStatus(statusDirRepository.findById(new Long(3)));
         filesRepository.saveAll(fileList);
         taskEntityRepository.save(task);
+        for (Files file : fileList){
+            file.setFileLink(answerToLink(file.getId()));
+        }
+        filesRepository.saveAll(fileList);
         return fileList;
     }
 
@@ -350,10 +355,32 @@ public class FilesController {
     }
 
     public String answerToLink(Long fileId) throws IOException {
-        ChatFiles link = chatFilesRepository.findById(fileId);
-        String lnk = "http://82.179.12.115:8080/getAnswer/"+link.getHashName();
-        return "{\"link\": \" "+ lnk +"\"}";
+        Files link = filesRepository.findById(fileId);
+        String lnk = "http://82.179.12.115:8080/getAnswer/"+link.getHashname();
+        return lnk;
     }
 
+    //Скачивание файла по ссылке
+    @GetMapping(
+            value = "getAnswer/{hashname:.+}",
+            produces = {MediaType.ALL_VALUE}
+    )
+    public ResponseEntity<Object> getAnswerByLink(@PathVariable(name = "hashname") String hashname) throws IOException {
+        Files filepath = filesRepository.findByHashname(hashname);
+        String filename = filepath.getFilePath();
+        String[] parts = filepath.getFileName().split(Pattern.quote("."));
+        String mediaType = ("application/" + parts[1]);
+        File file = new File(filename);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", filepath.getFileName()));
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+        ResponseEntity<Object>
+                responseEntity = ResponseEntity.ok().headers(headers).contentLength(file.length()).contentType(
+                MediaType.parseMediaType(mediaType)).body(resource);
+        return responseEntity;
+    }
 
 }

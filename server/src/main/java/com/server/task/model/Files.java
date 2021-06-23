@@ -24,6 +24,20 @@ public class Files implements Serializable {
     @Column(name = "task_answer_id")
     private Long answer;
 
+    @Column(name = "file_link")
+    private String fileLink;
+
+    @Column(name = "hashname")
+    private String hashname;
+
+    public String getHashname() { return hashname; }
+
+    public void setHashname(String hashname) { this.hashname = hashname; }
+
+    public String getFileLink() { return fileLink; }
+
+    public void setFileLink(String fileLink) { this.fileLink = fileLink; }
+
     public Long getAnswer() { return answer; }
 
     public void setAnswer(Long answer) { this.answer = answer; }
