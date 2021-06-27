@@ -28,7 +28,7 @@ const Header = () => {
   }
   return (
     <Navbar collapseOnSelect bg="dark" variant="dark">
-      <Navbar.Brand href="#home" style={{ maxWidth: "200px", whiteSpace: "normal" }} >{getUserName()}</Navbar.Brand>
+      <Navbar.Brand href="#home" style={{ maxWidth: "250px", whiteSpace: "normal", fontSize:"16px" }} >{getUserName()}</Navbar.Brand>
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className=" container d-flex flex-row">
           <Nav.Link href="home" style={{ maxHeight: "45px", textAlign: "center", minWidth: "90px", maxWidth: "90px" }}

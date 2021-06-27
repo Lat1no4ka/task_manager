@@ -98,16 +98,16 @@ export const TaskBoard = () => {
           </div>
           <div className="d-flex mt-2 justify-content-end col-2">
             <div className="mr-2">
-              <ChatText size={42} className="icon" onClick={e => {
+              <input type="button" className="btn btn-secondary" value="Чат" onClick={e => {
                 setShowChat(!showChat)
                 setShowFilter(false)
-              }} style={{ background: 'white', borderRadius: '50% 50% 10px 6px ' }} />
+              }}></input>
             </div>
             <div className="mr-2">
-              <Sliders size={42} className="icon" onClick={e => {
+              <input type="button" className="btn btn-secondary" value="Фильтры" onClick={e => {
                 setShowFilter(!showFilter)
                 setShowChat(false)
-              }} style={{ background: 'white', borderRadius: '0px' }} />
+              }}></input>
             </div>
           </div>
         </div>

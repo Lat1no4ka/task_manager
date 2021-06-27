@@ -201,6 +201,12 @@ export const DetailTask = (props) => {
         })
         setNextStatus(next)
         break
+      case "overdue":
+        next = status.filter(item => {
+          return item.alias == 'closed' ? item : null;
+        })
+        setNextStatus(next)
+        break
       default:
         next = status.filter(item => {
           return null;
