@@ -90,7 +90,7 @@ export const TaskBoard = () => {
               : null
             }
           </div>
-          <div className="input-group mt-2 col-4 p-0">
+          <div className={!selectedUserId ? "input-group mt-2 col-4 p-0" : "input-group mt-2 col-8 p-0"}>
             <input type="search" className="form-control" placeholder="Поиск" value={!selectedUserId ? search : taskSearch}
               onChange={e => { !selectedUserId ? setSearch(e.target.value) : setTaskSearch(e.target.value) }}
             >
