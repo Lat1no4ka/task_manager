@@ -78,13 +78,19 @@ export const TaskBoard = () => {
     <div className="d-flex">
       <div className="container">
         <div className="d-flex">
-          <div className="col-3 mt-2 mr-2">
-            {!selectedUserId ? <input type="button" onClick={e => setMytask(!myTask)}
-              className="btn btn-secondary" value={myTask ? "Поставленные мной" : "Назначенные для меня"}></input>
+          <div className=" mt-2 mr-2">
+            {!selectedUserId ? <input type="button" onClick={e => setMytask(true)}
+              className={myTask ? "btn btn-success" : "btn btn-secondary"} value={"Назначенные для меня"}></input>
               : <input type="button" class="btn btn-secondary" onClick={e => setSelectedUserId(null)} value="Назад"></input>
             }
           </div>
-          <div className="input-group mt-2 col-6 p-0">
+          <div className=" mt-2 mr-2">
+            {!selectedUserId ? <input type="button" onClick={e => setMytask(false)}
+              className={myTask ? "btn btn-secondary" : "btn btn-success"} value={"Поставленные мной"}></input>
+              : null
+            }
+          </div>
+          <div className="input-group mt-2 col-4 p-0">
             <input type="search" className="form-control" placeholder="Поиск" value={!selectedUserId ? search : taskSearch}
               onChange={e => { !selectedUserId ? setSearch(e.target.value) : setTaskSearch(e.target.value) }}
             >
@@ -95,13 +101,13 @@ export const TaskBoard = () => {
               <ChatText size={42} className="icon" onClick={e => {
                 setShowChat(!showChat)
                 setShowFilter(false)
-              }} style={{background:'white', borderRadius:'50% 50% 10px 6px '}}/>
+              }} style={{ background: 'white', borderRadius: '50% 50% 10px 6px ' }} />
             </div>
             <div className="mr-2">
               <Sliders size={42} className="icon" onClick={e => {
                 setShowFilter(!showFilter)
                 setShowChat(false)
-              }} style={{background:'white', borderRadius:'0px'}}/>
+              }} style={{ background: 'white', borderRadius: '0px' }} />
             </div>
           </div>
         </div>
@@ -129,7 +135,7 @@ export const UsersFolders = (props) => {
   return (
     users.filter(user => serachUser(user)).map((user) => {
       return (
-        <div className="folder col-3 m-2" key={user.id} onClick={e => setSelectedUserId(user.id)} style={{background: 'white'}}>
+        <div className="folder col-3 m-2" key={user.id} onClick={e => setSelectedUserId(user.id)} style={{ background: 'white' }}>
           <div className="folder_header p-2">
             <p>
               {user.firstName} {user.lastName}
@@ -189,7 +195,7 @@ export const UserTasks = (props) => {
         tasks.filter((task) => serachTask(task)).map((task) => {
           return (
             <div className="col-3 p-2" key={task.id} onClick={e => { setSelectedTask(task); setShowDetail(true); }} >
-              <div className="task" style={{background: 'white'}}>
+              <div className="task" style={{ background: 'white' }}>
                 <div className="task_header" style={statusStyle(task.status.statusColor)}>
                   <p className="p-0 m-0">Статус: {task.status.statusName}</p>
                 </div>
