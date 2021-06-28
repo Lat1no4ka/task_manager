@@ -17,19 +17,10 @@
 
         </insert>
 
+
         <insert tableName="priodir">
 
             <column name="id" valueNumeric="2"/>
-
-            <column name="prio_name" value="По возможности"/>
-
-            <column name="prio_color" value="#8cde10"/>
-
-        </insert>
-
-        <insert tableName="priodir">
-
-            <column name="id" valueNumeric="3"/>
 
             <column name="prio_name" value="Важно"/>
 
@@ -37,19 +28,10 @@
 
         </insert>
 
-        <insert tableName="priodir">
-
-            <column name="id" valueNumeric="4"/>
-
-            <column name="prio_name" value="Очень важно"/>
-
-            <column name="prio_color" value="#cf7c17"/>
-
-        </insert>
 
         <insert tableName="priodir">
 
-            <column name="id" valueNumeric="5"/>
+            <column name="id" valueNumeric="3"/>
 
             <column name="prio_name" value="Срочно"/>
 

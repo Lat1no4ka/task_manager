@@ -18,6 +18,7 @@ export const Chat = (props) => {
     const [sendTime, setSendTime] = useState(new Date());
     const [filesField, setFilesField] = useState([])
     const data = JSON.parse(localStorage.getItem("userData"));
+    const [search, setSearch] = useState("")
 
     const connect = () => {
         const Stomp = require("stompjs");
@@ -156,22 +157,39 @@ export const Chat = (props) => {
         setFilesField(data)
     }
 
+    const filteredRoom = (room) => {
+        const rooms = room.status.alias != 'archived' && room.taskName.toUpperCase().includes(search.toUpperCase()) ? room : null
+        return rooms
+    }
 
     return (
-        <div className="d-flex">
-            <div className="col-3 p-0 mr-1 m-0 d-flex flex-column scroll-room">
-                <div className="room" onClick={e => changeRoom(0, "Общий чат")}> <input type="button" className="btn room-btn" value="Общий чат"></input></div>
-                {
-                    props.tasks.length ? props.tasks.map(room => {
-                        return <div key={room.id} className="room" onClick={e => changeRoom(room.id, room.taskName)}> <input type="button" className="btn room-btn" value={room.taskName}></input></div>
-                    }) : null
-                }
+        <div>
+            <div className="input-group mb-2 p-0">
+                <input type="search" className="form-control" placeholder="Поиск"
+                    onChange={e => setSearch(e.target.value)}
+                >
+                </input>
             </div>
-            <div className="chat col-9 m-0 p-0">
-                <ChatHeader roomName={roomName} />
-                <ChatBody messages={messages} user={user} time={new Date()} />
-                <ChatFooter sendMessage={sendMessage} files={files} setFiles={setFiles} />
-            </div >
-        </div>
+            <div className="d-flex">
+                <div className="col-3 p-0 mr-1 m-0 d-flex flex-column scroll-room">
+                    {
+                        search && "ОБЩИЙ ЧАТ".includes(search.toUpperCase()) ?
+                            <div className="room" onClick={e => changeRoom(0, "Общий чат")}> <input type="button" className="btn room-btn" value="Общий чат"></input></div>
+                            : search == "" ? <div className="room" onClick={e => changeRoom(0, "Общий чат")}> <input type="button" className="btn room-btn" value="Общий чат"></input></div>
+                                : null
+                    }
+                    {
+                        props.tasks.length ? props.tasks.filter((room) => filteredRoom(room)).map(room => {
+                            return <div key={room.id} className="room" onClick={e => changeRoom(room.id, room.taskName)}> <input type="button" className="btn room-btn" value={room.taskName}></input></div>
+                        }) : null
+                    }
+                </div>
+                <div className="chat col-9 m-0 p-0">
+                    <ChatHeader roomName={roomName} />
+                    <ChatBody messages={messages} user={user} time={new Date()} />
+                    <ChatFooter sendMessage={sendMessage} files={files} setFiles={setFiles} />
+                </div >
+            </div>
+        </div >
     )
 }

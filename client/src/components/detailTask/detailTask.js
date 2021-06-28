@@ -112,7 +112,7 @@ export const DetailTask = (props) => {
   const getUsers = async () => {
     const response = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
     const users = await response.map(user => {
-      return { id: user.id, name: user.userName }
+      return { id: user.id, name: `${user.lastName} ${user.firstName}` }
     })
     setUsers(users);
   }
@@ -126,7 +126,7 @@ export const DetailTask = (props) => {
     update.priority = update.priority.id
     status ? update.status = status.id : update.status = update.status.id
     update.author = update.author.id
-    update.employee = update.employee.id
+    update.employee = update.employee
     try {
       await request(`${process.env.REACT_APP_API_URL}/alterTask`, "POST", JSON.stringify(update))
     } catch (err) {
@@ -192,6 +192,18 @@ export const DetailTask = (props) => {
       case "closed":
         next = status.filter(item => {
           return item.alias == 'archived' ? item : null;
+        })
+        setNextStatus(next)
+        break
+      case "archived":
+        next = status.filter(item => {
+          return item.alias === "revision" ? item : null;
+        })
+        setNextStatus(next)
+        break
+      case "overdue":
+        next = status.filter(item => {
+          return item.alias == 'closed' ? item : null;
         })
         setNextStatus(next)
         break
@@ -474,7 +486,7 @@ export const AddSubTask = (props) => {
   const getUsers = async () => {
     const response = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
     const users = await response.map(user => {
-      return { id: user.id, name: user.userName }
+      return { id: user.id, name: `${user.lastName} ${user.firstName}` }
     })
     setUsers(users);
   }
@@ -552,7 +564,7 @@ export const AddSubTask = (props) => {
               id="selections-example"
               {...register("subEmployerRequired", { required: true })}
               onChange={(user) => {
-                setForm({ ...form, employee: [{ id: user[0]?.id, userName: user[0]?.name }] });
+                setForm({ ...form, employee: user });
                 setValue('subEmployerRequired', user);
                 clearErrors("subEmployerRequired")
               }}

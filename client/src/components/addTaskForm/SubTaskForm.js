@@ -56,7 +56,7 @@ export const SubTask = () => {
     const getUsers = async () => {
         const response = await request(`${process.env.REACT_APP_API_URL}/allUsers`, "GET");
         const users = await response.map(user => {
-            return { id: user.id, name: user.userName }
+            return { id: user.id, name: `${user.lastName} ${user.firstName}` }
         })
         setUsers(users);
     }

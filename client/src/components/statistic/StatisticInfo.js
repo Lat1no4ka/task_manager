@@ -86,7 +86,7 @@ export const StatisticInfo = () => {
                                 onClick={e => getUserStatistic(e.target.value)}>
                                 {
                                     users.map((user) => {
-                                        return <option key={user.id} value={user.id}>{user.userName}</option>
+                                        return <option key={user.id} value={user.id}>{`${user.lastName} ${user.firstName}`}</option>
                                     })
                                 }
                             </select>
