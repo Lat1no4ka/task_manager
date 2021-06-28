@@ -78,7 +78,7 @@ public class UserController {
                 if(bCryptPasswordEncoder.matches(user.getPassword(), newusr.getPassword())){
                     newusr.setPassword(bCryptPasswordEncoder.encode(user.getNewPassword()));
                 }
-                else{return user.getPassword() + " ___ " + " ___ " + newusr.getPassword();}
+                else{return "Пароли не совпадают";}
         }
         userRepository.save(newusr);
         return "Информация обновлена";
@@ -132,7 +132,7 @@ public class UserController {
         return blkusr;
     }
 
-    //  Ахуеешь, разблокировка пользователоя
+    //разблокировка пользователоя
     @RequestMapping(value={"/unblockUser"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
     public UserEntity UnblockUser(@RequestBody User user)
     {
@@ -166,6 +166,15 @@ public class UserController {
         return settings;
     }
 
+    //изменение Пользователя
+    @RequestMapping(value={"/Chameleonio"}, method=RequestMethod.POST, headers = {"Content-type=application/json"})
+    public String ForcePassChange(@RequestBody UserAlterEntity user)
+    {
+        User newusr = userRepository.findById(user.getId());
+        newusr.setPassword(bCryptPasswordEncoder.encode(user.getNewPassword()));
+        userRepository.save(newusr);
+        return "Дело Сделано";
+    }
 
 
 }

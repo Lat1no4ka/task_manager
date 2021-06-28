@@ -288,7 +288,7 @@ public class AddTaskController {
         return userList;
     }
 
-    //Автоматическая поебень™ смотрит дату и ебашит задачи в просроченные
+    //Автоматическое отслеживание срока выполнения
     @Scheduled(cron ="50 59 23 * * *")
     public List<TaskEntity> DailyCheck () throws IOException, ParseException {
         Date today = new Date();
@@ -309,7 +309,7 @@ public class AddTaskController {
         return overdueList;
     }
 
-    //Обновление просроченного задания для автоматической поебени™
+    //Обновление просроченного задания
     public void setTaskExpired(List<TaskEntity> taskList) throws IOException {
         for (TaskEntity tsk : taskList) {
             tsk.setOverdue("#cf1717");
