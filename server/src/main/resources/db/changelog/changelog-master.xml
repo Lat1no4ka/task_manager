@@ -6,6 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <include file="/db/changelog/changes/create-user-table-changelog-1.xml"/>
+    <include file="/db/changelog/changes/insert-user-table-changelog-2.xml"/>
     <include file="/db/changelog/changes/create-task-table-changelog.xml"/>
     <include file="/db/changelog/changes/create-chatfiles-table-changelog.xml"/>
     <include file="/db/changelog/changes/create-files-table-changelog.xml"/>
